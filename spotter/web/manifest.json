@@ -1,6 +1,6 @@
 {
-    "name": "Spotter",
-    "short_name": "Spotter",
+    "name": "spotter",
+    "short_name": "spotter",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
