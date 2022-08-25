@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+int length = 0;
 
 void main() {
   runApp(const MyApp());
@@ -28,17 +31,59 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+class RemindersList extends StatefulWidget {
+  const RemindersList({Key? key, required this.title}) : super(key: key);
+  final String title;
+
+  @override
+  State<RemindersList> createState() => _RemindersListState();
+}
+
+class _RemindersListState extends State<RemindersList> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: length,
+      itemBuilder: (BuildContext context, int index) {
+        return ListTile(
+          title: Text('Item $index'), //label per entry
+          onTap: (() {
+            //action trigger
+            print('Tapped item $index');
+          }),
+        );
+      },
+    );
+  }
+}
+
 class Reminders extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _RemindersState();
 }
 
 class _RemindersState extends State<Reminders> {
+  void _temp() {
+    setState(() {
+      length = length + 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Reminders"),
+      ),
+      body: const Center(
+        child: RemindersList(
+          title: "Reminders",
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _temp,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -55,6 +100,11 @@ class _CalendarState extends State<Calendar> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Calendar"),
+      ),
+      body: TableCalendar(
+        firstDay: DateTime.utc(1970, 1, 1),
+        lastDay: DateTime.utc(2099, 12, 31),
+        focusedDay: DateTime.now(),
       ),
     );
   }
@@ -84,9 +134,6 @@ class _MyHomePageState extends State<MyHomePage> {
     Calendar(),
     Settings(),
   ];
-  void _incrementCounter() {
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,11 +165,6 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
       body: _pages[page],
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
