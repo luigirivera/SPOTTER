@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 int length = 0;
 
@@ -31,40 +30,16 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class RemindersList extends StatefulWidget {
-  const RemindersList({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  State<RemindersList> createState() => _RemindersListState();
-}
-
-class _RemindersListState extends State<RemindersList> {
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: length,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Text('Item $index'), //label per entry
-          onTap: (() {
-            //action trigger
-            print('Tapped item $index');
-          }),
-        );
-      },
-    );
-  }
-}
-
 class Reminders extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _RemindersState();
 }
 
 class _RemindersState extends State<Reminders> {
+  List<bool> itemValues = List.generate(length, (index) => false); 
   void _temp() {
     setState(() {
+      itemValues.add(false);
       length = length + 1;
     });
   }
@@ -75,10 +50,28 @@ class _RemindersState extends State<Reminders> {
       appBar: AppBar(
         title: Text("Reminders"),
       ),
-      body: const Center(
-        child: RemindersList(
-          title: "Reminders",
-        ),
+      body: ListView.builder(
+        itemCount: length,
+        itemBuilder: (BuildContext context, int index) {
+          return CheckboxListTile(
+            title: Text('Item $index'), //label per entry
+            value: itemValues[index],
+            controlAffinity: ListTileControlAffinity.leading,
+            secondary: PopupMenuButton(
+              itemBuilder: ((context) => [
+                PopupMenuItem(
+                  child: Text("Delete"),
+                  value: 1)
+              ]),
+              icon: Icon(Icons.menu),
+            ),
+            onChanged: ((val) {
+              setState(() {
+                itemValues[index] = val!;
+              });
+            }),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _temp,
@@ -100,11 +93,6 @@ class _CalendarState extends State<Calendar> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Calendar"),
-      ),
-      body: TableCalendar(
-        firstDay: DateTime.utc(1970, 1, 1),
-        lastDay: DateTime.utc(2099, 12, 31),
-        focusedDay: DateTime.now(),
       ),
     );
   }
