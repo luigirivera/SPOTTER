@@ -1,4 +1,4 @@
-package com.example.spotter
+package com.example.spotter_test
 
 import io.flutter.embedding.android.FlutterActivity
 
