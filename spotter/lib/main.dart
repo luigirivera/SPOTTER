@@ -45,41 +45,40 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       endDrawer: const SettingsDrawer(),
       body: Column(children: [
+        //The first section of the homepage; Task board.
         Expanded(
           child: Container(
             color: Colors.orange,
+            child: Padding(
+              padding: const EdgeInsets.all(40),
+              child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.white.withOpacity(0.4),
+                  child: ListView(
+                    children: const [
+                      Text("Task 1"),
+                      Text("Task 2"),
+                      Text("Task 3"),
+                      Text("Task 4"),
+                    ],
+                  )),
+            ),
           ),
         ),
+        //The second section of the homepage; Textbox.
         Expanded(
           child: Container(
             color: Colors.yellow,
           ),
         ),
+        //The third section of the homepage; Mascot.
         Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  color: Colors.blue,
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Container(color: Colors.brown),
-                    ),
-                    Expanded(
-                      child: Container(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          child: Container(
+            color: Colors.pink,
           ),
         ),
       ]),
