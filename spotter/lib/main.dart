@@ -48,20 +48,23 @@ class _MyHomePageState extends State<MyHomePage> {
         iconTheme: IconThemeData(color: Colors.black),
       ),
       endDrawer: const SettingsDrawer(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      body: Column(children: [
+        Expanded(
+          child: Container(
+            color: Colors.orange,
+          ),
         ),
-      ),
+        Expanded(
+          child: Container(
+            color: Colors.yellow,
+          ),
+        ),
+        Expanded(
+          child: Container(
+            color: Colors.pink,
+          ),
+        ),
+      ]),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
