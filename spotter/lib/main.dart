@@ -13,9 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Spotter',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-      ),
+      theme: ThemeData(primarySwatch: Colors.red),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -86,16 +84,100 @@ class _MyHomePageState extends State<MyHomePage> {
         //
         //The third section of the homepage; Mascot.
         Expanded(
-          child: Container(
-            color: Colors.pink,
+          // child: Container( // This is the original code.
+          //   color: Colors.pink, // This is the original code.
+          // ), // This is the original code.
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  color: Colors.blue,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Padding(
+                            padding: const EdgeInsets.only(left: 30, top: 15),
+                            child: TextButton(
+                                style: TextButton.styleFrom(
+                                    padding: EdgeInsets.all(0)),
+                                onPressed: () {
+                                  print("Tasks Pressed");
+                                },
+                                child: Text(
+                                  'Tasks',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ))),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Padding(
+                            padding: const EdgeInsets.only(left: 60, top: 15),
+                            child: TextButton(
+                                style: TextButton.styleFrom(
+                                    padding: EdgeInsets.all(0)),
+                                onPressed: () {
+                                  print("Calendar Pressed");
+                                },
+                                child: Text(
+                                  'Calendar',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ))),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Padding(
+                            padding: const EdgeInsets.only(left: 60, top: 15),
+                            child: TextButton(
+                                style: TextButton.styleFrom(
+                                    padding: EdgeInsets.all(0)),
+                                onPressed: () {
+                                  print("Study Session Pressed");
+                                },
+                                child: Text(
+                                  'Study Session',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ))),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Padding(
+                            padding: const EdgeInsets.only(left: 30, top: 15),
+                            child: TextButton(
+                                style: TextButton.styleFrom(
+                                    padding: EdgeInsets.all(0)),
+                                onPressed: () {
+                                  print("Market Pressed");
+                                },
+                                child: Text(
+                                  'Market',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ))),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _incrementCounter,
+      //   tooltip: 'Increment',
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }
