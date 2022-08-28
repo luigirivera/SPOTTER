@@ -60,8 +60,26 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         Expanded(
-          child: Container(
-            color: Colors.pink,
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  color: Colors.blue,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Container(color: Colors.brown),
+                    ),
+                    Expanded(
+                      child: Container(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ]),
