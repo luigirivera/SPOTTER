@@ -58,16 +58,20 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Padding(
               padding: const EdgeInsets.all(40),
               child: Container(
-                  alignment: Alignment.center,
-                  color: Colors.white.withOpacity(0.4),
-                  child: ListView(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.4),
+                    border: Border.all(color: Colors.blue, width: 5),
+                    borderRadius: const BorderRadius.all(Radius.circular(40)),
+                  ),
+                  child: Center(
+                      child: ListView(
                     children: const [
                       Text("Task 1"),
                       Text("Task 2"),
                       Text("Task 3"),
                       Text("Task 4"),
                     ],
-                  )),
+                  ))),
             ),
           ),
         ),
