@@ -63,15 +63,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     border: Border.all(color: Colors.blue, width: 5),
                     borderRadius: const BorderRadius.all(Radius.circular(40)),
                   ),
-                  child: Center(
-                      child: ListView(
+                  child: ListView(
                     children: const [
                       Text("Task 1"),
                       Text("Task 2"),
                       Text("Task 3"),
                       Text("Task 4"),
                     ],
-                  ))),
+                  )),
             ),
           ),
         ),
