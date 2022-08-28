@@ -49,6 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       endDrawer: const SettingsDrawer(),
       body: Column(children: [
+        //
+        //
         //The first section of the homepage; Task board.
         Expanded(
           child: Container(
@@ -69,12 +71,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
+        //
+        //
         //The second section of the homepage; Textbox.
         Expanded(
           child: Container(
             color: Colors.yellow,
           ),
         ),
+        //
+        //
         //The third section of the homepage; Mascot.
         Expanded(
           child: Container(
