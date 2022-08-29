@@ -31,9 +31,9 @@ class SettingsDrawer extends StatelessWidget {
               onChanged: (value) {},
             ),
           ),
-          ListTile(
-            title: const Text('About'),
-            trailing: const Icon(Icons.info),
+          const ListTile(
+            title: Text('About'),
+            trailing: Icon(Icons.info),
           ),
         ],
       ),

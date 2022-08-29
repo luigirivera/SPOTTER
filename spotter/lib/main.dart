@@ -33,12 +33,30 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue.shade200,
+      //
+      //Adding background image to the appbar
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+            image: AssetImage('assets/stars.png'),
+            fit: BoxFit.fill,
+          )),
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
+        iconTheme: const IconThemeData(color: Colors.orange),
       ),
-      endDrawer: const SettingsDrawer(),
+      drawer: const SettingsDrawer(),
       body: Column(children: [
         //
         //
