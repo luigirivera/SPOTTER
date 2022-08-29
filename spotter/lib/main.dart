@@ -57,12 +57,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemCount: 20,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      leading: const Icon(Icons.circle),
-                      trailing: const Text("completed",
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 25,
-                          )),
+                      leading: const Icon(
+                        Icons.star,
+                        color: Colors.yellow,
+                      ),
+                      trailing:
+                          const Icon(Icons.check_box_outline_blank_rounded),
                       title: Text("Task _$index"),
                     );
                   }),
