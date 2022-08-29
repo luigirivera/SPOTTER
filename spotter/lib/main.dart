@@ -29,14 +29,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: ListView.builder(
                   padding: const EdgeInsets.all(10),
-                  itemCount: 10,
+                  itemCount: 20,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
                       leading: const Icon(Icons.circle),
