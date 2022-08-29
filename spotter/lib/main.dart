@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue.shade200,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -52,23 +53,27 @@ class _MyHomePageState extends State<MyHomePage> {
         //The first section of the homepage; Task board.
         Expanded(
           child: Container(
-            color: Colors.orange,
-            child: Padding(
-              padding: const EdgeInsets.all(40),
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.4),
-                    border: Border.all(color: Colors.blue, width: 5),
-                    borderRadius: const BorderRadius.all(Radius.circular(40)),
-                  ),
-                  child: ListView(
-                    children: const [
-                      Text("Task 1"),
-                      Text("Task 2"),
-                      Text("Task 3"),
-                      Text("Task 4"),
-                    ],
-                  )),
+            padding: const EdgeInsets.only(right: 20, left: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.4),
+                border: Border.all(color: Colors.blue, width: 5),
+                borderRadius: const BorderRadius.all(Radius.circular(40)),
+              ),
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(10),
+                  itemCount: 10,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      leading: const Icon(Icons.circle),
+                      trailing: const Text("completed",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 25,
+                          )),
+                      title: Text("Task _$index"),
+                    );
+                  }),
             ),
           ),
         ),
@@ -76,17 +81,12 @@ class _MyHomePageState extends State<MyHomePage> {
         //
         //The second section of the homepage; Textbox.
         Expanded(
-          child: Container(
-            color: Colors.yellow,
-          ),
+          child: Container(),
         ),
         //
         //
         //The third section of the homepage; Mascot.
         Expanded(
-          // child: Container( // This is the original code.
-          //   color: Colors.pink, // This is the original code.
-          // ), // This is the original code.
           child: Row(
             children: [
               Expanded(
@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: const EdgeInsets.only(left: 30, top: 15),
                             child: TextButton(
                                 style: TextButton.styleFrom(
-                                    padding: EdgeInsets.all(0)),
+                                    padding: const EdgeInsets.all(0)),
                                 onPressed: () {
                                   print("Tasks Pressed");
                                 },
@@ -122,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: const EdgeInsets.only(left: 60, top: 15),
                             child: TextButton(
                                 style: TextButton.styleFrom(
-                                    padding: EdgeInsets.all(0)),
+                                    padding: const EdgeInsets.all(0)),
                                 onPressed: () {
                                   print("Calendar Pressed");
                                 },
@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: const EdgeInsets.only(left: 60, top: 15),
                             child: TextButton(
                                 style: TextButton.styleFrom(
-                                    padding: EdgeInsets.all(0)),
+                                    padding: const EdgeInsets.all(0)),
                                 onPressed: () {
                                   print("Study Session Pressed");
                                 },
@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: const EdgeInsets.only(left: 30, top: 15),
                             child: TextButton(
                                 style: TextButton.styleFrom(
-                                    padding: EdgeInsets.all(0)),
+                                    padding: const EdgeInsets.all(0)),
                                 onPressed: () {
                                   print("Market Pressed");
                                 },
