@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'settings.dart';
 import 'tasks.dart';
+import 'navigationBar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //
       //Adding background image to the appbar
       appBar: AppBar(
+        elevation: 0,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
               image: DecorationImage(
@@ -60,109 +62,29 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(children: [
         //
         //
-        //The first section of the homepage; Task board.
+        //The first section; Task board.
         const TaskBoard(),
         //
         //
-        //The second section of the homepage; Textbox.
-        Expanded(
-          child: Container(),
+        //The second section; Textbox.
+        Container(
+          height: 100,
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/filler.png'), fit: BoxFit.fill)),
         ),
         //
-        //
-        //The third section of the homepage; Mascot.
+        //The third section; Mascot
         Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  color: Colors.blue,
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        color: Colors.transparent,
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 30),
-                            child: TextButton(
-                                style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.all(0)),
-                                onPressed: () {
-                                  print("Tasks Pressed");
-                                },
-                                child: Text(
-                                  'Tasks',
-                                  style: Theme.of(context).textTheme.headline6,
-                                ))),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: Colors.transparent,
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 60),
-                            child: TextButton(
-                                style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.all(0)),
-                                onPressed: () {
-                                  print("Calendar Pressed");
-                                },
-                                child: Text(
-                                  'Calendar',
-                                  style: Theme.of(context).textTheme.headline6,
-                                ))),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: Colors.transparent,
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 60),
-                            child: TextButton(
-                                style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.all(0)),
-                                onPressed: () {
-                                  print("Study Session Pressed");
-                                },
-                                child: Text(
-                                  'Study Session',
-                                  style: Theme.of(context).textTheme.headline6,
-                                ))),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: Colors.transparent,
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 30),
-                            child: TextButton(
-                                style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.all(0)),
-                                onPressed: () {
-                                  print("Market Pressed");
-                                },
-                                child: Text(
-                                  'Market',
-                                  style: Theme.of(context).textTheme.headline6,
-                                ))),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/space.png'), fit: BoxFit.fill),
+            ),
           ),
         ),
       ]),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ),
+      bottomNavigationBar: const NavBar(),
     );
   }
 }
