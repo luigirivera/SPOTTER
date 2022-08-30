@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Container(
                         color: Colors.transparent,
                         child: Padding(
-                            padding: const EdgeInsets.only(left: 30, top: 15),
+                            padding: const EdgeInsets.only(left: 30),
                             child: TextButton(
                                 style: TextButton.styleFrom(
                                     padding: const EdgeInsets.all(0)),
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Container(
                         color: Colors.transparent,
                         child: Padding(
-                            padding: const EdgeInsets.only(left: 60, top: 15),
+                            padding: const EdgeInsets.only(left: 60),
                             child: TextButton(
                                 style: TextButton.styleFrom(
                                     padding: const EdgeInsets.all(0)),
@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Container(
                         color: Colors.transparent,
                         child: Padding(
-                            padding: const EdgeInsets.only(left: 60, top: 15),
+                            padding: const EdgeInsets.only(left: 60),
                             child: TextButton(
                                 style: TextButton.styleFrom(
                                     padding: const EdgeInsets.all(0)),
@@ -138,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Container(
                         color: Colors.transparent,
                         child: Padding(
-                            padding: const EdgeInsets.only(left: 30, top: 15),
+                            padding: const EdgeInsets.only(left: 30),
                             child: TextButton(
                                 style: TextButton.styleFrom(
                                     padding: const EdgeInsets.all(0)),

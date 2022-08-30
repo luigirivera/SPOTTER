@@ -12,7 +12,7 @@ class _TaskBoardState extends State<TaskBoard> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.only(right: 20, left: 20),
+        padding: const EdgeInsets.only(right: 20, left: 20, top: 20),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.4),
