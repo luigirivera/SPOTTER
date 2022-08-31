@@ -5,37 +5,22 @@ class SettingsDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Dialog errorDialog = Dialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0)), //this right here
+    Dialog aboutPopup = Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: Container(
-        height: 300.0,
-        width: 300.0,
+        height: 150.0,
+        width: 150.0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text("Spotter - Tasks Companion"),
-            Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Text(
-                'COMP 499 Capstone Project',
-              ),
-            ),
+            Text('COMP 499 Capstone Project'),
             Padding(
               padding: EdgeInsets.all(15.0),
               child: Text(
                 'By Arze Lu and Louie Rivera',
               ),
-            ),
-            Padding(padding: EdgeInsets.only(top: 40.0)),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'Done',
-                  style: TextStyle(color: Colors.black, fontSize: 18.0),
-                ))
+            )
           ],
         ),
       ),
@@ -67,7 +52,7 @@ class SettingsDrawer extends StatelessWidget {
             onTap: () {
               showDialog(
                   context: context,
-                  builder: (BuildContext context) => errorDialog);
+                  builder: (BuildContext context) => aboutPopup);
             },
           ),
         ],
