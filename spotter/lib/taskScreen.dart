@@ -20,11 +20,25 @@ class _TaskScreenState extends State<TaskScreen> {
       //
       //The second section; Textbox.
       Container(
-        height: 100,
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/filler.png'), fit: BoxFit.fill)),
-      ),
+          height: 100,
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/filler.png'), fit: BoxFit.fill)),
+          child: Center(
+              child: TextButton(
+            onPressed: () {
+              TextButton(
+                child: const Text('test'),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TaskPage()));
+                },
+              );
+            },
+            child: const Icon(Icons.outbond),
+          ))),
       //
       //The third section; Mascot
       Expanded(
@@ -36,5 +50,23 @@ class _TaskScreenState extends State<TaskScreen> {
         ),
       ),
     ]);
+  }
+}
+
+class TaskPage extends StatelessWidget {
+  const TaskPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextButton(
+            child: const Text('test'),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+        const TaskList(),
+      ],
+    );
   }
 }

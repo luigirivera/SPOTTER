@@ -67,6 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
             fit: BoxFit.fill,
           )),
         ),
+        //
+        //Adding settings for the drawer
+        //will select the drawer in the scaffold
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -74,10 +77,11 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             );
           },
         ),
+        //
+        //Changing icon theme
         iconTheme: const IconThemeData(color: Colors.orange),
       ),
       drawer: const SettingsDrawer(),
