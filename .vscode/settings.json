@@ -1,3 +1,4 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "cmake.sourceDirectory": "${workspaceFolder}/$Recycle.Bin/S-1-5-21-3163279298-1486062734-697718305-1001/$RBKGAOP/spotter/linux/flutter"
 }

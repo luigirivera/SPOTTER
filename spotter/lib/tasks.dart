@@ -41,11 +41,9 @@ class _TaskListState extends State<TaskList> {
         padding: const EdgeInsets.all(10),
         itemCount: 20,
         itemBuilder: (BuildContext context, int index) {
-          Data data = Data();
-
           if (index.isOdd) return const Divider();
 
-          final check = data.getCompletion(index ~/ 2);
+          final check = Data.completed[index ~/ 2];
 
           return ListTile(
             title: Text("Task _$index"),
@@ -65,9 +63,9 @@ class _TaskListState extends State<TaskList> {
               onPressed: () {
                 setState(() {
                   if (check) {
-                    data.setCompletion(index ~/ 2, false);
+                    Data.completed[index ~/ 2] = false;
                   } else {
-                    data.setCompletion(index ~/ 2, true);
+                    Data.completed[index ~/ 2] = true;
                   }
                 });
               },
