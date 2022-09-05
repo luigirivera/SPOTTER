@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spotter/taskScreen.dart';
+import 'buttons.dart';
 
 class TaskGroup {
   late String groupTitle;
@@ -61,24 +62,10 @@ class _TaskListState extends State<TaskList> {
         itemCount: 20,
         itemBuilder: (BuildContext context, int index) {
           if (index == 0 && !widget.popped) {
-            return Center(
-                child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TaskPopOutPage(),
-                        )).then((value) {
-                      setState(() {});
-                    });
-                  },
-                  icon: const Icon(Icons.output),
-                  tooltip: 'View in a pop out',
-                ),
-              ],
-            ));
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [TaskPagePopUpButton()],
+            );
           }
           if (index.isOdd) return const Divider();
           final i = index ~/ 2;
