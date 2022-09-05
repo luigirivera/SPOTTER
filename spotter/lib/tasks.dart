@@ -1,7 +1,24 @@
+//Classes: TaskItem, TaskGroup, TaskData, TaskBoard, TaskList
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spotter/taskScreen.dart';
-import 'test_data.dart';
+
+class TaskGroup {
+  late String groupTitle;
+  late Color groupColor;
+}
+
+class TaskItem {
+  late TaskGroup itemGroup;
+  late Icon itemIcon;
+  late String itemTask;
+  bool completed = false;
+}
+
+class TaskData {
+  int amount = 0;
+  static late List<TaskItem> taskList;
+}
 
 class TaskBoard extends StatelessWidget {
   const TaskBoard({Key? key}) : super(key: key);
@@ -65,7 +82,7 @@ class _TaskListState extends State<TaskList> {
           }
           if (index.isOdd) return const Divider();
           final i = index ~/ 2;
-          final check = Data.completed[i];
+          final check = TaskData.taskList[i].completed;
 
           return ListTile(
             title: Text("Task _$i"),
@@ -85,9 +102,9 @@ class _TaskListState extends State<TaskList> {
               onPressed: () {
                 setState(() {
                   if (check) {
-                    Data.completed[i] = false;
+                    TaskData.taskList[i].completed = false;
                   } else {
-                    Data.completed[i] = true;
+                    TaskData.taskList[i].completed = true;
                   }
                 });
               },
