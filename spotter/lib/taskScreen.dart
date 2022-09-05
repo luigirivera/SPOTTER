@@ -9,21 +9,10 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  static void rebuildAllChildren(BuildContext context) {
-    void rebuild(Element el) {
-      el.markNeedsBuild();
-      el.visitChildren(rebuild);
-    }
-
-    (context as Element).visitChildren(rebuild);
-  }
+  int test = 0;
 
   @override
   Widget build(BuildContext context) {
-    void rebuild() {
-      rebuildAllChildren(context);
-    }
-
     return Column(children: [
       //
       //
@@ -37,19 +26,8 @@ class _TaskScreenState extends State<TaskScreen> {
         decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('assets/filler.png'), fit: BoxFit.fill)),
-        child: Center(
-            child: TextButton(
-          child: const Text('test'),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TaskPage(
-                          outerContext: context,
-                        )));
-          },
-        )),
       ),
+      //
       //
       //The third section; Mascot
       Expanded(
@@ -64,9 +42,8 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 }
 
-class TaskPage extends StatelessWidget {
-  final BuildContext outerContext;
-  const TaskPage({Key? key, required this.outerContext}) : super(key: key);
+class TaskPopOutPage extends StatelessWidget {
+  const TaskPopOutPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -87,15 +64,15 @@ class TaskPage extends StatelessWidget {
                 color: Colors.orange,
               ),
               onPressed: () {
-                _TaskScreenState otherScreen = _TaskScreenState();
-                otherScreen.build(outerContext);
                 Navigator.pop(context);
               },
             );
           },
         ),
       ),
-      body: const TaskList(),
+      body: TaskList(
+        popped: true,
+      ),
     );
   }
 }
