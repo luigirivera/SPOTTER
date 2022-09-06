@@ -2,22 +2,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spotter/taskScreen.dart';
-import 'buttons.dart';
 
 class TaskGroup {
   late String groupTitle;
   late Color groupColor;
+  TaskGroup(groupTitle, groupColor);
 }
 
 class TaskItem {
-  late TaskGroup itemGroup;
-  late Icon itemIcon;
-  late String itemTask;
+  var g = TaskGroup('SomeTitle', Colors.amber);
+  late TaskGroup itemGroup = g;
+  Icon itemIcon = const Icon(Icons.abc);
+  String itemTask = 'SomeItem';
   bool completed = false;
 }
 
 class TaskData {
-  int amount = 0;
+  static int amount = 1;
   static late List<TaskItem> taskList;
 }
 
@@ -38,17 +39,15 @@ class TaskBoard extends StatelessWidget {
           border: Border.all(color: Colors.blue, width: 5),
           borderRadius: const BorderRadius.all(Radius.circular(40)),
         ),
-        child: TaskList(
-          popped: false,
-        ),
+        child: const TaskList(),
       ),
     );
   }
 }
 
 class TaskList extends StatefulWidget {
-  late bool popped;
-  TaskList({Key? key, required this.popped}) : super(key: key);
+  final bool popped;
+  const TaskList({Key? key, this.popped = false}) : super(key: key);
 
   @override
   State<TaskList> createState() => _TaskListState();
@@ -59,12 +58,26 @@ class _TaskListState extends State<TaskList> {
   Widget build(BuildContext context) {
     return ListView.builder(
         padding: const EdgeInsets.all(10),
-        itemCount: 20,
+        itemCount: TaskData.amount + 1,
         itemBuilder: (BuildContext context, int index) {
           if (index == 0 && !widget.popped) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [TaskPagePopUpButton()],
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TaskPopOutPage(),
+                        )).then((value) {
+                      setState(() {});
+                    });
+                  },
+                  icon: const Icon(Icons.output),
+                  tooltip: 'View in a pop out',
+                )
+              ],
             );
           }
           if (index.isOdd) return const Divider();
