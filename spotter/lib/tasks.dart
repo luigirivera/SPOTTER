@@ -6,20 +6,28 @@ import 'package:spotter/taskScreen.dart';
 class TaskGroup {
   late String groupTitle;
   late Color groupColor;
+  //Constructor
   TaskGroup(groupTitle, groupColor);
 }
 
 class TaskItem {
-  var g = TaskGroup('SomeTitle', Colors.amber);
-  late TaskGroup itemGroup = g;
-  Icon itemIcon = const Icon(Icons.abc);
-  String itemTask = 'SomeItem';
-  bool completed = false;
+  late TaskGroup itemGroup;
+  Icon itemIcon = const Icon(
+    Icons.arrow_forward,
+    color: Colors.blue,
+  );
+  late String itemTask = "ryset";
+  late bool completed = false;
+  //Constructor
+  TaskItem(itemGroup, [completed, itemIcon, itemTask]);
 }
 
 class TaskData {
+  var g = TaskGroup('SomeTitle', Colors.amber);
+  late TaskItem t = TaskItem(g);
+
   static int amount = 1;
-  static late List<TaskItem> taskList;
+  late List<TaskItem> taskList = List.filled(1, t);
 }
 
 class TaskBoard extends StatelessWidget {
@@ -58,8 +66,11 @@ class _TaskListState extends State<TaskList> {
   Widget build(BuildContext context) {
     return ListView.builder(
         padding: const EdgeInsets.all(10),
-        itemCount: TaskData.amount + 1,
+        //multiplying by 2 to account for the divider at odd indices,
+        //and the +1 is for the first row of buttons
+        itemCount: (TaskData.amount * 2) + 1,
         itemBuilder: (BuildContext context, int index) {
+          TaskData d = TaskData();
           if (index == 0 && !widget.popped) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -81,15 +92,12 @@ class _TaskListState extends State<TaskList> {
             );
           }
           if (index.isOdd) return const Divider();
-          final i = index ~/ 2;
-          final check = TaskData.taskList[i].completed;
+          final i = index - 2;
+          final check = d.taskList[i].completed;
 
           return ListTile(
-            title: Text("Task _$i"),
-            leading: const Icon(
-              Icons.star,
-              color: Colors.yellow,
-            ),
+            title: Text(d.taskList[i].itemTask),
+            leading: d.taskList[i].itemIcon,
             trailing: IconButton(
               icon: Icon(
                 check
@@ -102,9 +110,9 @@ class _TaskListState extends State<TaskList> {
               onPressed: () {
                 setState(() {
                   if (check) {
-                    TaskData.taskList[i].completed = false;
+                    d.taskList[i].completed = false;
                   } else {
-                    TaskData.taskList[i].completed = true;
+                    d.taskList[i].completed = true;
                   }
                 });
               },
