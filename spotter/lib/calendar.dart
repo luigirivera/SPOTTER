@@ -9,8 +9,9 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  late DateTime _selectedDay;
-  late DateTime _selectedFocusedDay; //idk what to do with this yet
+  /// try to avoid "late" initialization or the calendar will look trippy
+  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks; //setting a default
 
   @override
@@ -30,7 +31,7 @@ class _CalendarState extends State<Calendar> {
       onDaySelected: (selectedDay, focusedDay) {
         setState(() {
           _selectedDay = selectedDay;
-          _selectedFocusedDay = focusedDay;
+          _focusedDay = focusedDay;
         });
       },
 
@@ -45,6 +46,9 @@ class _CalendarState extends State<Calendar> {
       },
 
 
+      // onPageChanged: (focusedDay) {
+      //   _focusedDay = focusedDay;
+      // },
     );
   }
 }
