@@ -30,6 +30,7 @@ class TaskBoard extends StatelessWidget {
 
 class TaskList extends StatefulWidget {
   final bool popped;
+
   const TaskList({Key? key, this.popped = false}) : super(key: key);
 
   @override
@@ -43,12 +44,12 @@ class _TaskListState extends State<TaskList> {
         padding: const EdgeInsets.all(10),
         itemCount: 30 + 1,
         itemBuilder: (BuildContext context, int index) {
-
           /** Creating a list of IconButtons,
            * then add the default plus button in to create a pop-up for adding new tasks.
            */
           if (index == 0) {
             List<IconButton> buttons = List.empty(growable: true);
+
             buttons.add(IconButton(
               icon: const Icon(
                 Icons.add_circle,
