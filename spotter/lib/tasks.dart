@@ -1,33 +1,8 @@
-//Classes: TaskItem, TaskGroup, TaskData, TaskBoard, TaskList
-import 'package:flutter/foundation.dart';
+//Classes: TempTaskData, TaskBoard, TaskList, TaskPagePopOutButton, TaskPage
 import 'package:flutter/material.dart';
-import 'package:spotter/taskScreen.dart';
 
-class TaskGroup {
-  late String groupTitle;
-  late Color groupColor;
-  //Constructor
-  TaskGroup(groupTitle, groupColor);
-}
-
-class TaskItem {
-  late TaskGroup itemGroup;
-  Icon itemIcon = const Icon(
-    Icons.arrow_forward,
-    color: Colors.blue,
-  );
-  late String itemTask = "ryset";
-  late bool completed = false;
-  //Constructor
-  TaskItem(itemGroup, [completed, itemIcon, itemTask]);
-}
-
-class TaskData {
-  var g = TaskGroup('SomeTitle', Colors.amber);
-  late TaskItem t = TaskItem(g);
-
-  static int amount = 1;
-  late List<TaskItem> taskList = List.filled(1, t);
+class TempTaskData {
+  static List<bool> boolList = List.filled(30, false);
 }
 
 class TaskBoard extends StatelessWidget {
@@ -66,38 +41,79 @@ class _TaskListState extends State<TaskList> {
   Widget build(BuildContext context) {
     return ListView.builder(
         padding: const EdgeInsets.all(10),
-        //multiplying by 2 to account for the divider at odd indices,
-        //and the +1 is for the first row of buttons
-        itemCount: (TaskData.amount * 2) + 1,
+        itemCount: 30 + 1,
         itemBuilder: (BuildContext context, int index) {
-          TaskData d = TaskData();
-          if (index == 0 && !widget.popped) {
+
+          /** Creating a list of IconButtons,
+           * then add the default plus button in to create a pop-up for adding new tasks.
+           */
+          if (index == 0) {
+            List<IconButton> buttons = List.empty(growable: true);
+            buttons.add(IconButton(
+              icon: const Icon(
+                Icons.add_circle,
+                color: Colors.orange,
+              ),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: const Text(
+                            'This will be a pop-up to add more tasks'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Okay'),
+                          )
+                        ],
+                      );
+                    });
+              },
+              tooltip: 'Add new tasks',
+            ));
+
+            /** If page pop triggered,
+             * then add the page pop button to the list
+             */
+            if (!widget.popped) {
+              buttons.add(IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TaskPopOutPage(),
+                      )).then((value) {
+                    setState(() {});
+                  });
+                },
+                icon: const Icon(Icons.output),
+                tooltip: 'View in a pop out',
+              ));
+            }
+
+            /** Adding the buttons in the list to the first row */
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TaskPopOutPage(),
-                        )).then((value) {
-                      setState(() {});
-                    });
-                  },
-                  icon: const Icon(Icons.output),
-                  tooltip: 'View in a pop out',
-                )
-              ],
+              children: buttons.map((button) {
+                return Container(
+                  child: (button),
+                );
+              }).toList(),
             );
           }
-          if (index.isOdd) return const Divider();
-          final i = index - 2;
-          final check = d.taskList[i].completed;
 
+          if (index.isOdd) return const Divider();
+          final i = index ~/ 2;
+          final check = TempTaskData.boolList[i];
+
+          /** Putting tasks onto the task board */
           return ListTile(
-            title: Text(d.taskList[i].itemTask),
-            leading: d.taskList[i].itemIcon,
+            title: Text('Task $i'),
+            leading: const Icon(Icons.arrow_forward_ios, color: Colors.orange),
             trailing: IconButton(
               icon: Icon(
                 check
@@ -110,14 +126,49 @@ class _TaskListState extends State<TaskList> {
               onPressed: () {
                 setState(() {
                   if (check) {
-                    d.taskList[i].completed = false;
+                    TempTaskData.boolList[i] = false;
                   } else {
-                    d.taskList[i].completed = true;
+                    TempTaskData.boolList[i] = true;
                   }
                 });
               },
             ),
           );
         });
+  }
+}
+
+class TaskPopOutPage extends StatelessWidget {
+  const TaskPopOutPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+          image: AssetImage('assets/stars.png'),
+          fit: BoxFit.fill,
+        ))),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.orange,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            );
+          },
+        ),
+      ),
+      body: const TaskList(
+        popped: true,
+      ),
+    );
   }
 }

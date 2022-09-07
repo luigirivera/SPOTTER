@@ -5,7 +5,6 @@ import 'scrollHighlightRemove.dart';
 import 'taskScreen.dart';
 import 'studySession.dart';
 
-//Hi Mr. Brian Thoms :D
 
 void main() {
   runApp(const MyApp());

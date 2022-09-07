@@ -20,7 +20,7 @@ class _TaskScreenState extends State<TaskScreen> {
       const TaskBoard(),
       //
       //
-      //The second section; Textbox.
+      //The second section; Text box.
       Container(
         height: 100,
         decoration: const BoxDecoration(
@@ -39,40 +39,5 @@ class _TaskScreenState extends State<TaskScreen> {
         ),
       ),
     ]);
-  }
-}
-
-class TaskPopOutPage extends StatelessWidget {
-  const TaskPopOutPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-          image: AssetImage('assets/stars.png'),
-          fit: BoxFit.fill,
-        ))),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.orange,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            );
-          },
-        ),
-      ),
-      body: TaskList(
-        popped: true,
-      ),
-    );
   }
 }
