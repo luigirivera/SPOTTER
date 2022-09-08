@@ -97,7 +97,7 @@ class _TableEventsExampleState extends State<TableEventsExample> {
             calendarFormat: _calendarFormat,
             rangeSelectionMode: _rangeSelectionMode,
             eventLoader: _getEventsForDay,
-            startingDayOfWeek: StartingDayOfWeek.monday,
+            startingDayOfWeek: StartingDayOfWeek.sunday,
             calendarStyle: CalendarStyle(
               // Use `CalendarStyle` to customize the UI
               outsideDaysVisible: false,

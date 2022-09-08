@@ -9,15 +9,16 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  /// try to avoid "late" initialization or the calendar will look trippy
-  DateTime _selectedDay = DateTime.now();
+  /// Try to avoid "late" initialization or the calendar will look trippy
+  /// I tried to fill in below variables with some defaults
+  static DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks; //setting a default
 
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
-      focusedDay: DateTime.now(),
+      focusedDay: _focusedDay,
       firstDay: DateTime.utc(1970, 1, 1),
       lastDay: DateTime.utc(2199, 12, 31),
       headerVisible: true,
@@ -25,9 +26,7 @@ class _CalendarState extends State<Calendar> {
       shouldFillViewport: false,
 
       /** Adding interactivity */
-      selectedDayPredicate: (day) {
-        return isSameDay(_selectedDay, day);
-      },
+      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
       onDaySelected: (selectedDay, focusedDay) {
         setState(() {
           _selectedDay = selectedDay;
@@ -45,10 +44,17 @@ class _CalendarState extends State<Calendar> {
         });
       },
 
+      /** This is to prevent losing the focus of the main day
+       * For now I can only see this being helpful in hot reload
+       */
+      onPageChanged: (focusedDay) {
+        _focusedDay = focusedDay;
+      },
 
-      // onPageChanged: (focusedDay) {
-      //   _focusedDay = focusedDay;
-      // },
+      /** Customizing UI */
+      calendarStyle: const CalendarStyle(
+        outsideDaysVisible: false,
+      ),
     );
   }
 }

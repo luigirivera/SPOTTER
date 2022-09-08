@@ -1,94 +1,86 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
+import 'pages/basic_example.dart';
+import 'pages/complex_example.dart';
+import 'pages/events_example.dart';
+import 'pages/multi_example.dart';
+import 'pages/range_example.dart';
 
 void main() {
-  runApp(const MyApp());
+  initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Kindacode.com',
-      home: HomePage(),
+    return MaterialApp(
+      title: 'TableCalendar Example',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: StartPage(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
+class StartPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _StartPageState createState() => _StartPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  // This will be displayed on the screen
-  String? _content;
-
-  // Find the Documents path
-  Future<String> _getDirPath() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return dir.path;
-  }
-
-  // This function is triggered when the "Read" button is pressed
-  Future<void> _readData() async {
-    final dirPath = await _getDirPath();
-    final myFile = File('$dirPath/data.txt');
-    final data = await myFile.readAsString(encoding: utf8);
-    setState(() {
-      _content = data;
-    });
-  }
-
-  // TextField controller
-  final _textController = TextEditingController();
-  // This function is triggered when the "Write" buttion is pressed
-  Future<void> _writeData() async {
-    final _dirPath = await _getDirPath();
-
-    final _myFile = File('$_dirPath/data.txt');
-    // If data.txt doesn't exist, it will be created automatically
-
-    await _myFile.writeAsString(_textController.text);
-    _textController.clear();
-  }
-
+class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kindacode.com'),
+        title: Text('TableCalendar Example'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
+      body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: _textController,
-              decoration: const InputDecoration(labelText: 'Enter your name'),
-            ),
+            const SizedBox(height: 20.0),
             ElevatedButton(
-              child: const Text('Save to file'),
-              onPressed: _writeData,
+              child: Text('Basics'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => TableBasicsExample()),
+              ),
             ),
-            const SizedBox(
-              height: 150,
-            ),
-            Text(_content ?? 'Press the button to load your name',
-                style: const TextStyle(fontSize: 24, color: Colors.pink)),
+            const SizedBox(height: 12.0),
             ElevatedButton(
-              child: const Text('Read my name from the file'),
-              onPressed: _readData,
-            )
+              child: Text('Range Selection'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => TableRangeExample()),
+              ),
+            ),
+            const SizedBox(height: 12.0),
+            ElevatedButton(
+              child: Text('Events'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => TableEventsExample()),
+              ),
+            ),
+            const SizedBox(height: 12.0),
+            ElevatedButton(
+              child: Text('Multiple Selection'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => TableMultiExample()),
+              ),
+            ),
+            const SizedBox(height: 12.0),
+            ElevatedButton(
+              child: Text('Complex'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => TableComplexExample()),
+              ),
+            ),
+            const SizedBox(height: 20.0),
           ],
         ),
       ),
