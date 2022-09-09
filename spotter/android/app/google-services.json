@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "59204674157",
+    "project_id": "spotter-4627a",
+    "storage_bucket": "spotter-4627a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59204674157:android:78e488d76782b3aada9564",
+        "android_client_info": {
+          "package_name": "com.loucy.spotter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "59204674157-17ujke0e509c8j35edjt4qqa2273650a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfk3fklIo2PxLF3WmoNYSg4LH6qTaGZno"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "59204674157-17ujke0e509c8j35edjt4qqa2273650a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
