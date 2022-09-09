@@ -10,7 +10,8 @@ class AuthService{
       User? user = userCred.user;
       return user;
     }catch(e){
-
+      print(e.toString());
+      return null;
     }
   }
   //sign in with email & password
