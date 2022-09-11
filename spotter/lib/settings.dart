@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'backup.dart';
 
 class SettingsDrawer extends StatelessWidget {
   const SettingsDrawer({Key? key}) : super(key: key);
@@ -37,7 +38,13 @@ class SettingsDrawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Backup'),
-            onTap: () => print("Backup tapped"),
+            onTap: () {
+              print("Backup tapped");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const BackupScreen()));
+            },
           ),
           // ListTile(
           //   title: const Text('Dark Mode'),

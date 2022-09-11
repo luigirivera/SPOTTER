@@ -28,6 +28,9 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Spotter',
           theme: ThemeData(primarySwatch: Colors.red),
+          // home: const MyHomePage(
+          //   title: '',
+          // ),
           home: const Wrapper(),
           builder: (BuildContext context, child) {
             return ScrollConfiguration(
