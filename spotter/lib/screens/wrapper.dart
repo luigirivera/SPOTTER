@@ -10,9 +10,12 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final user = Provider.of<SpotterUser?>(context);
     debugPrint(user.toString());
 =======
+=======
+>>>>>>> parent of c3ba728 (fixing the error you saw earlier)
     final user = Provider.of<SpotterUser>(context);
     print(user);
 >>>>>>> parent of c3ba728 (fixing the error you saw earlier)
