@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'backup.dart';
+import 'statistics.dart';
 
 class SettingsDrawer extends StatelessWidget {
   const SettingsDrawer({Key? key}) : super(key: key);
@@ -34,7 +35,13 @@ class SettingsDrawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Statistics'),
-            onTap: () => print("Statistics tapped"),
+            onTap: () {
+              print("Statistics tapped");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const StatisticsScreen()));
+            },
           ),
           ListTile(
             title: const Text('Backup'),
