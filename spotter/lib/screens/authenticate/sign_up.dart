@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../services/auth.dart';
-import 'sign_up.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
+class SignUp extends StatefulWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignUpState extends State<SignUp> {
   final AuthService _auth = AuthService();
 
   @override
@@ -17,30 +16,16 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
         backgroundColor: Colors.blue.shade200,
         appBar: AppBar(
-            backgroundColor: Colors.orange,
-            title: const Text("Test sign in"),
-            actions: <Widget>[
-              TextButton.icon(
-                  onPressed: () async {
-                    dynamic result = await _auth.anonSignIn();
-                    if (result == null) {
-                      print('error signing in');
-                    } else {
-                      print('signed in \n$result\n');
-                      print(result.uid);
-                    }
-                  },
-                  icon: const Icon(Icons.person),
-                  label: const Text("Guest Login"),
-                  style: TextButton.styleFrom(foregroundColor: Colors.white))
-            ]),
+          backgroundColor: Colors.orange,
+          title: const Text("Test sign up"),
+        ),
         body: SafeArea(
           child: Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 10),
-              Text("Spotter", style: TextStyle(fontSize: 30)),
+              Text("Sign Up", style: TextStyle(fontSize: 30)),
               SizedBox(height: 20),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -94,29 +79,12 @@ class _SignInState extends State<SignIn> {
                         }
                       },
                       child: Center(
-                        child: Text("Sign in",
+                        child: Text("Sign up",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20)),
                       ))),
-              SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Don't have an account?"),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignUp()));
-                      },
-                      child: Text("Sign up",
-                          style: TextStyle(
-                              color: Colors.blue.shade800,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20)))
-                ],
-              )
             ],
           )),
         ));
