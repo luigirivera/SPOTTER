@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../statistics/statistics.dart';
 import '../settings/settings.dart';
 import '../calendar/calendar.dart';
 import 'taskScreen.dart';
@@ -26,6 +27,7 @@ class _HomeState extends State<Home> {
     const TaskScreen(),
     const Calendar(),
     const StudySession(),
+    const StatisticsScreen(),
   ];
 
   @override
@@ -39,9 +41,9 @@ class _HomeState extends State<Home> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/stars.png'),
-                fit: BoxFit.fill,
-              )),
+            image: AssetImage('assets/stars.png'),
+            fit: BoxFit.fill,
+          )),
         ),
         //
         //Adding settings for the drawer
@@ -69,6 +71,8 @@ class _HomeState extends State<Home> {
               icon: Icon(Icons.edit_calendar), label: 'Calendar'),
           BottomNavigationBarItem(
               icon: Icon(Icons.book), label: 'Study Session'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart), label: 'Statistic'),
         ],
         onTap: _onBarTap,
         currentIndex: _barIndexSelected,

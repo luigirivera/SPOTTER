@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import '../models/user.dart';
 
@@ -7,7 +8,7 @@ class AuthService {
 
   //create user object based on User
   SpotterUser _user(User? user) {
-    return SpotterUser(uid: user!.uid);
+    return SpotterUser(uid: user?.uid);
   }
 
   //auth change user stream
@@ -25,11 +26,20 @@ class AuthService {
       User? user = userCred.user;
       return _user(user!);
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
       return null;
     }
   }
-//sign in with email & password
-//register with email & password
-//sign out
+
+  //sign in with email & password
+  //register with email & password
+  //sign out
+  Future signOut() async {
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
+  }
 }

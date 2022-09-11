@@ -3,11 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:spotter/models/user.dart';
 import 'package:spotter/screens/wrapper.dart';
 import 'package:spotter/services/auth.dart';
-import 'screens/settings/settings.dart';
-import 'screens/calendar/calendar.dart';
 import 'scrollHighlightRemove.dart';
-import 'screens/home/taskScreen.dart';
-import 'screens/study_session/studySession.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
@@ -28,13 +24,13 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Spotter',
           theme: ThemeData(primarySwatch: Colors.red),
+          home: const Wrapper(),
           builder: (BuildContext context, child) {
             return ScrollConfiguration(
               behavior: MyBehavior(),
               child: child!,
             );
           },
-          home: const Wrapper(),
         ));
   }
 }

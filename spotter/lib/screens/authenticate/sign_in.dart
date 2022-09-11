@@ -24,10 +24,10 @@ class _SignInState extends State<SignIn> {
                   onPressed: () async {
                     dynamic result = await _auth.anonSignIn();
                     if (result == null) {
-                      print('error signing in');
+                      debugPrint('error signing in');
                     } else {
-                      print('signed in \n$result\n');
-                      print(result.uid);
+                      debugPrint('signed in \n$result\n');
+                      debugPrint(result.uid);
                     }
                   },
                   icon: const Icon(Icons.person),
@@ -39,15 +39,15 @@ class _SignInState extends State<SignIn> {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 10),
-              Text("Spotter", style: TextStyle(fontSize: 30)),
-              SizedBox(height: 20),
+              const SizedBox(height: 10),
+              const Text("Spotter", style: TextStyle(fontSize: 30)),
+              const SizedBox(height: 20),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextField(
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                            borderSide: const BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -57,14 +57,14 @@ class _SignInState extends State<SignIn> {
                           hintText: "Email",
                           filled: true,
                           fillColor: Colors.grey.shade200))),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextField(
                       obscureText: true,
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                            borderSide: const BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -74,7 +74,7 @@ class _SignInState extends State<SignIn> {
                           hintText: "Password",
                           filled: true,
                           fillColor: Colors.grey.shade200))),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: ElevatedButton(
@@ -87,28 +87,28 @@ class _SignInState extends State<SignIn> {
                       onPressed: () async {
                         dynamic result = await _auth.anonSignIn();
                         if (result == null) {
-                          print('error signing in');
+                          debugPrint('error signing in');
                         } else {
-                          print('signed in \n$result\n');
-                          print(result.uid);
+                          debugPrint('signed in \n$result\n');
+                          debugPrint(result.uid);
                         }
                       },
-                      child: Center(
+                      child: const Center(
                         child: Text("Sign in",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20)),
                       ))),
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account?"),
+                  const Text("Don't have an account?"),
                   TextButton(
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignUp()));
+                            MaterialPageRoute(builder: (context) => const SignUp()));
                       },
                       child: Text("Sign up",
                           style: TextStyle(

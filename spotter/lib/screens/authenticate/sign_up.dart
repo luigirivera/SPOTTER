@@ -72,10 +72,10 @@ class _SignUpState extends State<SignUp> {
                       onPressed: () async {
                         dynamic result = await _auth.anonSignIn();
                         if (result == null) {
-                          print('error signing in');
+                          debugPrint('error signing in');
                         } else {
-                          print('signed in \n$result\n');
-                          print(result.uid);
+                          debugPrint('signed in \n$result\n');
+                          debugPrint(result.uid);
                         }
                       },
                       child: const Center(
