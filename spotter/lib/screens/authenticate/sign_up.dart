@@ -24,15 +24,15 @@ class _SignUpState extends State<SignUp> {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 10),
-              Text("Sign Up", style: TextStyle(fontSize: 30)),
-              SizedBox(height: 20),
+              const SizedBox(height: 10),
+              const Text("Sign Up", style: TextStyle(fontSize: 30)),
+              const SizedBox(height: 20),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextField(
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                            borderSide: const BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -42,14 +42,14 @@ class _SignUpState extends State<SignUp> {
                           hintText: "Email",
                           filled: true,
                           fillColor: Colors.grey.shade200))),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextField(
                       obscureText: true,
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                            borderSide: const BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -59,7 +59,7 @@ class _SignUpState extends State<SignUp> {
                           hintText: "Password",
                           filled: true,
                           fillColor: Colors.grey.shade200))),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: ElevatedButton(
@@ -78,7 +78,7 @@ class _SignUpState extends State<SignUp> {
                           print(result.uid);
                         }
                       },
-                      child: Center(
+                      child: const Center(
                         child: Text("Sign up",
                             style: TextStyle(
                                 color: Colors.white,

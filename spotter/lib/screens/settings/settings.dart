@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'backup.dart';
-import 'statistics.dart';
+import '../../backup.dart';
+import '../statistics/statistics.dart';
 
 class SettingsDrawer extends StatelessWidget {
   const SettingsDrawer({Key? key}) : super(key: key);
