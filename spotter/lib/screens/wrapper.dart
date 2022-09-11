@@ -12,9 +12,9 @@ class Wrapper extends StatelessWidget {
     final user = Provider.of<SpotterUser?>(context);
     debugPrint(user.toString());
     //return either authenticate or home page
-    if(user == null){
+    if (user == null) {
       return const Authenticate();
-    }else{
+    } else {
       return const Home(title: 'Spotter');
     }
   }
