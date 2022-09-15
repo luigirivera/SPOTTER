@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spotter/models/user.dart';
-import 'package:spotter/screens/wrapper.dart';
+import 'package:spotter/screens/authenticate/wrapper.dart';
 import 'package:spotter/services/auth.dart';
 import 'scrollHighlightRemove.dart';
 import 'package:firebase_core/firebase_core.dart';

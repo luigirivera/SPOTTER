@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/user.dart';
-import 'authenticate/authenticate.dart';
-import 'home/home.dart';
+import '../../models/user.dart';
+import 'package:spotter/screens/authenticate/sign_in.dart';
+import '../home/home.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class Wrapper extends StatelessWidget {
 
     //return either authenticate or home page
     if (user?.uid == null) {
-      return const Authenticate();
+      return const SignIn();
     } else {
       debugPrint('Le debug print: ${user?.uid}');
       return const Home(title: 'Spotter');
