@@ -33,6 +33,25 @@ class AuthService {
 
   //sign in with email & password
   //register with email & password
+  Future registerEP(String email, String password) async {
+    try {
+      /** previously AuthResult */
+      UserCredential userCred = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      User? user = userCred.user;
+      return _user(user);
+    } on FirebaseAuthException catch (error){ //This is the specific error catching method found on documentation
+      if(error.code == 'weak-password'){
+        return 'The password provided is too weak';
+      }else if(error.code == 'email-already-in-use'){
+        return 'The email is already in use';
+      }
+    }catch (error){
+      debugPrint('Not FirebaseAuthException: $error');
+      return null;
+    }
+  }
+
   //sign out
   Future signOut() async {
     try {

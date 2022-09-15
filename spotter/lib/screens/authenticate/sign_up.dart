@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../models/user.dart';
 import '../../services/auth.dart';
 
 class SignUp extends StatefulWidget {
@@ -10,6 +11,12 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
+  ///This is used with the 'Sign up' button
+  String email = '';
+  String password = '';
+  String error = '';
 
   @override
   Widget build(BuildContext context) {
@@ -21,72 +28,110 @@ class _SignUpState extends State<SignUp> {
         ),
         body: SafeArea(
           child: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 10),
-              const Text("Sign Up", style: TextStyle(fontSize: 30)),
-              const SizedBox(height: 20),
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: TextField(
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue.shade800),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          hintText: "Email",
-                          filled: true,
-                          fillColor: Colors.grey.shade200))),
-              const SizedBox(height: 10),
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue.shade800),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          hintText: "Password",
-                          filled: true,
-                          fillColor: Colors.grey.shade200))),
-              const SizedBox(height: 10),
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.blue.shade800),
-                        padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(vertical: 15)),
+              child: Form(
+                  /** Using _formKey here */
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 10),
+                      const Text("Sign Up", style: TextStyle(fontSize: 30)),
+                      const SizedBox(height: 20),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.blue.shade800),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: "Email",
+                                filled: true,
+                                fillColor: Colors.grey.shade200),
+                            /** Help in validating formats */
+                            validator: (value) =>
+                                value!.isEmpty ? 'Enter an email' : null,
+                            onChanged: (value) {
+                              setState(() => email = value);
+                            },
+                          )),
+                      const SizedBox(height: 10),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          child: TextFormField(
+                            obscureText: true,
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.blue.shade800),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: "Password",
+                                filled: true,
+                                fillColor: Colors.grey.shade200),
+                            /** Help in validating formats */
+                            validator: (value) => value!.length < 6
+                                ? 'Enter a password 6+ chars long'
+                                : null,
+                            onChanged: (value) {
+                              setState(() => password = value);
+                            },
+                          )),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Colors.blue.shade800),
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.symmetric(vertical: 15)),
+                            ),
+                            onPressed: () async {
+                              /** This will only be valid iff both of
+                               * the validators above return null
+                               */
+                              if (_formKey.currentState!.validate()) {
+                                // debugPrint(email);
+                                // debugPrint(password);
+                                dynamic result =
+                                    await _auth.registerEP(email, password);
+
+                                if(result is! SpotterUser){
+                                  setState(() {
+                                    error = result;
+                                  });
+                                }else{
+                                  if(!mounted) return;
+                                  Navigator.of(context).pop();
+                                }
+                              }
+                            },
+                            child: const Center(
+                              child: Text("Sign up",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20)),
+                            )),
                       ),
-                      onPressed: () async {
-                        dynamic result = await _auth.anonSignIn();
-                        if (result == null) {
-                          debugPrint('error signing in');
-                        } else {
-                          debugPrint('signed in \n$result\n');
-                          debugPrint(result.uid);
-                        }
-                      },
-                      child: const Center(
-                        child: Text("Sign up",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20)),
-                      ))),
-            ],
-          )),
+                      const SizedBox(height: 12),
+                      Text(error,
+                          style:
+                              const TextStyle(color: Colors.red, fontSize: 14)),
+                    ],
+                  ))),
         ));
   }
 }

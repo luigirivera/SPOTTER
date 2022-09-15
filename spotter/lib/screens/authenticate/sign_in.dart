@@ -11,6 +11,8 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
+  String email = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,8 @@ class _SignInState extends State<SignIn> {
             ]),
         body: SafeArea(
           child: Center(
-              child: Column(
+              child: Form(
+                  child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 10),
@@ -45,35 +48,43 @@ class _SignInState extends State<SignIn> {
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextField(
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue.shade800),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          hintText: "Email",
-                          filled: true,
-                          fillColor: Colors.grey.shade200))),
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue.shade800),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        hintText: "Email",
+                        filled: true,
+                        fillColor: Colors.grey.shade200),
+                    onChanged: (value) {
+                      setState(() => email = value);
+                    },
+                  )),
               const SizedBox(height: 10),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue.shade800),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          hintText: "Password",
-                          filled: true,
-                          fillColor: Colors.grey.shade200))),
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue.shade800),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        hintText: "Password",
+                        filled: true,
+                        fillColor: Colors.grey.shade200),
+                    onChanged: (value) {
+                      setState(() => password = value);
+                    },
+                  )),
               const SizedBox(height: 10),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -85,13 +96,8 @@ class _SignInState extends State<SignIn> {
                             const EdgeInsets.symmetric(vertical: 15)),
                       ),
                       onPressed: () async {
-                        dynamic result = await _auth.anonSignIn();
-                        if (result == null) {
-                          debugPrint('error signing in');
-                        } else {
-                          debugPrint('signed in \n$result\n');
-                          debugPrint(result.uid);
-                        }
+                        debugPrint(email);
+                        debugPrint(password);
                       },
                       child: const Center(
                         child: Text("Sign in",
@@ -107,8 +113,10 @@ class _SignInState extends State<SignIn> {
                   const Text("Don't have an account?"),
                   TextButton(
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const SignUp()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUp()));
                       },
                       child: Text("Sign up",
                           style: TextStyle(
@@ -118,7 +126,7 @@ class _SignInState extends State<SignIn> {
                 ],
               )
             ],
-          )),
+          ))),
         ));
   }
 }
