@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-
 import '../models/task_model.dart';
 
 class DatabaseService {
@@ -22,6 +20,7 @@ class DatabaseService {
       'icon': 'defaultIcon',
       'taskDescription': taskDescription,
       'taskGroup': taskGroup,
+      'completed' : false,
     });
   }
 
@@ -32,6 +31,7 @@ class DatabaseService {
         icon: doc['icon'],
         taskDescription: doc['taskDescription'],
         taskGroup: doc['taskGroup'],
+        completed: doc['completed'],
       );
     }).toList();
   }
