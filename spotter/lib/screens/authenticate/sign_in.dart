@@ -152,6 +152,7 @@ class _SignInState extends State<SignIn> {
                                       if (result is! SpotterUser) {
                                         setState(() {
                                           error = result;
+                                          loading = false;
                                         });
                                       }
                                     }
