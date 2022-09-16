@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
+import '../models/task_model.dart';
 
 class DatabaseService {
   final String? uid;
@@ -10,16 +13,31 @@ class DatabaseService {
   final CollectionReference tasksCollection =
       FirebaseFirestore.instance.collection('tasks');
 
-  Future updateUserData(String task) async {
+  Future initiateTaskData(String task) async {
     //Linking the new document with the user uid
-    int taskCount = 0;
+    String taskDescription = task;
+    int taskGroup = 0;
+
     return await tasksCollection.doc(uid).set({
-      taskCount : 0,
+      'icon': 'defaultIcon',
+      'taskDescription': taskDescription,
+      'taskGroup': taskGroup,
     });
   }
 
+  List<Task> _taskListSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return Task(
+        ///nullable
+        icon: doc['icon'],
+        taskDescription: doc['taskDescription'],
+        taskGroup: doc['taskGroup'],
+      );
+    }).toList();
+  }
+
   //get brews stream
-  Stream<QuerySnapshot> get tasks {
-    return tasksCollection.snapshots();
+  Stream<List<Task>> get tasks {
+    return tasksCollection.snapshots().map(_taskListSnapshot);
   }
 }

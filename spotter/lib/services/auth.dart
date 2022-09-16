@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spotter/services/database.dart';
 
-import '../models/user.dart';
+import '../models/user_model.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -61,7 +61,7 @@ class AuthService {
 
       /** Creating a document for the user */
       await DatabaseService(uid: user!.uid)
-          .updateUserData('Add your first task here');
+          .initiateTaskData('Add your first task here');
 
       return _user(user);
     } on FirebaseAuthException catch (error) {

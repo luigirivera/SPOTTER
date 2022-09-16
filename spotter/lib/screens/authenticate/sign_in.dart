@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotter/models/user.dart';
+import 'package:spotter/models/user_model.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
 import 'sign_up.dart';

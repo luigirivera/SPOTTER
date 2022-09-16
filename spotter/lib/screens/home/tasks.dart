@@ -1,8 +1,7 @@
 //Classes: TempTaskData, TaskBoard, TaskList, TaskPagePopOutButton, TaskPage
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../models/task_model.dart';
 import '../../services/database.dart';
 
 class TempTaskData {
@@ -44,7 +43,7 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<QuerySnapshot?>.value(
+    return StreamProvider<List<Task>?>.value(
         initialData: null,
         value: DatabaseService().tasks,
         child: ListView.builder(
