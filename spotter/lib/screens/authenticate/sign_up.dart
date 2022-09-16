@@ -139,6 +139,7 @@ class _SignUpState extends State<SignUp> {
                                     if (result is! SpotterUser) {
                                       setState(() {
                                         error = result;
+                                        _loading = false;
                                       });
                                     } else {
                                       if (!mounted) return;
