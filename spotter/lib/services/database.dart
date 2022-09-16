@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
-  final String uid;
+  final String? uid;
 
-  DatabaseService({required this.uid});
+  DatabaseService({this.uid});
 
   //collection reference
   //Firestore class name was changed
@@ -12,8 +12,14 @@ class DatabaseService {
 
   Future updateUserData(String task) async {
     //Linking the new document with the user uid
+    int taskCount = 0;
     return await tasksCollection.doc(uid).set({
-      'task': task,
+      taskCount : 0,
     });
+  }
+
+  //get brews stream
+  Stream<QuerySnapshot> get tasks {
+    return tasksCollection.snapshots();
   }
 }
