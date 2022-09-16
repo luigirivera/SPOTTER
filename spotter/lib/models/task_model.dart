@@ -7,8 +7,9 @@ class Task {
   Icon? icon = const Icon(Icons.arrow_forward_ios, color: Colors.orange);
   String taskDescription;
   int? taskGroup;
+  bool? completed = false;
 
-  Task({this.icon, required this.taskDescription, this.taskGroup});
+  Task({this.icon, required this.taskDescription, this.taskGroup, this.completed});
 
   @override
   String toString() => 'icon: ${icon}text: ${taskDescription}taskGroup: $taskGroup';

@@ -2,11 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/task_model.dart';
-import '../../services/database.dart';
-
-class TempTaskData {
-  static List<bool> boolList = List.filled(30, false);
-}
 
 class TaskBoard extends StatelessWidget {
   const TaskBoard({Key? key}) : super(key: key);
@@ -43,15 +38,14 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Task>?>.value(
-        initialData: null,
-        value: DatabaseService().tasks,
-        child: ListView.builder(
+    final tasks = Provider.of<List<Task>?>(context);
+    return ListView.builder(
             padding: const EdgeInsets.all(10),
-            itemCount: 30 + 1,
+            itemCount: tasks?.length,
             itemBuilder: (BuildContext context, int index) {
               /** Creating a list of IconButtons,
                * then add the default plus button in to create a pop-up for adding new tasks.
+               * Able to add more buttons if desired in the future
                */
               if (index == 0) {
                 List<IconButton> buttons = List.empty(growable: true);
@@ -115,11 +109,11 @@ class _TaskListState extends State<TaskList> {
 
               if (index.isOdd) return const Divider();
               final i = index ~/ 2;
-              final check = TempTaskData.boolList[i];
+              final check = tasks?[i].completed ?? false;
 
               /** Putting tasks onto the task board */
               return ListTile(
-                title: Text('Task $i'),
+                title: Text('${tasks?[i].taskDescription} Group ID: ${tasks?[i].taskGroup}'),
                 leading:
                     const Icon(Icons.arrow_forward_ios, color: Colors.orange),
                 trailing: IconButton(
@@ -134,15 +128,15 @@ class _TaskListState extends State<TaskList> {
                   onPressed: () {
                     setState(() {
                       if (check) {
-                        TempTaskData.boolList[i] = false;
+                        //set data to false
                       } else {
-                        TempTaskData.boolList[i] = true;
+                        //set data to true
                       }
                     });
                   },
                 ),
               );
-            }));
+            });
   }
 }
 

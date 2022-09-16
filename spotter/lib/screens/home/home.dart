@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../../models/task_model.dart';
 import '../statistics/statistics.dart';
 import '../settings/settings.dart';
 import '../calendar/calendar.dart';
@@ -35,7 +36,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StreamProvider<List<Task>?>.value(
+        initialData: null,
+        value: DatabaseService().tasks,
+        child: Scaffold(
           backgroundColor: Colors.blue.shade200,
           //
           //Adding background image to the appbar
@@ -82,6 +86,6 @@ class _HomeState extends State<Home> {
             onTap: _onBarTap,
             currentIndex: _barIndexSelected,
           ),
-        );
+        ));
   }
 }
