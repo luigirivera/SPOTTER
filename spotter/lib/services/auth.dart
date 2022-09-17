@@ -15,8 +15,10 @@ class AuthService {
     return uid;
   }
 
+  //get uid directly here instead
   //create user object based on User
   SpotterUser _user(User? user) {
+    uid = user?.uid;
     return SpotterUser(uid: user?.uid);
   }
 

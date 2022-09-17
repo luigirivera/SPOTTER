@@ -44,7 +44,7 @@ class _SignInState extends State<SignIn> {
                       icon: const Icon(Icons.person),
                       label: const Text("Guest Login"),
                       style:
-                          TextButton.styleFrom(foregroundColor: Colors.white))
+                          TextButton.styleFrom(backgroundColor: Colors.white))
                 ]),
             body: SafeArea(
               child: Center(
