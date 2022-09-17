@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/user_model.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
+import '../../services/database.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final AuthService _auth = AuthService();
+  final DatabaseService _db = DatabaseService();
   final _formKey = GlobalKey<FormState>();
   bool _loading = false;
   bool hidePassword = true;
@@ -144,6 +146,8 @@ class _SignUpState extends State<SignUp> {
                                     } else {
                                       if (!mounted) return;
                                       Navigator.of(context).pop();
+
+                                      _db.makeCollection(result.uid);
                                     }
                                   }
                                 },
