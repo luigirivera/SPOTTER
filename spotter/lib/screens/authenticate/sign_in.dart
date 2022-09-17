@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spotter/models/user_model.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
@@ -151,7 +152,15 @@ class _SignInState extends State<SignIn> {
                                           await _auth.signInEP(email, password);
                                       if (result is! SpotterUser) {
                                         setState(() {
-                                          error = result;
+                                          // error = result;
+                                          Fluttertoast.showToast(
+                                              msg: result,
+                                              toastLength: Toast.LENGTH_LONG,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 5,
+                                              backgroundColor: Colors.black,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0);
                                           loading = false;
                                         });
                                       }

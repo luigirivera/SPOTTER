@@ -3,6 +3,7 @@ import '../../models/user_model.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
 import '../../services/database.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -140,7 +141,15 @@ class _SignUpState extends State<SignUp> {
 
                                     if (result is! SpotterUser) {
                                       setState(() {
-                                        error = result;
+                                        // error = result;
+                                        Fluttertoast.showToast(
+                                            msg: result,
+                                            toastLength: Toast.LENGTH_LONG,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 5,
+                                            backgroundColor: Colors.black,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
                                         _loading = false;
                                       });
                                     } else {
