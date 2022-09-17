@@ -52,10 +52,10 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
           ElevatedButton(
               onPressed: () async {
                 await _auth.signOut();
-                if(!mounted) return;
+                if (!mounted) return;
                 Navigator.popUntil(context, ModalRoute.withName("/"));
               },
-              child: const Text('Log Out'))
+              child: const Text('Log Out')),
         ],
       ),
     );
