@@ -1,3 +1,8 @@
 look into making a document on command rather than on sign up
 look into making multiple docs for one user
 get result only pertaining to that particular user
+
+skipped vids:
+bottom sheet
+drop downs
+sliders

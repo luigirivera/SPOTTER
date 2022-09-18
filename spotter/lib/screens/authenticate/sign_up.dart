@@ -26,154 +26,156 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return _loading
-        ? const Loading()
-        : Scaffold(
-            backgroundColor: Colors.blue.shade200,
-            appBar: AppBar(
-              backgroundColor: Colors.orange,
-              title: const Text("Test sign up"),
-            ),
-            body: SafeArea(
-              child: Center(
-                  child: Form(
-                      /** Using _formKey here */
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 10),
-                          const Text("Sign Up", style: TextStyle(fontSize: 30)),
-                          const SizedBox(height: 20),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 25),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.blue.shade800),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    hintText: "Email",
-                                    filled: true,
-                                    fillColor: Colors.grey.shade200),
-                                /** Help in validating formats */
-                                validator: (value) =>
-                                    value!.isEmpty ? 'Enter an email' : null,
-                                onChanged: (value) {
-                                  setState(() => email = value);
-                                },
-                              )),
-                          const SizedBox(height: 10),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 25),
-                              child: TextFormField(
-                                obscureText: hidePassword,
-                                decoration: InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.blue.shade800),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    hintText: "Password",
-                                    filled: true,
-                                    fillColor: Colors.grey.shade200,
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        hidePassword
-                                            ? Icons.visibility_off
-                                            : Icons.visibility,
-                                        color: Colors.orange,
+    return Scaffold(
+        backgroundColor: Colors.blue.shade200,
+        appBar: AppBar(
+          backgroundColor: Colors.orange,
+          title: const Text("Test sign up"),
+        ),
+        body: _loading
+            ? const Loading()
+            : SafeArea(
+                child: Center(
+                    child: Form(
+                        /** Using _formKey here */
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 10),
+                            const Text("Sign Up",
+                                style: TextStyle(fontSize: 30)),
+                            const SizedBox(height: 20),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: Colors.white),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
-                                      onPressed: () {
-                                        setState(() {
-                                          if (hidePassword) {
-                                            hidePassword = false;
-                                          } else {
-                                            hidePassword = true;
-                                          }
-                                        });
-                                      },
-                                    )),
-                                /** Help in validating formats */
-                                validator: (value) => value!.length < 6
-                                    ? 'Enter a password 6+ chars long'
-                                    : null,
-                                onChanged: (value) {
-                                  setState(() => password = value);
-                                },
-                              )),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 25.0),
-                            child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Colors.blue.shade800),
-                                  padding: MaterialStateProperty.all(
-                                      const EdgeInsets.symmetric(vertical: 15)),
-                                ),
-                                onPressed: () async {
-                                  /** This will only be valid iff both of
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.blue.shade800),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      hintText: "Email",
+                                      filled: true,
+                                      fillColor: Colors.grey.shade200),
+                                  /** Help in validating formats */
+                                  validator: (value) =>
+                                      value!.isEmpty ? 'Enter an email' : null,
+                                  onChanged: (value) {
+                                    setState(() => email = value);
+                                  },
+                                )),
+                            const SizedBox(height: 10),
+                            Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
+                                child: TextFormField(
+                                  obscureText: hidePassword,
+                                  decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: Colors.white),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.blue.shade800),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      hintText: "Password",
+                                      filled: true,
+                                      fillColor: Colors.grey.shade200,
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          hidePassword
+                                              ? Icons.visibility_off
+                                              : Icons.visibility,
+                                          color: Colors.orange,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            if (hidePassword) {
+                                              hidePassword = false;
+                                            } else {
+                                              hidePassword = true;
+                                            }
+                                          });
+                                        },
+                                      )),
+                                  /** Help in validating formats */
+                                  validator: (value) => value!.length < 6
+                                      ? 'Enter a password 6+ chars long'
+                                      : null,
+                                  onChanged: (value) {
+                                    setState(() => password = value);
+                                  },
+                                )),
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 25.0),
+                              child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.blue.shade800),
+                                    padding: MaterialStateProperty.all(
+                                        const EdgeInsets.symmetric(
+                                            vertical: 15)),
+                                  ),
+                                  onPressed: () async {
+                                    /** This will only be valid iff both of
                                * the validators above return null
                                */
-                                  if (_formKey.currentState!.validate()) {
-                                    setState(() {
-                                      _loading = true;
-                                    });
-                                    // debugPrint(email);
-                                    // debugPrint(password);
-                                    dynamic result =
-                                        await _auth.registerEP(email, password);
-
-                                    /** result (from Future) is either String type or SpotterUser type */
-                                    if (result is! SpotterUser) {
+                                    if (_formKey.currentState!.validate()) {
                                       setState(() {
-                                        Fluttertoast.showToast(
-                                            msg: result,
-                                            toastLength: Toast.LENGTH_LONG,
-                                            gravity: ToastGravity.BOTTOM,
-                                            timeInSecForIosWeb: 5,
-                                            backgroundColor: Colors.black,
-                                            textColor: Colors.white,
-                                            fontSize: 16.0);
-                                        _loading = false;
+                                        _loading = true;
                                       });
-                                    } else {
-                                      if (!mounted) return;
-                                      Navigator.of(context).pop();
+                                      // debugPrint(email);
+                                      // debugPrint(password);
+                                      dynamic result = await _auth.registerEP(
+                                          email, password);
 
-                                      //_db.makeCollection(result.uid);
+                                      /** result (from Future) is either String type or SpotterUser type */
+                                      if (result is! SpotterUser) {
+                                        setState(() {
+                                          Fluttertoast.showToast(
+                                              msg: result,
+                                              toastLength: Toast.LENGTH_LONG,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 5,
+                                              backgroundColor: Colors.black,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0);
+                                          _loading = false;
+                                        });
+                                      } else {
+                                        if (!mounted) return;
+                                        Navigator.of(context).pop();
+
+                                        //_db.makeCollection(result.uid);
+                                      }
                                     }
-                                  }
-                                },
-                                child: const Center(
-                                  child: Text("Sign up",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20)),
-                                )),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(error,
-                              style: const TextStyle(
-                                  color: Colors.red, fontSize: 14)),
-                        ],
-                      ))),
-            ));
+                                  },
+                                  child: const Center(
+                                    child: Text("Sign up",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20)),
+                                  )),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(error,
+                                style: const TextStyle(
+                                    color: Colors.red, fontSize: 14)),
+                          ],
+                        ))),
+              ));
   }
 }
