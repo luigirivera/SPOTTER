@@ -139,9 +139,9 @@ class _SignUpState extends State<SignUp> {
                                     dynamic result =
                                         await _auth.registerEP(email, password);
 
+                                    /** result (from Future) is either String type or SpotterUser type */
                                     if (result is! SpotterUser) {
                                       setState(() {
-                                        // error = result;
                                         Fluttertoast.showToast(
                                             msg: result,
                                             toastLength: Toast.LENGTH_LONG,
@@ -156,7 +156,7 @@ class _SignUpState extends State<SignUp> {
                                       if (!mounted) return;
                                       Navigator.of(context).pop();
 
-                                      _db.makeCollection(result.uid);
+                                      //_db.makeCollection(result.uid);
                                     }
                                   }
                                 },

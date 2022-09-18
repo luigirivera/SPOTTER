@@ -6,19 +6,9 @@ import '../models/user_model.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  String? uid;
 
-  //gets the uid of current logged in User
-  String? getUID() {
-    uid ??= _auth.currentUser!.uid;
-
-    return uid;
-  }
-
-  //get uid directly here instead
   //create user object based on User
   SpotterUser _user(User? user) {
-    uid = user?.uid;
     return SpotterUser(uid: user?.uid);
   }
 

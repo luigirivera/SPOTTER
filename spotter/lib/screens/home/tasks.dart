@@ -38,10 +38,11 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
-    final tasks = Provider.of<List<Task>?>(context);
+    final taskList = Provider.of<List<Task>>(context);
+
     return ListView.builder(
             padding: const EdgeInsets.all(10),
-            itemCount: tasks?.length,
+            itemCount: taskList.length * 2 + 1,
             itemBuilder: (BuildContext context, int index) {
               /** Creating a list of IconButtons,
                * then add the default plus button in to create a pop-up for adding new tasks.
@@ -108,12 +109,12 @@ class _TaskListState extends State<TaskList> {
               }
 
               if (index.isOdd) return const Divider();
-              final i = index ~/ 2;
-              final check = tasks?[i].completed ?? false;
+              final i = (index ~/ 2) - 1;
+              final check = taskList[i].completed;
 
               /** Putting tasks onto the task board */
               return ListTile(
-                title: Text('${tasks?[i].taskDescription} Group ID: ${tasks?[i].taskGroup}'),
+                title: Text('${taskList[i].taskDescription} Group ID: ${taskList[i].taskGroup}'),
                 leading:
                     const Icon(Icons.arrow_forward_ios, color: Colors.orange),
                 trailing: IconButton(

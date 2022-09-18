@@ -1,13 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
-import '../../models/task_model.dart';
 import '../statistics/statistics.dart';
 import '../settings/settings.dart';
 import '../calendar/calendar.dart';
-import 'taskScreen.dart';
+import 'task_screen.dart';
 import '../study_session/studySession.dart';
-import '../../services/database.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key, required this.title}) : super(key: key);
@@ -36,10 +33,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Task>?>.value(
-        initialData: null,
-        value: DatabaseService().tasks,
-        child: Scaffold(
+    return Scaffold(
           backgroundColor: Colors.blue.shade200,
           //
           //Adding background image to the appbar
@@ -86,6 +80,6 @@ class _HomeState extends State<Home> {
             onTap: _onBarTap,
             currentIndex: _barIndexSelected,
           ),
-        ));
+        );
   }
 }

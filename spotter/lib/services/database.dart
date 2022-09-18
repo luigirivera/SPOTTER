@@ -11,16 +11,17 @@ class DatabaseService {
   final CollectionReference tasksCollection =
       FirebaseFirestore.instance.collection('tasks');
 
+  /// Saving this tech for later
   //create a new task document and collection for user
-  void makeCollection(String? uid) {
-    tasksCollection.doc(uid).set(
-        {"taskDescription": "Add your first task here", "icon": "defaultIcon"});
-
-    tasksCollection
-        .doc(uid)
-        .collection('default')
-        .add({"taskDescription": "Task 1"});
-  }
+  // void makeCollection(String? uid) {
+  //   tasksCollection.doc(uid).set(
+  //       {"taskDescription": "Add your first task here", "icon": "defaultIcon"});
+  //
+  //   tasksCollection
+  //       .doc('Task1')
+  //       .collection('default')
+  //       .add({"taskDescription": "Task 1"});
+  // }
 
   Future initiateTaskData(String task) async {
     //Linking the new document with the user uid
@@ -28,7 +29,6 @@ class DatabaseService {
     int taskGroup = 0;
 
     return await tasksCollection.doc(uid).set({
-      'icon': 'defaultIcon',
       'taskDescription': taskDescription,
       'taskGroup': taskGroup,
       'completed': false,
@@ -39,7 +39,6 @@ class DatabaseService {
     return snapshot.docs.map((doc) {
       return Task(
         ///nullable
-        icon: doc['icon'],
         taskDescription: doc['taskDescription'],
         taskGroup: doc['taskGroup'],
         completed: doc['completed'],
