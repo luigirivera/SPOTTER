@@ -1,34 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/task_model.dart';
 
 class DatabaseService {
-  final String? uid;
+  DatabaseService();
 
-  DatabaseService({this.uid});
+  ///Get the current user id
+  final String? uid = FirebaseAuth.instance.currentUser?.uid;
 
-  //collection reference
-  //Firestore class name was changed
-  final CollectionReference tasksCollection =
-      FirebaseFirestore.instance.collection('tasks');
+  /// Set up a collection of tasks for the particular user
+  final CollectionReference taskCollection = FirebaseFirestore.instance.collection('tasks').doc(FirebaseAuth.instance.currentUser?.uid).collection(
+      'Task List');
 
-  /// Saving this tech for later
-  //create a new task document and collection for user
-  // void makeCollection(String? uid) {
-  //   tasksCollection.doc(uid).set(
-  //       {"taskDescription": "Add your first task here", "icon": "defaultIcon"});
-  //
-  //   tasksCollection
-  //       .doc('Task1')
-  //       .collection('default')
-  //       .add({"taskDescription": "Task 1"});
-  // }
-
-  Future initiateTaskData(String task) async {
+  Future updateTaskData(int taskGroup, String taskNumber, String taskDescription) async {
     //Linking the new document with the user uid
-    String taskDescription = task;
-    int taskGroup = 0;
 
-    return await tasksCollection.doc(uid).set({
+    return await taskCollection.doc(taskNumber).set({
       'taskDescription': taskDescription,
       'taskGroup': taskGroup,
       'completed': false,
@@ -48,6 +35,6 @@ class DatabaseService {
 
   //get brews stream
   Stream<List<Task>> get tasks {
-    return tasksCollection.snapshots().map(_taskListSnapshot);
+    return taskCollection.snapshots().map(_taskListSnapshot);
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../models/user_model.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
-import '../../services/database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUp extends StatefulWidget {
@@ -14,7 +13,6 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final AuthService _auth = AuthService();
-  final DatabaseService _db = DatabaseService();
   final _formKey = GlobalKey<FormState>();
   bool _loading = false;
   bool hidePassword = true;
@@ -37,7 +35,7 @@ class _SignUpState extends State<SignUp> {
             : SafeArea(
                 child: Center(
                     child: Form(
-                        /** Using _formKey here */
+                        ///Using _formKey here
                         key: _formKey,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -46,6 +44,8 @@ class _SignUpState extends State<SignUp> {
                             const Text("Sign Up",
                                 style: TextStyle(fontSize: 30)),
                             const SizedBox(height: 20),
+
+                            ///Email text box
                             Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 25),
@@ -72,6 +72,8 @@ class _SignUpState extends State<SignUp> {
                                   },
                                 )),
                             const SizedBox(height: 10),
+
+                            ///Password text box
                             Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 25),
@@ -108,7 +110,8 @@ class _SignUpState extends State<SignUp> {
                                           });
                                         },
                                       )),
-                                  /** Help in validating formats */
+
+                                  /** Help validating formats */
                                   validator: (value) => value!.length < 6
                                       ? 'Enter a password 6+ chars long'
                                       : null,
@@ -116,6 +119,8 @@ class _SignUpState extends State<SignUp> {
                                     setState(() => password = value);
                                   },
                                 )),
+
+                            ///The sign up button section
                             const SizedBox(height: 10),
                             Padding(
                               padding:

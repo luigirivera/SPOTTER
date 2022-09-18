@@ -9,16 +9,19 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+
+  ///Default SpotterUser value for initialData
+  final SpotterUser defaultSpotterUser = SpotterUser(uid: null);
+
   @override
   Widget build(BuildContext context) {
-    /** Adding the ? in the type specification to be able to set initialData to null */
-    return StreamProvider<SpotterUser?>.value(
-        initialData: null,
+    return StreamProvider<SpotterUser>.value(
+        initialData: defaultSpotterUser,
         value: AuthService().user,
         child: MaterialApp(
           title: 'Spotter',

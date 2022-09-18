@@ -56,6 +56,8 @@ class _SignInState extends State<SignIn> {
                             const Text("Spotter",
                                 style: TextStyle(fontSize: 30)),
                             const SizedBox(height: 20),
+
+                            ///Email text box
                             Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 25),
@@ -85,6 +87,8 @@ class _SignInState extends State<SignIn> {
                                   },
                                 )),
                             const SizedBox(height: 10),
+
+                            ///Password text box
                             Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 25),
@@ -132,6 +136,8 @@ class _SignInState extends State<SignIn> {
                                   },
                                 )),
                             const SizedBox(height: 10),
+
+                            ///Sign in button section
                             Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 25.0),

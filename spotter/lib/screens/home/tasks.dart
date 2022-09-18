@@ -39,7 +39,6 @@ class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
     final taskList = Provider.of<List<Task>>(context);
-
     return ListView.builder(
             padding: const EdgeInsets.all(10),
             itemCount: taskList.length * 2 + 1,
@@ -142,6 +141,7 @@ class _TaskListState extends State<TaskList> {
 }
 
 class TaskPopOutPage extends StatelessWidget {
+
   const TaskPopOutPage({Key? key}) : super(key: key);
 
   @override

@@ -1,5 +1,7 @@
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../models/task_model.dart';
+import '../../services/database.dart';
 import '../statistics/statistics.dart';
 import '../settings/settings.dart';
 import '../calendar/calendar.dart';
@@ -31,12 +33,19 @@ class _HomeState extends State<Home> {
     const StatisticsScreen(),
   ];
 
+  ///Default value for initialData
+  List<Task> defaultTaskList = List.filled(1,
+      Task(taskDescription: 'taskDescription', taskGroup: 0, completed: false));
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StreamProvider<List<Task>>.value(
+        initialData: defaultTaskList,
+        value: DatabaseService().tasks,
+        child: Scaffold(
           backgroundColor: Colors.blue.shade200,
-          //
-          //Adding background image to the appbar
+
+          ///Adding background image to the appbar
           appBar: AppBar(
             elevation: 0,
             flexibleSpace: Container(
@@ -46,9 +55,9 @@ class _HomeState extends State<Home> {
                 fit: BoxFit.fill,
               )),
             ),
-            //
-            //Adding settings for the drawer
-            //will select the drawer in the scaffold
+
+            ///Adding settings for the drawer
+            ///will select the drawer in the scaffold
             leading: Builder(
               builder: (BuildContext context) {
                 return IconButton(
@@ -59,10 +68,11 @@ class _HomeState extends State<Home> {
                 );
               },
             ),
-            //
-            //Changing icon theme
+
             iconTheme: const IconThemeData(color: Colors.orange),
           ),
+
+          ///Bottom screen selection row
           drawer: const SettingsDrawer(),
           body: _screens[_barIndexSelected],
           bottomNavigationBar: BottomNavigationBar(
@@ -80,6 +90,6 @@ class _HomeState extends State<Home> {
             onTap: _onBarTap,
             currentIndex: _barIndexSelected,
           ),
-        );
+        ));
   }
 }

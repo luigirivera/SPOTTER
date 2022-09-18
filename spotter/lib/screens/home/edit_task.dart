@@ -14,7 +14,7 @@ class _EditTaskState extends State<EditTask> {
       appBar: AppBar(
         title: const Text("Edit Task"),
       ),
-      body: const Column(
+      body: Column(
         children: [
           //Name box
           //Description box

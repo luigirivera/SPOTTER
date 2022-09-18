@@ -8,7 +8,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //create user object based on User
-  SpotterUser _user(User? user) {
+  SpotterUser _spotterUser(User? user) {
     return SpotterUser(uid: user?.uid);
   }
 
@@ -16,7 +16,7 @@ class AuthService {
   Stream<SpotterUser> get user {
     //return _auth.authStateChanges().map((User? user) => _user(user!));
     //Same thing
-    return _auth.authStateChanges().map(_user);
+    return _auth.authStateChanges().map(_spotterUser);
   }
 
   //sign in anon
@@ -25,7 +25,7 @@ class AuthService {
       /** These class names are different than the demonstration due to updates in API*/
       UserCredential userCred = await _auth.signInAnonymously();
       User? user = userCred.user;
-      return _user(user!);
+      return _spotterUser(user!);
     } catch (e) {
       debugPrint(e.toString());
       return null;
@@ -38,7 +38,7 @@ class AuthService {
       UserCredential userCred = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = userCred.user;
-      return _user(user);
+      return _spotterUser(user);
     } on FirebaseAuthException catch (error) {
       if (error.code == 'user-not-found') {
         return 'The email is not in use';
@@ -59,11 +59,7 @@ class AuthService {
           email: email, password: password);
       User? user = userCred.user;
 
-      /** Creating a document for the user */
-      await DatabaseService(uid: user!.uid)
-          .initiateTaskData('Add your first task here');
-
-      return _user(user);
+      return _spotterUser(user);
     } on FirebaseAuthException catch (error) {
       //This is the specific error catching method found on documentation
       if (error.code == 'weak-password') {
