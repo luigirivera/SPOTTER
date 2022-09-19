@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
 
   ///Default value for initialData
   List<Task> defaultTaskList = List.filled(1,
-      Task(taskDescription: 'taskDescription', taskGroup: 0, completed: false));
+      Task(taskDescription: 'taskDescription', taskGroup: 'General', completed: false));
 
   @override
   Widget build(BuildContext context) {

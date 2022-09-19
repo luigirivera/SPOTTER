@@ -1,4 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/task_model.dart';
+
+class AddTask extends StatefulWidget {
+  const AddTask({Key? key}) : super(key: key);
+
+  @override
+  State<AddTask> createState() => _AddTaskState();
+}
+
+class _AddTaskState extends State<AddTask> {
+
+  final _formKey = GlobalKey<FormState>();
+  late String taskDescription;
+  String? taskGroup;
+
+  @override
+  Widget build(BuildContext context) {
+    final taskList = Provider.of<List<Task>>(context);
+    return AlertDialog(
+      content: Form(
+        child: Column(
+          children: [
+            TextFormField(decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                      color: Colors.white),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors.blue.shade800),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                hintText: "What is your new task?",
+                filled: true,
+                fillColor: Colors.grey.shade200),
+              /** Help in validating formats */
+              validator: (value) =>
+              value!.isEmpty ? 'Enter a task here' : null,
+              onChanged: (value) {
+                setState(() => taskDescription = value);
+              },),
+            ///DropdownButtonFormField(items: items, onChanged: onChanged)
+          ],
+        )
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Okay'),
+        )
+      ],
+    );
+  }
+}
+
 
 class EditTask extends StatefulWidget {
   const EditTask({Key? key}) : super(key: key);
