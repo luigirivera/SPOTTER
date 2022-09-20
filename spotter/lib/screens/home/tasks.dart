@@ -1,6 +1,6 @@
-//Classes: TempTaskData, TaskBoard, TaskList, TaskPagePopOutButton, TaskPage
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:spotter/screens/home/task_management.dart';
 import '../../models/task_model.dart';
 
 class TaskBoard extends StatelessWidget {
@@ -60,18 +60,7 @@ class _TaskListState extends State<TaskList> {
                         context: context,
                         barrierDismissible: true,
                         builder: (context) {
-                          return AlertDialog(
-                            content: const Text(
-                                'This will be a pop-up to add more tasks'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Okay'),
-                              )
-                            ],
-                          );
+                          return const AddTask();
                         });
                   },
                   tooltip: 'Add new tasks',
