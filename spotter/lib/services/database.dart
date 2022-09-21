@@ -33,7 +33,7 @@ class DatabaseService {
     ///Add new collection name to the doc if it doesn't exist
     ///This helps keeping track
     ///This shit took me way too long
-    if (!await ifCollectionExists(taskGroup)) {
+    if (! await ifCollectionExists(taskGroup) && taskGroup != 'General') {
       addTaskCollectionName(taskGroup);
       ObjectBox().addTaskCollectionName(taskGroup);
     }
@@ -51,13 +51,19 @@ class DatabaseService {
     });
   }
 
+  ///Upon deleting a task, if the collection of the task doesn't exist anymore, then
+  ///remove the group from the objectbox and the cloud doc
   Future deleteTask(Task task) async {
     ObjectBox().deleteTask(task);
-    return await taskCollection.doc(uid).collection(task.taskGroup).doc(task.taskDescription).delete();
+    await taskCollection.doc(uid).collection(task.taskGroup).doc(task.taskDescription).delete();
+
+    if(! await ifCollectionExists(task.taskGroup) && task.taskGroup != 'General'){
+      deleteTaskCollectionName(task.taskGroup);
+    }
+    return;
   }
 
   ///Returns a boolean
-  ///you have to add await to assign this function return value
   Future ifCollectionExists(String taskGroup) async {
     var snapshot =
         await taskCollection.doc(uid).collection(taskGroup).limit(1).get();
@@ -72,7 +78,12 @@ class DatabaseService {
   }
 
   Future deleteTaskCollectionName(String taskGroup) async {
-    
+    ObjectBox().deleteTaskCollectionName(taskGroup);
+
+    List<String> taskCollectionNames = await getTaskCollection();
+    int index = taskCollectionNames.indexOf(taskGroup);
+    taskCollectionNames.removeAt(index);
+    return;
   }
 
   ///Returns a List<String>
