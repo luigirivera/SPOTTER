@@ -59,6 +59,9 @@ class AuthService {
           email: email, password: password);
       User? user = userCred.user;
 
+      ///Putting in the 'General' default task group name in the array
+      DatabaseService().initiateGeneralCollection();
+
       return _spotterUser(user);
     } on FirebaseAuthException catch (error) {
       //This is the specific error catching method found on documentation

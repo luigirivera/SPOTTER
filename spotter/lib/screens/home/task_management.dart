@@ -43,7 +43,7 @@ class _AddTaskState extends State<AddTask> {
               onChanged: (value) {
                 setState(() => taskDescription = value);
               },),
-            ///DropdownButtonFormField(items: items, onChanged: onChanged)
+            DropdownButtonFormField(items: items, onChanged: onChanged)
           ],
         )
       ),

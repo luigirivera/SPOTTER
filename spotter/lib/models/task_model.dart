@@ -1,15 +1,26 @@
-import 'package:flutter/material.dart';
+import 'package:objectbox/objectbox.dart';
 
 ///Making the Tasks object and filling it with some default values
 ///These are subjected to change by the user so pls don't add final tag
+@Entity()
 class Task {
-  Icon? icon = const Icon(Icons.arrow_forward_ios, color: Colors.orange);
+  @Id()
+  int id = 0; //don't delete this. it's for objectbox
   String taskDescription;
-  String? taskGroup;
+  String taskGroup;
   bool completed = false;
 
-  Task({this.icon, required this.taskDescription, this.taskGroup, required this.completed});
+  Task({required this.taskDescription, required this.taskGroup, required this.completed});
 
   @override
-  String toString() => 'icon: ${icon}text: ${taskDescription}taskGroup: $taskGroup completed: $completed';
+  String toString() => '${taskDescription}taskGroup: $taskGroup completed: $completed';
+}
+
+@Entity()
+class TaskCollectionList{
+  @Id()
+  int id = 0; //don't delete this. it's for objectbox
+  List<String> taskCollectionNames;
+
+  TaskCollectionList({required this.taskCollectionNames});
 }

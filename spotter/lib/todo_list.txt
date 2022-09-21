@@ -1,8 +1,18 @@
 look into making a document on command rather than on sign up
 look into making multiple docs for one user
 get result only pertaining to that particular user
+when the user signs up with a non-valid email address (and other cases presumably) the loading spins forever
 
 skipped vids:
 bottom sheet
 drop downs
 sliders
+
+
+List dynamicList = [];
+List<String> stringList = <String>[];
+    await taskCollection.doc(uid).get().then((value){
+dynamicList = value['task group array'];
+    });
+stringList = dynamicList.cast<String>();
+    debugPrint('\n\nThis is debugPrint: ${stringList[0]}    ${stringList[1]}\n\n');

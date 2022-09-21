@@ -5,10 +5,14 @@ import 'package:spotter/screens/authenticate/wrapper.dart';
 import 'package:spotter/services/auth.dart';
 import 'scrollHighlightRemove.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'objectbox.dart';
 
-void main() async {
+late ObjectBox objectbox;
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  objectbox = await ObjectBox.create();
   runApp(MyApp());
 }
 

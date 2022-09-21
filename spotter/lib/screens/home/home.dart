@@ -39,10 +39,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Task>>.value(
-        initialData: defaultTaskList,
-        value: DatabaseService().tasks,
-        child: Scaffold(
+    return Scaffold(
           backgroundColor: Colors.blue.shade200,
 
           ///Adding background image to the appbar
@@ -90,6 +87,6 @@ class _HomeState extends State<Home> {
             onTap: _onBarTap,
             currentIndex: _barIndexSelected,
           ),
-        ));
+        );
   }
 }
