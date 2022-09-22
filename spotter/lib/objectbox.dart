@@ -22,23 +22,23 @@ class ObjectBox{
     return ObjectBox._create(store);
   }
 
-  List<TaskGroup> getTaskGroups() => taskGroups?.getAll().toList() ?? List.empty();
+  List<TaskGroup> getTaskGroups() => taskGroups?.getAll().toList() ?? List.filled(1, TaskGroup(taskGroup: 'General'));
 
   List<Task> getTaskList() => taskList?.getAll().toList() ?? List.empty();
 
   void addTaskGroup(String taskGroup){
-    taskGroups!.put(TaskGroup(taskGroup: taskGroup));
+    taskGroups?.put(TaskGroup(taskGroup: taskGroup));
   }
 
   void deleteTaskGroup(String taskGroup){
-    taskGroups!.put(TaskGroup(taskGroup: taskGroup));
+    taskGroups?.put(TaskGroup(taskGroup: taskGroup));
   }
 
   void addTask(Task task){
-    taskList!.put(task);
+    taskList?.put(task);
   }
 
   void deleteTask(Task task){
-    taskList!.remove(task.id);
+    taskList?.remove(task.id);
   }
 }
