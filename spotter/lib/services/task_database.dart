@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/task_model.dart';
 import '../objectbox.dart';
 
-class DatabaseService {
-  DatabaseService();
+class TaskDatabaseService {
+  TaskDatabaseService();
 
   ///Get the current user id
   final String? uid = FirebaseAuth.instance.currentUser?.uid;
@@ -18,6 +18,10 @@ class DatabaseService {
       'task group array': ['General']
     });
   }
+
+  List<TaskGroup> getTaskGroups() => ObjectBox().getTaskGroups();
+
+  List<Task> getTaskList() => ObjectBox().getTaskList();
 
   /// Collection doesn't exist if there are no documents in it.
   /// So every time the user wants to add a task, we'll just
@@ -34,8 +38,8 @@ class DatabaseService {
     ///This helps keeping track
     ///This shit took me way too long
     if (! await ifCollectionExists(taskGroup) && taskGroup != 'General') {
-      addTaskCollectionName(taskGroup);
-      ObjectBox().addTaskCollectionName(taskGroup);
+      addTaskGroup(taskGroup);
+      ObjectBox().addTaskGroup(taskGroup);
     }
 
     ObjectBox().addTask(task);
@@ -58,7 +62,7 @@ class DatabaseService {
     await taskCollection.doc(uid).collection(task.taskGroup).doc(task.taskDescription).delete();
 
     if(! await ifCollectionExists(task.taskGroup) && task.taskGroup != 'General'){
-      deleteTaskCollectionName(task.taskGroup);
+      deleteTaskGroup(task.taskGroup);
     }
     return;
   }
@@ -70,31 +74,31 @@ class DatabaseService {
     return snapshot.docs.isNotEmpty;
   }
 
-  Future addTaskCollectionName(String taskGroup) async {
-    List<String> taskCollectionNames = await getTaskCollection();
-    taskCollectionNames.add(taskGroup);
-    taskCollection.doc(uid).set({'task group array': taskCollectionNames});
+  Future addTaskGroup(String taskGroup) async {
+    List<String> taskGroupNames = await _getFirebaseTaskGroups();
+    taskGroupNames.add(taskGroup);
+    taskCollection.doc(uid).set({'task group array': taskGroupNames});
     return;
   }
 
-  Future deleteTaskCollectionName(String taskGroup) async {
-    ObjectBox().deleteTaskCollectionName(taskGroup);
+  Future deleteTaskGroup(String taskGroup) async {
+    ObjectBox().deleteTaskGroup(taskGroup);
 
-    List<String> taskCollectionNames = await getTaskCollection();
+    List<String> taskCollectionNames = await _getFirebaseTaskGroups();
     int index = taskCollectionNames.indexOf(taskGroup);
     taskCollectionNames.removeAt(index);
     return;
   }
 
   ///Returns a List<String>
-  Future getTaskCollection() async {
+  Future _getFirebaseTaskGroups() async {
     List dynamicList = [];
-    List<String> taskCollectionNames = <String>[];
+    List<String> taskGroups = <String>[];
     await taskCollection.doc(uid).get().then((value) {
       dynamicList = value['task group array'];
     });
-    taskCollectionNames = dynamicList.cast<String>();
+    taskGroups = dynamicList.cast<String>();
 
-    return taskCollectionNames;
+    return taskGroups;
   }
 }

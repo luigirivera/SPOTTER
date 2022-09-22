@@ -422,6 +422,13 @@
             </list>
           </value>
         </entry>
+        <entry key="objectbox_flutter_libs">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../../../dev/flutter/.pub-cache/hosted/pub.dartlang.org/objectbox_flutter_libs-1.6.2/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="objectbox_generator">
           <value>
             <list>
@@ -749,6 +756,7 @@
       <root url="file://$PROJECT_DIR$/../../../dev/flutter/.pub-cache/hosted/pub.dartlang.org/mime-1.0.2/lib" />
       <root url="file://$PROJECT_DIR$/../../../dev/flutter/.pub-cache/hosted/pub.dartlang.org/nested-1.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../../../dev/flutter/.pub-cache/hosted/pub.dartlang.org/objectbox-1.6.2/lib" />
+      <root url="file://$PROJECT_DIR$/../../../dev/flutter/.pub-cache/hosted/pub.dartlang.org/objectbox_flutter_libs-1.6.2/lib" />
       <root url="file://$PROJECT_DIR$/../../../dev/flutter/.pub-cache/hosted/pub.dartlang.org/objectbox_generator-1.6.2/lib" />
       <root url="file://$PROJECT_DIR$/../../../dev/flutter/.pub-cache/hosted/pub.dartlang.org/package_config-2.1.0/lib" />
       <root url="file://$PROJECT_DIR$/../../../dev/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.2/lib" />

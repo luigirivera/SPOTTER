@@ -13,14 +13,17 @@ class Task {
   Task({required this.taskDescription, required this.taskGroup, required this.completed});
 
   @override
-  String toString() => '${taskDescription}taskGroup: $taskGroup completed: $completed';
+  String toString() => 'Task: $taskDescription, Task Group: $taskGroup, Completed: $completed';
 }
 
 @Entity()
-class TaskCollectionList{
+class TaskGroup{
   @Id()
-  int id = 0; //don't delete this. it's for objectbox
-  List<String> taskCollectionNames;
+  int id = 0;
+  String taskGroup;
 
-  TaskCollectionList({required this.taskCollectionNames});
+  TaskGroup({required this.taskGroup});
+
+  @override
+  String toString() => 'Task Group: $taskGroup';
 }

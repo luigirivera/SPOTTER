@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:spotter/screens/home/task_management.dart';
+import 'package:spotter/services/task_database.dart';
 import '../../models/task_model.dart';
 
 class TaskBoard extends StatelessWidget {
@@ -38,7 +38,8 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
-    final taskList = Provider.of<List<Task>>(context);
+    final TaskDatabaseService taskData = TaskDatabaseService();
+    final List<Task> taskList = taskData.getTaskList();
     return ListView.builder(
             padding: const EdgeInsets.all(10),
             itemCount: taskList.length * 2 + 1,

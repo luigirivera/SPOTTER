@@ -12,6 +12,7 @@ import 'dart:typed_data';
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 import 'package:objectbox/internal.dart'; // generated code can access "internal" functionality
 import 'package:objectbox/objectbox.dart';
+import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'models/task_model.dart';
 
@@ -48,20 +49,20 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(2, 8108166947537495174),
-      name: 'TaskCollectionList',
-      lastPropertyId: const IdUid(2, 3744637546667393341),
+      id: const IdUid(3, 2244299741876127042),
+      name: 'TaskGroup',
+      lastPropertyId: const IdUid(2, 3245963186454929968),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 8985378110078263766),
+            id: const IdUid(1, 5149661405858191867),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 3744637546667393341),
-            name: 'taskCollectionNames',
-            type: 30,
+            id: const IdUid(2, 3245963186454929968),
+            name: 'taskGroup',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -69,15 +70,15 @@ final _entities = <ModelEntity>[
 ];
 
 /// Open an ObjectBox store with the model declared in this file.
-Store openStore(
+Future<Store> openStore(
         {String? directory,
         int? maxDBSizeInKB,
         int? fileMode,
         int? maxReaders,
         bool queriesCaseSensitiveDefault = true,
-        String? macosApplicationGroup}) =>
+        String? macosApplicationGroup}) async =>
     Store(getObjectBoxModel(),
-        directory: directory,
+        directory: directory ?? (await defaultStoreDirectory()).path,
         maxDBSizeInKB: maxDBSizeInKB,
         fileMode: fileMode,
         maxReaders: maxReaders,
@@ -88,13 +89,13 @@ Store openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(2, 8108166947537495174),
+      lastEntityId: const IdUid(3, 2244299741876127042),
       lastIndexId: const IdUid(0, 0),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
-      retiredEntityUids: const [],
+      retiredEntityUids: const [8108166947537495174],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [8985378110078263766, 3744637546667393341],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -135,22 +136,19 @@ ModelDefinition getObjectBoxModel() {
 
           return object;
         }),
-    TaskCollectionList: EntityDefinition<TaskCollectionList>(
+    TaskGroup: EntityDefinition<TaskGroup>(
         model: _entities[1],
-        toOneRelations: (TaskCollectionList object) => [],
-        toManyRelations: (TaskCollectionList object) => {},
-        getId: (TaskCollectionList object) => object.id,
-        setId: (TaskCollectionList object, int id) {
+        toOneRelations: (TaskGroup object) => [],
+        toManyRelations: (TaskGroup object) => {},
+        getId: (TaskGroup object) => object.id,
+        setId: (TaskGroup object, int id) {
           object.id = id;
         },
-        objectToFB: (TaskCollectionList object, fb.Builder fbb) {
-          final taskCollectionNamesOffset = fbb.writeList(object
-              .taskCollectionNames
-              .map(fbb.writeString)
-              .toList(growable: false));
+        objectToFB: (TaskGroup object, fb.Builder fbb) {
+          final taskGroupOffset = fbb.writeString(object.taskGroup);
           fbb.startTable(3);
           fbb.addInt64(0, object.id);
-          fbb.addOffset(1, taskCollectionNamesOffset);
+          fbb.addOffset(1, taskGroupOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -158,11 +156,9 @@ ModelDefinition getObjectBoxModel() {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
 
-          final object = TaskCollectionList(
-              taskCollectionNames: const fb.ListReader<String>(
-                      fb.StringReader(asciiOptimization: true),
-                      lazy: false)
-                  .vTableGet(buffer, rootOffset, 6, []))
+          final object = TaskGroup(
+              taskGroup: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''))
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
@@ -190,13 +186,12 @@ class Task_ {
       QueryBooleanProperty<Task>(_entities[0].properties[3]);
 }
 
-/// [TaskCollectionList] entity fields to define ObjectBox queries.
-class TaskCollectionList_ {
-  /// see [TaskCollectionList.id]
-  static final id =
-      QueryIntegerProperty<TaskCollectionList>(_entities[1].properties[0]);
+/// [TaskGroup] entity fields to define ObjectBox queries.
+class TaskGroup_ {
+  /// see [TaskGroup.id]
+  static final id = QueryIntegerProperty<TaskGroup>(_entities[1].properties[0]);
 
-  /// see [TaskCollectionList.taskCollectionNames]
-  static final taskCollectionNames =
-      QueryStringVectorProperty<TaskCollectionList>(_entities[1].properties[1]);
+  /// see [TaskGroup.taskGroup]
+  static final taskGroup =
+      QueryStringProperty<TaskGroup>(_entities[1].properties[1]);
 }

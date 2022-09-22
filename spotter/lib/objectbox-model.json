@@ -33,34 +33,39 @@
       "relations": []
     },
     {
-      "id": "2:8108166947537495174",
-      "lastPropertyId": "2:3744637546667393341",
-      "name": "TaskCollectionList",
+      "id": "3:2244299741876127042",
+      "lastPropertyId": "2:3245963186454929968",
+      "name": "TaskGroup",
       "properties": [
         {
-          "id": "1:8985378110078263766",
+          "id": "1:5149661405858191867",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:3744637546667393341",
-          "name": "taskCollectionNames",
-          "type": 30
+          "id": "2:3245963186454929968",
+          "name": "taskGroup",
+          "type": 9
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "2:8108166947537495174",
+  "lastEntityId": "3:2244299741876127042",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    8108166947537495174
+  ],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    8985378110078263766,
+    3744637546667393341
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
