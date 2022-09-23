@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:spotter/services/task_database.dart';
-
-import '../../models/task_model.dart';
 
 class AddTask extends StatefulWidget {
   const AddTask({Key? key}) : super(key: key);
@@ -14,53 +11,52 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   final _formKey = GlobalKey<FormState>();
   final TaskDatabaseService taskData = TaskDatabaseService();
-  late String taskDescription;
-  String? taskGroup;
 
   @override
   Widget build(BuildContext context) {
-    late String taskDescription;
-    late String taskGroup;
-    bool completed;
+    String? taskDescription;
+    String taskGroup = "General";
+    bool completed = false;
 
     return AlertDialog(
       content: Form(
-        key: _formKey,
+          key: _formKey,
           child: Column(
-        children: [
-          TextFormField(
-            decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue.shade800),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                hintText: "What is your new task?",
-                filled: true,
-                fillColor: Colors.grey.shade200),
-            /** Help in validating formats */
-            validator: (value) => value!.isEmpty ? 'Enter a task here' : null,
-            onChanged: (value) {
-              setState(() => taskDescription = value);
-            },
-          ),
-          DropdownButtonFormField(
-              items:
-                  taskData.getTaskGroups().map((taskGroup) {
-                return DropdownMenuItem<String>(
-                    child: Text(taskGroup.taskGroup));
-              }).toList(),
-              onChanged: (value) =>
-                  setState(() => taskGroup = value as String)),
-        ],
-      )),
+            children: [
+              TextFormField(
+                decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue.shade800),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    hintText: "What is your new task?",
+                    filled: true,
+                    fillColor: Colors.grey.shade200),
+                /** Help in validating formats */
+                validator: (value) =>
+                    value!.isEmpty ? 'Enter a task here' : null,
+                onChanged: (value) {
+                  taskDescription = value;
+                },
+              ),
+              DropdownButtonFormField(
+                  items: taskData.getTaskGroups().map((taskGroup) {
+                    return DropdownMenuItem<String>(
+                        child: Text(taskGroup.taskGroup));
+                  }).toList(),
+                  onChanged: (value) {
+                    taskGroup = value.toString();
+                  }),
+            ],
+          )),
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            taskData.addTask(taskGroup, taskDescription, false);
+            taskData.addTask(taskGroup, taskDescription!, completed);
             Navigator.of(context).pop();
           },
           child: const Text('Okay'),

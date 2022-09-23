@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spotter/screens/home/task_management.dart';
-import 'package:spotter/services/task_database.dart';
 import '../../models/task_model.dart';
+import '../../objectbox.dart';
 
 class TaskBoard extends StatelessWidget {
   const TaskBoard({Key? key}) : super(key: key);
@@ -36,102 +36,120 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
+  late final ObjectBox objectbox;
+  Future<bool> _objectboxOpened = Future.value(false);
+
+  @override
+  void initState() {
+    super.initState();
+
+    ///The open() method is async, need to do 'then'.
+    ///Opening the store also takes a lot of time, so we need this in initState
+    ObjectBox.open().then((obj){
+      objectbox = obj;
+      _objectboxOpened = Future.value(true);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TaskDatabaseService taskData = TaskDatabaseService();
-    final List<Task> taskList = taskData.getTaskList();
-    return ListView.builder(
-            padding: const EdgeInsets.all(10),
-            itemCount: taskList.length * 2 + 1,
-            itemBuilder: (BuildContext context, int index) {
-              /** Creating a list of IconButtons,
-               * then add the default plus button in to create a pop-up for adding new tasks.
-               * Able to add more buttons if desired in the future
-               */
-              if (index == 0) {
-                List<IconButton> buttons = List.empty(growable: true);
+    List<Task> taskList = objectbox.getTaskList();
+    return FutureBuilder(future: _objectboxOpened, builder: (context, snapshot) {
 
-                buttons.add(IconButton(
-                  icon: const Icon(
-                    Icons.add_circle,
-                    color: Colors.orange,
-                  ),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (context) {
-                          return const AddTask();
-                        });
-                  },
-                  tooltip: 'Add new tasks',
-                ));
+      return ListView.builder(
+          padding: const EdgeInsets.all(10),
+          itemCount: taskList.length * 2 + 1,
+          itemBuilder: (BuildContext context, int index) {
+            /** Creating a list of IconButtons,
+             * then add the default plus button in to create a pop-up for adding new tasks.
+             * Able to add more buttons if desired in the future
+             */
+            if (index == 0) {
+              List<IconButton> buttons = List.empty(growable: true);
 
-                /** If page pop triggered,
-                 * then add the page pop button to the list
-                 */
-                if (!widget.popped) {
-                  buttons.add(IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TaskPopOutPage(),
-                          )).then((value) {
-                        setState(() {});
+              buttons.add(IconButton(
+                icon: const Icon(
+                  Icons.add_circle,
+                  color: Colors.orange,
+                ),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (context) {
+                        return const AddTask();
                       });
-                    },
-                    icon: const Icon(Icons.output),
-                    tooltip: 'View in a pop out',
-                  ));
-                }
+                  setState(() {});
+                },
+                tooltip: 'Add new tasks',
+              ));
 
-                /** Adding the buttons in the list to the first row */
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: buttons.map((button) {
-                    return Container(
-                      child: (button),
-                    );
-                  }).toList(),
-                );
-              }
-
-              if (index.isOdd) return const Divider();
-              final i = (index ~/ 2) - 1;
-              final check = taskList[i].completed;
-
-              /** Putting tasks onto the task board */
-              return ListTile(
-                title: Text('${taskList[i].taskDescription} Group ID: ${taskList[i].taskGroup}'),
-                leading:
-                    const Icon(Icons.arrow_forward_ios, color: Colors.orange),
-                trailing: IconButton(
-                  icon: Icon(
-                    check
-                        ? Icons.check_box_outlined
-                        : Icons.check_box_outline_blank_rounded,
-                    color: check ? Colors.orange.shade900 : Colors.black,
-                    semanticLabel: check ? 'Completed' : 'Incomplete',
-                    size: 30,
-                  ),
+              /** If page pop triggered,
+               * then add the page pop button to the list
+               */
+              if (!widget.popped) {
+                buttons.add(IconButton(
                   onPressed: () {
-                    setState(() {
-                      if (check) {
-                        //set data to false
-                      } else {
-                        //set data to true
-                      }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TaskPopOutPage(),
+                        )).then((value) {
+                      setState(() {});
                     });
                   },
-                ),
+                  icon: const Icon(Icons.output),
+                  tooltip: 'View in a pop out',
+                ));
+              }
+
+              /** Adding the buttons in the list to the first row */
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: buttons.map((button) {
+                  return Container(
+                    child: (button),
+                  );
+                }).toList(),
               );
-            });
+            }
+
+            if (index.isOdd) return const Divider();
+            final i = (index ~/ 2) - 1;
+            final check = taskList[i].completed;
+
+            /** Putting tasks onto the task board */
+            return ListTile(
+              title: Text(
+                  '${taskList[i].taskDescription} Group ID: ${taskList[i].taskGroup}'),
+              leading:
+                  const Icon(Icons.arrow_forward_ios, color: Colors.orange),
+              trailing: IconButton(
+                icon: Icon(
+                  check
+                      ? Icons.check_box_outlined
+                      : Icons.check_box_outline_blank_rounded,
+                  color: check ? Colors.orange.shade900 : Colors.black,
+                  semanticLabel: check ? 'Completed' : 'Incomplete',
+                  size: 30,
+                ),
+                onPressed: () {
+                  setState(() {
+                    if (check) {
+                      //set data to false
+                    } else {
+                      //set data to true
+                    }
+                  });
+                },
+              ),
+            );
+          });
+    });
   }
 }
 
 class TaskPopOutPage extends StatelessWidget {
-
   const TaskPopOutPage({Key? key}) : super(key: key);
 
   @override
