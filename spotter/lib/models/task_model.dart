@@ -9,8 +9,9 @@ class Task {
   String taskDescription;
   String taskGroup;
   bool completed = false;
+  DateTime date;
 
-  Task({required this.taskDescription, required this.taskGroup, required this.completed});
+  Task({required this.taskDescription, required this.taskGroup, required this.completed, required this.date});
 
   @override
   String toString() => 'Task: $taskDescription, Task Group: $taskGroup, Completed: $completed';

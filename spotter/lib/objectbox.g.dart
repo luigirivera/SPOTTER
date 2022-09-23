@@ -22,7 +22,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 2432166687953516652),
       name: 'Task',
-      lastPropertyId: const IdUid(4, 4371495459484611180),
+      lastPropertyId: const IdUid(5, 3464322506574893699),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -44,6 +44,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(4, 4371495459484611180),
             name: 'completed',
             type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 3464322506574893699),
+            name: 'date',
+            type: 10,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -113,11 +118,12 @@ ModelDefinition getObjectBoxModel() {
         objectToFB: (Task object, fb.Builder fbb) {
           final taskDescriptionOffset = fbb.writeString(object.taskDescription);
           final taskGroupOffset = fbb.writeString(object.taskGroup);
-          fbb.startTable(5);
+          fbb.startTable(6);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, taskDescriptionOffset);
           fbb.addOffset(2, taskGroupOffset);
           fbb.addBool(3, object.completed);
+          fbb.addInt64(4, object.date.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -131,7 +137,9 @@ ModelDefinition getObjectBoxModel() {
               taskGroup: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 8, ''),
               completed: const fb.BoolReader()
-                  .vTableGet(buffer, rootOffset, 10, false))
+                  .vTableGet(buffer, rootOffset, 10, false),
+              date: DateTime.fromMillisecondsSinceEpoch(
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0)))
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
@@ -184,6 +192,9 @@ class Task_ {
   /// see [Task.completed]
   static final completed =
       QueryBooleanProperty<Task>(_entities[0].properties[3]);
+
+  /// see [Task.date]
+  static final date = QueryIntegerProperty<Task>(_entities[0].properties[4]);
 }
 
 /// [TaskGroup] entity fields to define ObjectBox queries.

@@ -3,3 +3,5 @@ the objectbox obj with the same file path (my assumption rn) is going to access 
 You don't need to close the store while it's open unless there are a lot of background writing going on. ref: https://stackoverflow.com/questions/68448935/whats-the-best-practice-to-close-the-store-instance-in-a-flutter-app
     Look in the small comments in the answer ^
 You can use relations like sql to link objects together even though ObjectBox itself is a nosql db.
+
+flutter pub run build_runner build --delete-conflicting-outputs

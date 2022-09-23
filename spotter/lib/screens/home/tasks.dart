@@ -39,7 +39,6 @@ class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
     List<Task> taskList = objectbox.getTaskList();
-    bool popped = false;
     return Column(children: [
       SizedBox(
         height: 50,
@@ -56,9 +55,7 @@ class _TaskListState extends State<TaskList> {
                     context: context,
                     barrierDismissible: true,
                     builder: (context) {
-                      return AddTask(
-                        objectbox: objectbox,
-                      );
+                      return const AddTask();
                     }).then((value) {
                   setState(() {});
                 });

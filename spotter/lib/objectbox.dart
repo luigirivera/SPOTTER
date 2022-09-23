@@ -13,6 +13,7 @@ class ObjectBox {
     taskGroups = Box<TaskGroup>(store);
     taskList = Box<Task>(store);
     if (taskGroups.isEmpty()) {
+      taskGroups.put(TaskGroup(taskGroup: '+ Add a New Group'));
       taskGroups.put(TaskGroup(taskGroup: 'General'));
     }
   }

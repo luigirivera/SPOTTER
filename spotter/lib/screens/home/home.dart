@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../models/task_model.dart';
 import '../statistics/statistics.dart';
 import '../settings/settings.dart';
 import '../calendar/calendar.dart';
@@ -30,14 +29,6 @@ class _HomeState extends State<Home> {
     const StudySession(),
     const StatisticsScreen(),
   ];
-
-  ///Default value for initialData
-  List<Task> defaultTaskList = List.filled(
-      1,
-      Task(
-          taskDescription: 'taskDescription',
-          taskGroup: 'General',
-          completed: false));
 
   @override
   Widget build(BuildContext context) {
