@@ -10,6 +10,16 @@ class StudySession extends StatefulWidget {
 class _StudySessionState extends State<StudySession> {
   @override
   Widget build(BuildContext context) {
-    return Text("Study Session");
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const <Widget>[
+          Text(
+            'Study Session',
+            style: TextStyle(fontSize: 30),
+          ),
+        ],
+      ),
+    );
   }
 }
