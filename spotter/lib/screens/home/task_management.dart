@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:spotter/services/task_database.dart';
+import '../../models/task_model.dart';
+import '../../objectbox.dart';
 
 class AddTask extends StatefulWidget {
-  const AddTask({Key? key}) : super(key: key);
+  final ObjectBox objectbox;
+  const AddTask({Key? key, required this.objectbox}) : super(key: key);
 
   @override
   State<AddTask> createState() => _AddTaskState();
@@ -10,11 +12,10 @@ class AddTask extends StatefulWidget {
 
 class _AddTaskState extends State<AddTask> {
   final _formKey = GlobalKey<FormState>();
-  final TaskDatabaseService taskData = TaskDatabaseService();
 
   @override
   Widget build(BuildContext context) {
-    String? taskDescription;
+    String taskDescription = '';
     String taskGroup = "General";
     bool completed = false;
 
@@ -44,7 +45,7 @@ class _AddTaskState extends State<AddTask> {
                 },
               ),
               DropdownButtonFormField(
-                  items: taskData.getTaskGroups().map((taskGroup) {
+                  items: widget.objectbox.getTaskGroups().map((taskGroup) {
                     return DropdownMenuItem<String>(
                         child: Text(taskGroup.taskGroup));
                   }).toList(),
@@ -56,7 +57,7 @@ class _AddTaskState extends State<AddTask> {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            taskData.addTask(taskGroup, taskDescription!, completed);
+            widget.objectbox.addTask(Task(taskDescription: taskDescription, taskGroup: taskGroup, completed: completed));
             Navigator.of(context).pop();
           },
           child: const Text('Okay'),
@@ -81,7 +82,7 @@ class _EditTaskState extends State<EditTask> {
         title: const Text("Edit Task"),
       ),
       body: Column(
-        children: [
+        children: const [
           //Name box
           //Description box
           //Group
