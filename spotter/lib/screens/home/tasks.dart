@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spotter/screens/home/task_management.dart';
-import 'package:spotter/screens/loading/loading.dart';
+import '../../main.dart';
 import '../../models/task_model.dart';
-import '../../objectbox.dart';
 
 class TaskBoard extends StatelessWidget {
   const TaskBoard({Key? key}) : super(key: key);
@@ -37,31 +36,11 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  late final ObjectBox objectbox;
-  Future<bool> _objectboxOpened = Future.value(false);
-
-  @override
-  void initState() {
-    super.initState();
-
-    ///The open() method is async, need to do 'then'.
-    ///Opening the store also takes a lot of time, so we need this in initState
-    ObjectBox.open().then((obj) {
-      objectbox = obj;
-      _objectboxOpened = Future.value(true);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _objectboxOpened,
-        builder: (context, snapshot) {
-          if (_objectboxOpened == Future.value(false)) {
-            return const Loading();
-          }
-          List<Task> taskList = objectbox.getTaskList();
-          return ListView.builder(
+    List<Task> taskList = objectbox.getTaskList();
+    return ListView.builder(
               padding: const EdgeInsets.all(10),
               itemCount: taskList.length * 2 + 1,
               itemBuilder: (BuildContext context, int index) {
@@ -82,10 +61,12 @@ class _TaskListState extends State<TaskList> {
                           context: context,
                           barrierDismissible: true,
                           builder: (context) {
-                            return AddTask(objectbox: objectbox,);
-                          }).then((value){setState(() {
-
-                          });});
+                            return AddTask(
+                              objectbox: objectbox,
+                            );
+                          }).then((value) {
+                        setState(() {});
+                      });
                     },
                     tooltip: 'Add new tasks',
                   ));
@@ -151,7 +132,6 @@ class _TaskListState extends State<TaskList> {
                   ),
                 );
               });
-        });
   }
 }
 

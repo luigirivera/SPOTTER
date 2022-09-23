@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spotter/services/auth.dart';
 import '../../backup.dart';
+import '../../objectbox.dart';
 
 class SettingsDrawer extends StatefulWidget {
   const SettingsDrawer({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
         width: 150.0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: const <Widget>[
             Text("Spotter - Tasks Companion"),
             Text('COMP 499 Capstone Project'),
             Padding(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../models/task_model.dart';
-import '../../objectbox.dart';
 import '../statistics/statistics.dart';
 import '../settings/settings.dart';
 import '../calendar/calendar.dart';
@@ -18,17 +17,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _barIndexSelected = 0;
-late final ObjectBox objectbox;
+
   void _onBarTap(int index) {
     setState(() {
       _barIndexSelected = index;
     });
   }
-  void func() async {
-    objectbox = await ObjectBox.open();
-    List<Task> tempList = objectbox.getTaskList();
-    debugPrint('\n\nThis is debugPrint: ${tempList.length}\n\n');
-  }
+
   final _screens = [
     const TaskScreen(),
     const Calendar(),
@@ -68,7 +63,6 @@ late final ObjectBox objectbox;
               icon: const Icon(Icons.menu),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
-                func();
               },
             );
           },
