@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:spotter/services/task_database.dart';
-
-import '../../models/task_model.dart';
 
 class AddTask extends StatefulWidget {
   const AddTask({Key? key}) : super(key: key);
@@ -14,14 +11,12 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   final _formKey = GlobalKey<FormState>();
   final TaskDatabaseService taskData = TaskDatabaseService();
-  late String taskDescription;
-  String? taskGroup;
 
   @override
   Widget build(BuildContext context) {
-    late String taskDescription;
-    String? taskGroup = "General";
-    bool completed;
+    String? taskDescription;
+    String taskGroup = "General";
+    bool completed = false;
 
     return AlertDialog(
       content: Form(
@@ -61,7 +56,7 @@ class _AddTaskState extends State<AddTask> {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            taskData.addTask(taskGroup!, taskDescription, false);
+            taskData.addTask(taskGroup, taskDescription!, completed);
             Navigator.of(context).pop();
           },
           child: const Text('Okay'),

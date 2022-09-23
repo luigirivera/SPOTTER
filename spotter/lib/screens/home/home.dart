@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../models/task_model.dart';
-import '../../services/task_database.dart';
+import '../../objectbox.dart';
 import '../statistics/statistics.dart';
 import '../settings/settings.dart';
 import '../calendar/calendar.dart';
@@ -19,13 +18,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _barIndexSelected = 0;
-
+late final ObjectBox objectbox;
   void _onBarTap(int index) {
     setState(() {
       _barIndexSelected = index;
     });
   }
-
+  void func() async {
+    objectbox = await ObjectBox.open();
+    List<Task> tempList = objectbox.getTaskList();
+    debugPrint('\n\nThis is debugPrint: ${tempList.length}\n\n');
+  }
   final _screens = [
     const TaskScreen(),
     const Calendar(),
@@ -34,59 +37,64 @@ class _HomeState extends State<Home> {
   ];
 
   ///Default value for initialData
-  List<Task> defaultTaskList = List.filled(1,
-      Task(taskDescription: 'taskDescription', taskGroup: 'General', completed: false));
+  List<Task> defaultTaskList = List.filled(
+      1,
+      Task(
+          taskDescription: 'taskDescription',
+          taskGroup: 'General',
+          completed: false));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          backgroundColor: Colors.blue.shade200,
+      backgroundColor: Colors.blue.shade200,
 
-          ///Adding background image to the appbar
-          appBar: AppBar(
-            elevation: 0,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
+      ///Adding background image to the appbar
+      appBar: AppBar(
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
                 image: AssetImage('assets/stars.png'),
                 fit: BoxFit.fill,
               )),
-            ),
+        ),
 
-            ///Adding settings for the drawer
-            ///will select the drawer in the scaffold
-            leading: Builder(
-              builder: (BuildContext context) {
-                return IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                );
+        ///Adding settings for the drawer
+        ///will select the drawer in the scaffold
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+                func();
               },
-            ),
+            );
+          },
+        ),
 
-            iconTheme: const IconThemeData(color: Colors.orange),
-          ),
+        iconTheme: const IconThemeData(color: Colors.orange),
+      ),
 
-          ///Bottom screen selection row
-          drawer: const SettingsDrawer(),
-          body: _screens[_barIndexSelected],
-          bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: Colors.grey,
-            unselectedItemColor: Colors.black,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.edit_calendar), label: 'Calendar'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.book), label: 'Study Session'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.bar_chart), label: 'Statistic'),
-            ],
-            onTap: _onBarTap,
-            currentIndex: _barIndexSelected,
-          ),
-        );
+      ///Bottom screen selection row
+      drawer: const SettingsDrawer(),
+      body: _screens[_barIndexSelected],
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.black,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.edit_calendar), label: 'Calendar'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.book), label: 'Study Session'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart), label: 'Statistic'),
+        ],
+        onTap: _onBarTap,
+        currentIndex: _barIndexSelected,
+      ),
+    );
   }
 }

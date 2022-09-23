@@ -51,6 +51,12 @@
       <excludeFolder url="file://$MODULE_DIR$/arze/linux/flutter/ephemeral/.plugin_symlinks/path_provider_linux/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/arze/linux/flutter/ephemeral/.plugin_symlinks/path_provider_linux/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/arze/linux/flutter/ephemeral/.plugin_symlinks/path_provider_linux/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/spotter/linux/flutter/ephemeral/.plugin_symlinks/objectbox_flutter_libs/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/spotter/linux/flutter/ephemeral/.plugin_symlinks/objectbox_flutter_libs/build" />
+      <excludeFolder url="file://$MODULE_DIR$/spotter/linux/flutter/ephemeral/.plugin_symlinks/objectbox_flutter_libs/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/spotter/windows/flutter/ephemeral/.plugin_symlinks/objectbox_flutter_libs/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/spotter/windows/flutter/ephemeral/.plugin_symlinks/objectbox_flutter_libs/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/spotter/windows/flutter/ephemeral/.plugin_symlinks/objectbox_flutter_libs/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
