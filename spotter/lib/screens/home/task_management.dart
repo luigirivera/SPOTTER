@@ -44,7 +44,7 @@ class _AddTaskState extends State<AddTask> {
                     validator: (value) =>
                         value!.isEmpty ? 'Enter a group here' : null,
                     onChanged: (value) {
-                      taskGroup = value;
+                      newTaskGroup = value;
                     },
                   )),
             ),
@@ -52,7 +52,7 @@ class _AddTaskState extends State<AddTask> {
               TextButton(
                 onPressed: () {
                   if (newTaskGroup != null) {
-                    objectbox.addTaskGroup(newTaskGroup);
+                    objectbox.addTaskGroup(newTaskGroup!);
                   }
                   isAddingGroup = false;
                   setState(() {});
@@ -107,10 +107,12 @@ class _AddTaskState extends State<AddTask> {
                             onChanged: (value) {
                               if (value.toString() == '+ Add a New Group') {
                                 isAddingGroup = true;
-                                setState(() {});
                               } else {
                                 taskGroup = value.toString();
                               }
+                              setState(() {
+
+                              });
                             }),
                       ],
                     ))),

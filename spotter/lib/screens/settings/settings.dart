@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spotter/services/auth.dart';
-import '../../backup.dart';
-import '../../objectbox.dart';
 
 class SettingsDrawer extends StatefulWidget {
   const SettingsDrawer({Key? key}) : super(key: key);
@@ -17,7 +15,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
   Widget build(BuildContext context) {
     Dialog aboutPopup = Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      child: Container(
+      child: SizedBox(
         height: 150.0,
         width: 150.0,
         child: Column(
@@ -40,16 +38,6 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
         children: [
           const DrawerHeader(
             child: Text('Settings'),
-          ),
-          ListTile(
-            title: const Text('Backup'),
-            onTap: () {
-              debugPrint("Backup tapped");
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const BackupScreen()));
-            },
           ),
           // ListTile(
           //   title: const Text('Dark Mode'),

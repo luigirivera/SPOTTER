@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:spotter/services/task_database.dart';
 
 import '../models/user_model.dart';
 
@@ -58,9 +57,6 @@ class AuthService {
       UserCredential userCred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = userCred.user;
-
-      ///Putting in the 'General' default task group name in the array
-      TaskDatabaseService().initiateGeneralCollection();
 
       return _spotterUser(user);
     } on FirebaseAuthException catch (error) {
