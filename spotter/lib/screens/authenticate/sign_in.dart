@@ -74,12 +74,13 @@ class _SignInState extends State<SignIn> {
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: const BorderSide(
                                             color: Colors.white),
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            color: Colors.blue.shade800),
-                                        borderRadius: BorderRadius.circular(10),
+                                            color: Colors.blue.shade800,
+                                            width: 2.5),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                       hintText: "Email",
                                       filled: true,
@@ -106,12 +107,13 @@ class _SignInState extends State<SignIn> {
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: const BorderSide(
                                             color: Colors.white),
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            color: Colors.blue.shade800),
-                                        borderRadius: BorderRadius.circular(10),
+                                            color: Colors.blue.shade800,
+                                            width: 2.5),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                       hintText: "Password",
                                       filled: true,

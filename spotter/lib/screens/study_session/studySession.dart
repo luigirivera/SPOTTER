@@ -139,7 +139,7 @@ class _StudySessionState extends State<StudySession> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text("$hoursString:$minutesString:$secondsString",
-                style: const TextStyle(fontSize: 50)),
+                style: const TextStyle(fontSize: 50, color: Colors.black)),
             SizedBox(
               height: 100,
             ),
@@ -148,7 +148,8 @@ class _StudySessionState extends State<StudySession> {
                   alignment: Alignment.center,
                   child: Text(
                       "Tree Phase: $treePhase\nTrees Completed: $completedTrees",
-                      style: const TextStyle(fontSize: 20, color: Colors.red))),
+                      style:
+                          const TextStyle(fontSize: 20, color: Colors.black))),
             ),
             Expanded(
               child: Align(

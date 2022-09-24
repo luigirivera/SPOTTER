@@ -22,7 +22,7 @@ class _CalendarState extends State<Calendar> {
       firstDay: DateTime.utc(1970, 1, 1),
       lastDay: DateTime.utc(2199, 12, 31),
       headerVisible: true,
-      weekNumbersVisible: true,
+      // weekNumbersVisible: true,
       shouldFillViewport: false,
 
       /** Adding interactivity */

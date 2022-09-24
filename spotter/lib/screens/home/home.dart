@@ -41,9 +41,9 @@ class _HomeState extends State<Home> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/stars.png'),
-                fit: BoxFit.fill,
-              )),
+            image: AssetImage('assets/stars.png'),
+            fit: BoxFit.fill,
+          )),
         ),
 
         ///Adding settings for the drawer
