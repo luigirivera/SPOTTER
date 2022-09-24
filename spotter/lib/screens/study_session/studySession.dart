@@ -132,34 +132,46 @@ class _StudySessionState extends State<StudySession> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text("$hoursString:$minutesString:$secondsString",
-              style: const TextStyle(fontSize: 50)),
-          SizedBox(
-            height: 20,
-          ),
-          Text("Tree Phase: $treePhase; Tress Completed: $completedTrees",
-              style: const TextStyle(fontSize: 20, color: Colors.red)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: isTimerRunning ? stop : start,
-                child: Text(isTimerRunning ? "Stop" : "Start"),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              ElevatedButton(
-                onPressed: reset,
-                child: Text("Reset"),
-              ),
-            ],
-          )
-        ],
+    return Padding(
+      padding: EdgeInsets.all(25),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text("$hoursString:$minutesString:$secondsString",
+                style: const TextStyle(fontSize: 50)),
+            SizedBox(
+              height: 100,
+            ),
+            Expanded(
+              child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                      "Tree Phase: $treePhase\nTrees Completed: $completedTrees",
+                      style: const TextStyle(fontSize: 20, color: Colors.red))),
+            ),
+            Expanded(
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: isTimerRunning ? stop : start,
+                        child: Text(isTimerRunning ? "Stop" : "Start"),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      ElevatedButton(
+                        onPressed: reset,
+                        child: Text("Reset"),
+                      ),
+                    ],
+                  )),
+            )
+          ],
+        ),
       ),
     );
   }
