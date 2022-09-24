@@ -27,7 +27,7 @@ class _SignInState extends State<SignIn> {
         backgroundColor: Colors.blue.shade200,
         appBar: AppBar(
             backgroundColor: Colors.orange,
-            title: const Text("Test sign in"),
+            title: const Text("Sign in"),
             actions: <Widget>[
               TextButton.icon(
                   onPressed: () async {
@@ -60,6 +60,9 @@ class _SignInState extends State<SignIn> {
                             const SizedBox(height: 10),
                             const Text("Spotter",
                                 style: TextStyle(fontSize: 30)),
+                            const SizedBox(height: 5),
+                            const Text("Tasks Compantion",
+                                style: TextStyle(fontSize: 15)),
                             const SizedBox(height: 20),
 
                             ///Email text box
