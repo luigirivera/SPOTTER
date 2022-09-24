@@ -28,13 +28,14 @@ class _SignUpState extends State<SignUp> {
         backgroundColor: Colors.blue.shade200,
         appBar: AppBar(
           backgroundColor: Colors.orange,
-          title: const Text("Test sign up"),
+          title: const Text("Sign up"),
         ),
         body: _loading
             ? const Loading()
             : SafeArea(
                 child: Center(
                     child: Form(
+
                         ///Using _formKey here
                         key: _formKey,
                         child: Column(
@@ -126,13 +127,18 @@ class _SignUpState extends State<SignUp> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 25.0),
                               child: ElevatedButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Colors.blue.shade800),
-                                    padding: MaterialStateProperty.all(
-                                        const EdgeInsets.symmetric(
-                                            vertical: 15)),
-                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      backgroundColor: Colors.transparent,
+                                      foregroundColor: Colors.blue.shade800,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 15),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        side: BorderSide(
+                                            color: Colors.blue.shade800,
+                                            width: 3),
+                                      )),
                                   onPressed: () async {
                                     /** This will only be valid iff both of
                                * the validators above return null
@@ -170,7 +176,6 @@ class _SignUpState extends State<SignUp> {
                                   child: const Center(
                                     child: Text("Sign up",
                                         style: TextStyle(
-                                            color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20)),
                                   )),

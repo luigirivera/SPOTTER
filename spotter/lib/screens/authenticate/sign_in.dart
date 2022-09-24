@@ -41,7 +41,12 @@ class _SignInState extends State<SignIn> {
                   },
                   icon: const Icon(Icons.person),
                   label: const Text("Guest Login"),
-                  style: TextButton.styleFrom(backgroundColor: Colors.white))
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: const BorderSide(color: Colors.white)))),
             ]),
         body: loading
             ? const Loading()
@@ -140,16 +145,21 @@ class _SignInState extends State<SignIn> {
                             ///Sign in button section
                             Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 25.0),
+                                    horizontal: 80.0),
                                 child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.blue.shade800),
-                                      padding: MaterialStateProperty.all(
-                                          const EdgeInsets.symmetric(
-                                              vertical: 15)),
-                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                        elevation: 0,
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Colors.blue.shade800,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 15),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          side: BorderSide(
+                                              color: Colors.blue.shade800,
+                                              width: 3),
+                                        )),
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                                         setState(() {
@@ -176,7 +186,6 @@ class _SignInState extends State<SignIn> {
                                     child: const Center(
                                       child: Text("Sign in",
                                           style: TextStyle(
-                                              color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20)),
                                     ))),
