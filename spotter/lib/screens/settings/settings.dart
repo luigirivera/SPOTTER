@@ -56,6 +56,14 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
             },
           ),
           ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Colors.black,
+                  //rounded corners
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: const BorderSide(color: Colors.black, width: 2))),
               onPressed: () async {
                 await _auth.signOut();
                 if (!mounted) return;

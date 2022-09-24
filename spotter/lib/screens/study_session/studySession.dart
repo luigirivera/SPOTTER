@@ -157,6 +157,15 @@ class _StudySessionState extends State<StudySession> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: Colors.black,
+                            //rounded corners
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: const BorderSide(
+                                    color: Colors.black, width: 2))),
                         onPressed: isTimerRunning ? stop : start,
                         child: Text(isTimerRunning ? "Stop" : "Start"),
                       ),
@@ -164,6 +173,15 @@ class _StudySessionState extends State<StudySession> {
                         width: 20,
                       ),
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: Colors.black,
+                            //rounded corners
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: const BorderSide(
+                                    color: Colors.black, width: 2))),
                         onPressed: reset,
                         child: Text("Reset"),
                       ),
