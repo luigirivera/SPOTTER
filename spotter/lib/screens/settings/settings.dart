@@ -46,6 +46,13 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
           //     onChanged: (value) {},
           //   ),
           // ),
+          if (_auth.currentUser!.isAnon == true)
+            ListTile(
+              title: const Text('Backup'),
+              onTap: () {
+                print("Backup");
+              },
+            ),
           ListTile(
             title: const Text('About'),
             trailing: const Icon(Icons.info),
@@ -55,6 +62,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                   builder: (BuildContext context) => aboutPopup);
             },
           ),
+
           ElevatedButton(
               style: ElevatedButton.styleFrom(
                   elevation: 0,

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class SpotterUser{
+class SpotterUser {
   late final String? uid;
-  SpotterUser({this.uid});
+  late final bool? isAnon;
+  SpotterUser({this.uid, this.isAnon});
 }
