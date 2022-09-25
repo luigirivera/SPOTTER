@@ -8,8 +8,10 @@ class AuthService {
 
   //create user object based on User
   SpotterUser _spotterUser(User? user) {
-    return SpotterUser(uid: user?.uid);
+    return SpotterUser(uid: user?.uid, isAnon: user?.isAnonymous);
   }
+
+  SpotterUser? get currentUser => _spotterUser(_auth.currentUser);
 
   //auth change user stream
   Stream<SpotterUser> get user {

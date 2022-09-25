@@ -4,6 +4,7 @@ import 'package:spotter/models/user_model.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
 import 'sign_up.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class _SignInState extends State<SignIn> {
         backgroundColor: Colors.blue.shade200,
         appBar: AppBar(
             backgroundColor: Colors.orange,
-            title: const Text("Test sign in"),
+            title: const Text("Sign in"),
             actions: <Widget>[
               TextButton.icon(
                   onPressed: () async {
@@ -41,7 +42,12 @@ class _SignInState extends State<SignIn> {
                   },
                   icon: const Icon(Icons.person),
                   label: const Text("Guest Login"),
-                  style: TextButton.styleFrom(backgroundColor: Colors.white))
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: const BorderSide(color: Colors.white)))),
             ]),
         body: loading
             ? const Loading()
@@ -55,6 +61,9 @@ class _SignInState extends State<SignIn> {
                             const SizedBox(height: 10),
                             const Text("Spotter",
                                 style: TextStyle(fontSize: 30)),
+                            const SizedBox(height: 5),
+                            const Text("Tasks Compantion",
+                                style: TextStyle(fontSize: 15)),
                             const SizedBox(height: 20),
 
                             ///Email text box
@@ -66,12 +75,13 @@ class _SignInState extends State<SignIn> {
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: const BorderSide(
                                             color: Colors.white),
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            color: Colors.blue.shade800),
-                                        borderRadius: BorderRadius.circular(10),
+                                            color: Colors.blue.shade800,
+                                            width: 2.5),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                       hintText: "Email",
                                       filled: true,
@@ -98,12 +108,13 @@ class _SignInState extends State<SignIn> {
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: const BorderSide(
                                             color: Colors.white),
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            color: Colors.blue.shade800),
-                                        borderRadius: BorderRadius.circular(10),
+                                            color: Colors.blue.shade800,
+                                            width: 2.5),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                       hintText: "Password",
                                       filled: true,
@@ -140,16 +151,21 @@ class _SignInState extends State<SignIn> {
                             ///Sign in button section
                             Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 25.0),
+                                    horizontal: 80.0),
                                 child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.blue.shade800),
-                                      padding: MaterialStateProperty.all(
-                                          const EdgeInsets.symmetric(
-                                              vertical: 15)),
-                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                        elevation: 0,
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Colors.blue.shade800,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 15),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          side: BorderSide(
+                                              color: Colors.blue.shade800,
+                                              width: 3),
+                                        )),
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                                         setState(() {
@@ -176,10 +192,10 @@ class _SignInState extends State<SignIn> {
                                     child: const Center(
                                       child: Text("Sign in",
                                           style: TextStyle(
-                                              color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20)),
                                     ))),
+                            SignInButton(Buttons.GoogleDark, onPressed: () {}),
                             const SizedBox(height: 25),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
