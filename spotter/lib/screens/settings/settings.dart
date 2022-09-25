@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spotter/services/auth.dart';
 import 'dart:io' show Platform;
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class SettingsDrawer extends StatefulWidget {
   const SettingsDrawer({Key? key}) : super(key: key);
@@ -37,15 +39,21 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
     return Drawer(
       child: Column(
         children: [
-          const DrawerHeader(
-            child: Text('Settings'),
+          const SizedBox(
+            height: 70,
           ),
-          // ListTile(
-          //   title: const Text('Dark Mode'),
-          //   trailing: Switch(
-          //     value: true,
-          //     onChanged: (value) {},
-          //   ),
+          Text(
+            "Settings",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          // const DrawerHeader(
+          //   child: Text('Settings'),
           // ),
 
           ListTile(
@@ -60,41 +68,27 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
 
           if (_auth.currentUser!.isAnon == true)
             SizedBox(
-              height: 50,
+              height: 30,
             ),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (_auth.currentUser!.isAnon == true) ...[
-                if (Platform.isIOS) const Text('Apple Login'),
-                const Text('Google Login'),
+                // if (Platform.isIOS)
+                //   SignInButton(Buttons.AppleDark, mini: true, onPressed: () {}),
+                SignInButton(Buttons.GoogleDark, onPressed: () {}),
               ],
             ],
           ),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (_auth.currentUser!.isAnon == true)
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        backgroundColor: Colors.transparent,
-                        foregroundColor: Colors.black,
-                        //rounded corners
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(
-                                color: Colors.black, width: 2))),
-                    onPressed: () async {
-                      // sign in with email and password
-                    },
-                    child: const Text('Sign In')),
-              SizedBox(
-                width: 10,
-              ),
-              ElevatedButton(
+          if (_auth.currentUser!.isAnon == true)
+            SignInButton(Buttons.Email, onPressed: () {}),
+
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       elevation: 0,
                       backgroundColor: Colors.transparent,
@@ -109,8 +103,11 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                     if (!mounted) return;
                     Navigator.popUntil(context, ModalRoute.withName("/"));
                   },
-                  child: const Text('Log Out'))
-            ],
+                  child: const Text('Log Out')),
+            ),
+          ),
+          SizedBox(
+            height: 50,
           ),
         ],
       ),
