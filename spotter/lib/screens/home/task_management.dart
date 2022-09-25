@@ -14,6 +14,15 @@ class _AddTaskState extends State<AddTask> {
   bool isAddingGroup = false;
 
   DateTime date = DateTime.now();
+  List<String> weekdays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
   String? newTaskGroup;
   String taskDescription = '';
   String taskGroup = "General";
@@ -130,16 +139,21 @@ class _AddTaskState extends State<AddTask> {
                             });
                           }
                         }),
-                    Text('On: ${date.month} / ${date.day} / ${date.year}'),
+                    const SizedBox(height: 20),
+                    Text('${date.month} / ${date.day} / ${date.year}'),
+                    Text(weekdays[date.weekday - 1]),
                     TextButton(
-                        onPressed: () {
-                          showDatePicker(
+                        onPressed: () async {
+                          DateTime? temp = await showDatePicker(
                               context: context,
                               initialDate: date,
-                              cancelText: 'Cancel',
                               confirmText: 'Okay',
                               firstDate: DateTime(2000),
                               lastDate: DateTime(2100));
+                          if (temp != null) {
+                            date = temp;
+                          }
+                          setState(() {});
                         },
                         child: const Text('Pick a Date'))
                   ],
@@ -157,7 +171,7 @@ class _AddTaskState extends State<AddTask> {
                     taskDescription: taskDescription,
                     taskGroup: taskGroup,
                     completed: completed,
-                    date: DateTime.now(),
+                    date: date,
                   ));
                   Navigator.of(context).pop();
                 },
