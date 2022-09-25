@@ -90,7 +90,7 @@ class _TaskListState extends State<TaskList> {
                 /** Putting tasks onto the task board */
                 return ListTile(
                   title: Text(
-                      '${taskList[i].taskDescription} Group ID: ${taskList[i].taskGroup}'),
+                      'Task: ${taskList[i].taskDescription} Group: ${taskList[i].taskGroup}'),
                   leading:
                       const Icon(Icons.arrow_forward_ios, color: Colors.orange),
                   trailing: IconButton(
