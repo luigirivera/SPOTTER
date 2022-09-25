@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotter/services/auth.dart';
+import 'dart:io' show Platform;
 
 class SettingsDrawer extends StatefulWidget {
   const SettingsDrawer({Key? key}) : super(key: key);
@@ -46,13 +47,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
           //     onChanged: (value) {},
           //   ),
           // ),
-          if (_auth.currentUser!.isAnon == true)
-            ListTile(
-              title: const Text('Backup'),
-              onTap: () {
-                print("Backup");
-              },
-            ),
+
           ListTile(
             title: const Text('About'),
             trailing: const Icon(Icons.info),
@@ -63,21 +58,60 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
             },
           ),
 
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Colors.black,
-                  //rounded corners
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      side: const BorderSide(color: Colors.black, width: 2))),
-              onPressed: () async {
-                await _auth.signOut();
-                if (!mounted) return;
-                Navigator.popUntil(context, ModalRoute.withName("/"));
-              },
-              child: const Text('Log Out')),
+          if (_auth.currentUser!.isAnon == true)
+            SizedBox(
+              height: 50,
+            ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (_auth.currentUser!.isAnon == true) ...[
+                if (Platform.isIOS) const Text('Apple Login'),
+                const Text('Google Login'),
+              ],
+            ],
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (_auth.currentUser!.isAnon == true)
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.black,
+                        //rounded corners
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: const BorderSide(
+                                color: Colors.black, width: 2))),
+                    onPressed: () async {
+                      // sign in with email and password
+                    },
+                    child: const Text('Sign In')),
+              SizedBox(
+                width: 10,
+              ),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.black,
+                      //rounded corners
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side:
+                              const BorderSide(color: Colors.black, width: 2))),
+                  onPressed: () async {
+                    await _auth.signOut();
+                    if (!mounted) return;
+                    Navigator.popUntil(context, ModalRoute.withName("/"));
+                  },
+                  child: const Text('Log Out'))
+            ],
+          ),
         ],
       ),
     );

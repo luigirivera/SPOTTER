@@ -47,6 +47,8 @@ dependencies:
   build_runner: ^2.2.1
   objectbox_generator: ^1.6.2
   objectbox_flutter_libs: ^1.6.2
+  google_sign_in: ^5.4.2
+  sign_in_with_apple: ^4.1.0
 
 dev_dependencies:
   flutter_test:
