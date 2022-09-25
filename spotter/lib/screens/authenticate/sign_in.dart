@@ -4,6 +4,7 @@ import 'package:spotter/models/user_model.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
 import 'sign_up.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -194,6 +195,7 @@ class _SignInState extends State<SignIn> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20)),
                                     ))),
+                            SignInButton(Buttons.GoogleDark, onPressed: () {}),
                             const SizedBox(height: 25),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
