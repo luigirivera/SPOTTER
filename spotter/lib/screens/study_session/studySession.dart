@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 
 class StudySession extends StatefulWidget {
@@ -52,156 +52,79 @@ class _StudySessionState extends State<StudySession> {
   }
 
   void start() {
-    if (Platform.isIOS) {
-      timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
-        setState(() {
-          milliseconds++;
+    timer = Timer.periodic(const Duration(microseconds: 1), (timer) {
+      setState(() {
+        milliseconds++;
 
-          switch (minutes) {
-            //new tree phase every 5 minutes
-            case 5:
-              treePhase = 2;
-              break;
-            case 10:
-              treePhase = 3;
-              break;
-            case 15:
-              treePhase = 4;
-              break;
-            case 20:
-              treePhase = 5;
-              break;
-            case 25:
-              treePhase = 6;
-              break;
-            case 30:
-              treePhase = 7;
-              break;
-            case 35:
-              treePhase = 8;
-              break;
-            case 40:
-              treePhase = 9;
-              break;
-            case 45:
-              treePhase = 10;
-              break;
-            case 50:
-              treePhase = 11;
-              break;
-            case 55:
-              treePhase = 12;
-              break;
-          }
+        switch (minutes) {
+          //new tree phase every 5 minutes
+          case 5:
+            treePhase = 2;
+            break;
+          case 10:
+            treePhase = 3;
+            break;
+          case 15:
+            treePhase = 4;
+            break;
+          case 20:
+            treePhase = 5;
+            break;
+          case 25:
+            treePhase = 6;
+            break;
+          case 30:
+            treePhase = 7;
+            break;
+          case 35:
+            treePhase = 8;
+            break;
+          case 40:
+            treePhase = 9;
+            break;
+          case 45:
+            treePhase = 10;
+            break;
+          case 50:
+            treePhase = 11;
+            break;
+          case 55:
+            treePhase = 12;
+            break;
+        }
 
-          if (milliseconds == 1000) {
-            milliseconds = 0;
-            seconds++;
-          }
-          if (seconds == 60) {
-            seconds = 0;
-            minutes++;
-          }
-          if (minutes == 60) {
-            minutes = 0;
-            hours++;
+        if (milliseconds == 1000) {
+          milliseconds = 0;
+          seconds++;
+        }
+        if (seconds == 60) {
+          seconds = 0;
+          minutes++;
+        }
+        if (minutes == 60) {
+          minutes = 0;
+          hours++;
 
-            treePhase = 1;
-            completedTrees++;
-          }
-          if (seconds < 10) {
-            secondsString = "0" + seconds.toString();
-          } else {
-            secondsString = seconds.toString();
-          }
-          if (minutes < 10) {
-            minutesString = "0" + minutes.toString();
-          } else {
-            minutesString = minutes.toString();
-          }
-          if (hours < 10) {
-            hoursString = "0" + hours.toString();
-          } else {
-            hoursString = hours.toString();
-          }
-        });
+          treePhase = 1;
+          completedTrees++;
+        }
+        if (seconds < 10) {
+          secondsString = "0" + seconds.toString();
+        } else {
+          secondsString = seconds.toString();
+        }
+        if (minutes < 10) {
+          minutesString = "0" + minutes.toString();
+        } else {
+          minutesString = minutes.toString();
+        }
+        if (hours < 10) {
+          hoursString = "0" + hours.toString();
+        } else {
+          hoursString = hours.toString();
+        }
       });
-    } else {
-      timer = Timer.periodic(const Duration(microseconds: 1), (timer) {
-        setState(() {
-          milliseconds++;
-
-          switch (minutes) {
-            //new tree phase every 5 minutes
-            case 5:
-              treePhase = 2;
-              break;
-            case 10:
-              treePhase = 3;
-              break;
-            case 15:
-              treePhase = 4;
-              break;
-            case 20:
-              treePhase = 5;
-              break;
-            case 25:
-              treePhase = 6;
-              break;
-            case 30:
-              treePhase = 7;
-              break;
-            case 35:
-              treePhase = 8;
-              break;
-            case 40:
-              treePhase = 9;
-              break;
-            case 45:
-              treePhase = 10;
-              break;
-            case 50:
-              treePhase = 11;
-              break;
-            case 55:
-              treePhase = 12;
-              break;
-          }
-
-          if (milliseconds == 1000) {
-            milliseconds = 0;
-            seconds++;
-          }
-          if (seconds == 60) {
-            seconds = 0;
-            minutes++;
-          }
-          if (minutes == 60) {
-            minutes = 0;
-            hours++;
-
-            treePhase = 1;
-            completedTrees++;
-          }
-          if (seconds < 10) {
-            secondsString = "0" + seconds.toString();
-          } else {
-            secondsString = seconds.toString();
-          }
-          if (minutes < 10) {
-            minutesString = "0" + minutes.toString();
-          } else {
-            minutesString = minutes.toString();
-          }
-          if (hours < 10) {
-            hoursString = "0" + hours.toString();
-          } else {
-            hoursString = hours.toString();
-          }
-        });
-      });
-    }
-
+    });
     setState(() {
       isTimerRunning = true;
     });
