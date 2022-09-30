@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
               image: DecorationImage(
-            image: AssetImage('assets/stars.png'),
+            image: AssetImage('assets/sea_appbar.png'),
             fit: BoxFit.fill,
           )),
         ),

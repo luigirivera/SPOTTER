@@ -10,9 +10,6 @@ class TaskBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 270,
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/filler.png'), fit: BoxFit.fill)),
       padding: const EdgeInsets.only(right: 20, left: 20),
       child: Container(
         decoration: BoxDecoration(
@@ -133,7 +130,7 @@ class TaskPopOutPage extends StatelessWidget {
         flexibleSpace: Container(
             decoration: const BoxDecoration(
                 image: DecorationImage(
-          image: AssetImage('assets/stars.png'),
+          image: AssetImage('assets/sea_appbar.png'),
           fit: BoxFit.fill,
         ))),
         leading: Builder(

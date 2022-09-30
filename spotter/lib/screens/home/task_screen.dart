@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 import 'tasks.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -12,7 +13,9 @@ class _TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return Container(decoration: const BoxDecoration(
+    image: DecorationImage(
+    image: AssetImage('assets/beach.png'), fit: BoxFit.fill)),child: Column(children: [
       //
       //
       //The first section; Task board.
@@ -22,21 +25,13 @@ class _TaskScreenState extends State<TaskScreen> {
       //The second section; Text box.
       Container(
         height: 100,
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/filler.png'), fit: BoxFit.fill)),
       ),
       //
       //
       //The third section; Mascot
-      Expanded(
-        child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/space.png'), fit: BoxFit.fill),
-          ),
+      const Expanded(
+          child: RiveAnimation.asset('assets/spotter_home.riv'),
         ),
-      ),
-    ]);
+    ]));
   }
 }
