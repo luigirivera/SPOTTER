@@ -22,7 +22,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 2432166687953516652),
       name: 'Task',
-      lastPropertyId: const IdUid(5, 3464322506574893699),
+      lastPropertyId: const IdUid(8, 3116807868853089639),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -36,20 +36,24 @@ final _entities = <ModelEntity>[
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 6907622731959549502),
-            name: 'taskGroup',
-            type: 9,
-            flags: 0),
-        ModelProperty(
             id: const IdUid(4, 4371495459484611180),
             name: 'completed',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 3464322506574893699),
-            name: 'date',
-            type: 10,
-            flags: 0)
+            id: const IdUid(6, 3031576394869465085),
+            name: 'taskGroupId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(1, 4157824682857840899),
+            relationTarget: 'TaskGroup'),
+        ModelProperty(
+            id: const IdUid(8, 3116807868853089639),
+            name: 'taskDateId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(3, 6369646154956444029),
+            relationTarget: 'TaskDate')
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
@@ -71,7 +75,30 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[])
+      backlinks: <ModelBacklink>[
+        ModelBacklink(name: 'tasks', srcEntity: 'Task', srcField: '')
+      ]),
+  ModelEntity(
+      id: const IdUid(4, 6894683450146198376),
+      name: 'TaskDate',
+      lastPropertyId: const IdUid(2, 1276408424731658357),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 1209234501180254007),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 1276408424731658357),
+            name: 'date',
+            type: 10,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[
+        ModelBacklink(name: 'tasks', srcEntity: 'Task', srcField: '')
+      ])
 ];
 
 /// Open an ObjectBox store with the model declared in this file.
@@ -94,13 +121,19 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(3, 2244299741876127042),
-      lastIndexId: const IdUid(0, 0),
+      lastEntityId: const IdUid(4, 6894683450146198376),
+      lastIndexId: const IdUid(3, 6369646154956444029),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [8108166947537495174],
-      retiredIndexUids: const [],
-      retiredPropertyUids: const [8985378110078263766, 3744637546667393341],
+      retiredIndexUids: const [7485740281930158389],
+      retiredPropertyUids: const [
+        8985378110078263766,
+        3744637546667393341,
+        6907622731959549502,
+        3464322506574893699,
+        6005979652544907125
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -109,7 +142,7 @@ ModelDefinition getObjectBoxModel() {
   final bindings = <Type, EntityDefinition>{
     Task: EntityDefinition<Task>(
         model: _entities[0],
-        toOneRelations: (Task object) => [],
+        toOneRelations: (Task object) => [object.taskGroup, object.taskDate],
         toManyRelations: (Task object) => {},
         getId: (Task object) => object.id,
         setId: (Task object, int id) {
@@ -117,13 +150,12 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (Task object, fb.Builder fbb) {
           final taskDescriptionOffset = fbb.writeString(object.taskDescription);
-          final taskGroupOffset = fbb.writeString(object.taskGroup);
-          fbb.startTable(6);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, taskDescriptionOffset);
-          fbb.addOffset(2, taskGroupOffset);
           fbb.addBool(3, object.completed);
-          fbb.addInt64(4, object.date.millisecondsSinceEpoch);
+          fbb.addInt64(5, object.taskGroup.targetId);
+          fbb.addInt64(7, object.taskDate.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -134,20 +166,25 @@ ModelDefinition getObjectBoxModel() {
           final object = Task(
               taskDescription: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 6, ''),
-              taskGroup: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
               completed: const fb.BoolReader()
-                  .vTableGet(buffer, rootOffset, 10, false),
-              date: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0)))
+                  .vTableGet(buffer, rootOffset, 10, false))
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-
+          object.taskGroup.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
+          object.taskGroup.attach(store);
+          object.taskDate.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
+          object.taskDate.attach(store);
           return object;
         }),
     TaskGroup: EntityDefinition<TaskGroup>(
         model: _entities[1],
         toOneRelations: (TaskGroup object) => [],
-        toManyRelations: (TaskGroup object) => {},
+        toManyRelations: (TaskGroup object) => {
+              RelInfo<Task>.toOneBacklink(
+                      6, object.id, (Task srcObject) => srcObject.taskGroup):
+                  object.tasks
+            },
         getId: (TaskGroup object) => object.id,
         setId: (TaskGroup object, int id) {
           object.id = id;
@@ -168,7 +205,47 @@ ModelDefinition getObjectBoxModel() {
               taskGroup: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 6, ''))
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          InternalToManyAccess.setRelInfo(
+              object.tasks,
+              store,
+              RelInfo<Task>.toOneBacklink(
+                  6, object.id, (Task srcObject) => srcObject.taskGroup),
+              store.box<TaskGroup>());
+          return object;
+        }),
+    TaskDate: EntityDefinition<TaskDate>(
+        model: _entities[2],
+        toOneRelations: (TaskDate object) => [],
+        toManyRelations: (TaskDate object) => {
+              RelInfo<Task>.toOneBacklink(
+                      8, object.id, (Task srcObject) => srcObject.taskDate):
+                  object.tasks
+            },
+        getId: (TaskDate object) => object.id,
+        setId: (TaskDate object, int id) {
+          object.id = id;
+        },
+        objectToFB: (TaskDate object, fb.Builder fbb) {
+          fbb.startTable(3);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.date.millisecondsSinceEpoch);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
 
+          final object = TaskDate(
+              date: DateTime.fromMillisecondsSinceEpoch(
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0)))
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          InternalToManyAccess.setRelInfo(
+              object.tasks,
+              store,
+              RelInfo<Task>.toOneBacklink(
+                  8, object.id, (Task srcObject) => srcObject.taskDate),
+              store.box<TaskDate>());
           return object;
         })
   };
@@ -185,16 +262,17 @@ class Task_ {
   static final taskDescription =
       QueryStringProperty<Task>(_entities[0].properties[1]);
 
-  /// see [Task.taskGroup]
-  static final taskGroup =
-      QueryStringProperty<Task>(_entities[0].properties[2]);
-
   /// see [Task.completed]
   static final completed =
-      QueryBooleanProperty<Task>(_entities[0].properties[3]);
+      QueryBooleanProperty<Task>(_entities[0].properties[2]);
 
-  /// see [Task.date]
-  static final date = QueryIntegerProperty<Task>(_entities[0].properties[4]);
+  /// see [Task.taskGroup]
+  static final taskGroup =
+      QueryRelationToOne<Task, TaskGroup>(_entities[0].properties[3]);
+
+  /// see [Task.taskDate]
+  static final taskDate =
+      QueryRelationToOne<Task, TaskDate>(_entities[0].properties[4]);
 }
 
 /// [TaskGroup] entity fields to define ObjectBox queries.
@@ -205,4 +283,14 @@ class TaskGroup_ {
   /// see [TaskGroup.taskGroup]
   static final taskGroup =
       QueryStringProperty<TaskGroup>(_entities[1].properties[1]);
+}
+
+/// [TaskDate] entity fields to define ObjectBox queries.
+class TaskDate_ {
+  /// see [TaskDate.id]
+  static final id = QueryIntegerProperty<TaskDate>(_entities[2].properties[0]);
+
+  /// see [TaskDate.date]
+  static final date =
+      QueryIntegerProperty<TaskDate>(_entities[2].properties[1]);
 }

@@ -9,10 +9,16 @@ class AddTask extends StatefulWidget {
   State<AddTask> createState() => _AddTaskState();
 }
 
+///This method handles adding task and task group
+///The task group addition is performed in here for rebuilding and variable book keeping convenience
+///Switching between the two modes by a boolean
+///This method also handles the data-relationship between task and date
 class _AddTaskState extends State<AddTask> {
   final _formKey = GlobalKey<FormState>();
   bool isAddingGroup = false;
 
+  ///This date is subjected to change if user picked another
+  ///The change will be reflected on the screen
   DateTime date = DateTime.now();
   List<String> weekdays = [
     'Monday',
@@ -23,10 +29,11 @@ class _AddTaskState extends State<AddTask> {
     'Saturday',
     'Sunday'
   ];
-  String? newTaskGroup;
-  String taskDescription = '';
-  String taskGroup = "General";
+  String? newGroup;
+  String description = '';
+  String group = "General";
   bool completed = false;
+  bool groupAddSuccess = true;
 
   @override
   Widget build(BuildContext context) {
@@ -35,32 +42,39 @@ class _AddTaskState extends State<AddTask> {
         ///Second alert dialogue for inputting new task group
         ///It's second because it's supposed show up after the other one does
         ? AlertDialog(
-            content: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.1,
-              width: MediaQuery.of(context).size.width * 0.2,
-              child: Form(
-                  key: _formKey,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue.shade800),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        hintText: "What is your new group?",
-                        filled: true,
-                        fillColor: Colors.grey.shade200),
-                    /** Help in validating formats */
-                    validator: (value) =>
-                        value!.isEmpty ? 'Enter a group here' : null,
-                    onChanged: (value) {
-                      newTaskGroup = value;
-                    },
-                  )),
-            ),
+            content:
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.1,
+                width: MediaQuery.of(context).size.width * 0.2,
+                child: Form(
+                    key: _formKey,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blue.shade800),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hintText: "What is your new group?",
+                          filled: true,
+                          fillColor: Colors.grey.shade200),
+                      /** Help in validating formats */
+                      validator: (value) {
+                        if(value!.isEmpty){
+                          return 'Enter a group here';
+                        }else if(objectbox.ifTaskGroupExistsInObjectBox(value)){
+                          return 'Group name already exists!';
+                        }
+                        return '';
+                      },
+                      onChanged: (value) {
+                        newGroup = value;
+                      },
+                    )),
+              ),
 
             ///Skip when there's no input in the text box when 'Okay' is clicked
             actions: <Widget>[
@@ -75,12 +89,11 @@ class _AddTaskState extends State<AddTask> {
               ),
               TextButton(
                 onPressed: () {
-                  if (newTaskGroup != null) {
-                    objectbox.addTaskGroup(newTaskGroup!);
+                  if (newGroup != null) {
+                      setState(() {
+                        isAddingGroup = false;
+                      });
                   }
-                  setState(() {
-                    isAddingGroup = false;
-                  });
                 },
                 child: const Text('Okay'),
               ),
@@ -114,7 +127,7 @@ class _AddTaskState extends State<AddTask> {
                           value!.isEmpty ? 'Enter a task here' : null,
                       onChanged: (value) {
                         setState(() {
-                          taskDescription = value;
+                          description = value;
                         });
                       },
                     ),
@@ -122,8 +135,8 @@ class _AddTaskState extends State<AddTask> {
 
                     ///Task group drop down form
                     DropdownButtonFormField<String>(
-                        value: objectbox.getTaskGroups().elementAt(1).taskGroup,
-                        items: objectbox.getTaskGroups().map((taskGroup) {
+                        value: objectbox.getTaskGroupList().elementAt(1).taskGroup,
+                        items: objectbox.getTaskGroupList().map((taskGroup) {
                           return DropdownMenuItem<String>(
                               value: taskGroup.taskGroup,
                               child: Text(taskGroup.taskGroup));
@@ -135,7 +148,7 @@ class _AddTaskState extends State<AddTask> {
                             });
                           } else {
                             setState(() {
-                              taskGroup = value.toString();
+                              group = value.toString();
                             });
                           }
                         }),
@@ -167,12 +180,20 @@ class _AddTaskState extends State<AddTask> {
               ),
               TextButton(
                 onPressed: () {
-                  objectbox.addTask(Task(
-                    taskDescription: taskDescription,
-                    taskGroup: taskGroup,
+                  Task newTask = Task(
+                    taskDescription: description,
                     completed: completed,
-                    date: date,
-                  ));
+                  );
+                  TaskGroup taskGroup = objectbox.getTaskGroup(group);
+                  TaskDate taskDate = objectbox.getTaskDate(date);
+                  ///Data relations
+                  newTask.taskDate.target = taskDate;
+                  newTask.taskGroup.target = taskGroup;
+                  taskGroup.tasks.add(newTask);
+                  taskDate.tasks.add(newTask);
+
+                  objectbox.addTask(newTask);
+
                   Navigator.of(context).pop();
                 },
                 child: const Text('Okay'),

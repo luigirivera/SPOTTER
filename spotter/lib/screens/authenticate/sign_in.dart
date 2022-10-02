@@ -62,7 +62,7 @@ class _SignInState extends State<SignIn> {
                             const Text("Spotter",
                                 style: TextStyle(fontSize: 30)),
                             const SizedBox(height: 5),
-                            const Text("Tasks Compantion",
+                            const Text("Tasks Companion",
                                 style: TextStyle(fontSize: 15)),
                             const SizedBox(height: 20),
 

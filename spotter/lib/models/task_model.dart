@@ -7,24 +7,43 @@ class Task {
   @Id()
   int id = 0; //don't delete this. it's for objectbox
   String taskDescription;
-  String taskGroup;
   bool completed = false;
-  DateTime date;
 
-  Task({required this.taskDescription, required this.taskGroup, required this.completed, required this.date});
+  final taskGroup = ToOne<TaskGroup>();
+  final taskDate = ToOne<TaskDate>();
+
+  Task(
+      {required this.taskDescription,
+      required this.completed});
 
   @override
-  String toString() => 'Task: $taskDescription, Task Group: $taskGroup, Completed: $completed';
+  String toString() =>
+      'Task: $taskDescription, Task Group: $taskGroup, Completed: $completed';
 }
 
 @Entity()
-class TaskGroup{
+class TaskGroup {
   @Id()
   int id = 0;
   String taskGroup;
+
+  @Backlink()
+  final tasks = ToMany<Task>();
 
   TaskGroup({required this.taskGroup});
 
   @override
   String toString() => 'Task Group: $taskGroup';
+}
+
+@Entity()
+class TaskDate {
+  @Id()
+  int id = 0;
+  DateTime date;
+
+  @Backlink()
+  final ToMany<Task>tasks = ToMany<Task>();
+
+  TaskDate({required this.date});
 }
