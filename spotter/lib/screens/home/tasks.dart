@@ -35,7 +35,7 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
-    List<Task> taskList = objectbox.getTaskList();
+    List<Task> taskList = objectbox.getTaskListByDate(DateTime.now());
     return Column(children: [
       SizedBox(
         height: 50,

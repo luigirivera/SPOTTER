@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:spotter/main.dart';
 import '../models/user_model.dart';
 
 class AuthService {
@@ -59,7 +59,7 @@ class AuthService {
       UserCredential userCred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = userCred.user;
-
+      objectbox.initTaskCollection();
       return _spotterUser(user);
     } on FirebaseAuthException catch (error) {
       //This is the specific error catching method found on documentation

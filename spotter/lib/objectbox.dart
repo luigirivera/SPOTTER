@@ -52,7 +52,13 @@ class ObjectBox {
 
   TaskGroup getTaskGroup(String taskGroup) => findTaskGroup(taskGroup)!;
 
-  TaskDate getTaskDate(DateTime date) => findTaskDate(date)!;
+  TaskDate getTaskDate(DateTime date) => findTaskDate(date);
+
+  List<Task> getTaskListByDate(DateTime date) =>
+      findTaskDate(date).tasks.toList();
+
+  List<Task> getTaskListByGroup(String taskGroup) =>
+      findTaskGroup(taskGroup)!.tasks.toList();
 
   ///==////////////////////////////////////////////////////////////////
 
@@ -85,7 +91,6 @@ class ObjectBox {
     return newTaskDate;
   }
 
-  //TODO: switch up the put() to remove()
   Future deleteTaskGroup(String taskGroup) async {
     List<String> taskGroupList = await _getFirebaseTaskGroups();
     int index = taskGroupList.indexOf(taskGroup);
@@ -120,7 +125,7 @@ class ObjectBox {
     return null;
   }
 
-  TaskDate? findTaskDate(DateTime date) {
+  TaskDate findTaskDate(DateTime date) {
     if (taskDate.isEmpty()) {
       return addTaskDate(date);
     }
