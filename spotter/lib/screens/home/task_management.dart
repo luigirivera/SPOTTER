@@ -186,11 +186,13 @@ class _AddTaskState extends State<AddTask> {
                   );
                   TaskGroup taskGroup = objectbox.getTaskGroup(group);
                   TaskDate taskDate = objectbox.getTaskDate(date);
+
                   ///Data relations
                   newTask.taskDate.target = taskDate;
                   newTask.taskGroup.target = taskGroup;
                   taskGroup.tasks.add(newTask);
                   taskDate.tasks.add(newTask);
+                  taskDate.taskGroups.add(taskGroup);
 
                   objectbox.addTask(newTask);
 

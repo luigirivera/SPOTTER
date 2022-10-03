@@ -29,9 +29,9 @@ class _TaskScreenState extends State<TaskScreen> {
       //
       //
       //The third section; Mascot
-      const Expanded(
-          child: RiveAnimation.asset('assets/spotter_home.riv'),
-        ),
+      // const Expanded(
+      //     child: RiveAnimation.asset('assets/spotter_home.riv'),
+      //   ),
     ]));
   }
 }

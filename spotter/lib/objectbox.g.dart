@@ -81,7 +81,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(4, 6894683450146198376),
       name: 'TaskDate',
-      lastPropertyId: const IdUid(2, 1276408424731658357),
+      lastPropertyId: const IdUid(5, 670442149101728455),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -90,12 +90,27 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 1276408424731658357),
-            name: 'date',
-            type: 10,
+            id: const IdUid(3, 157017507726260566),
+            name: 'year',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 8688360419597907777),
+            name: 'month',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 670442149101728455),
+            name: 'day',
+            type: 6,
             flags: 0)
       ],
-      relations: <ModelRelation>[],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(1, 5473346048667747771),
+            name: 'taskGroups',
+            targetId: const IdUid(3, 2244299741876127042))
+      ],
       backlinks: <ModelBacklink>[
         ModelBacklink(name: 'tasks', srcEntity: 'Task', srcField: '')
       ])
@@ -123,7 +138,7 @@ ModelDefinition getObjectBoxModel() {
       entities: _entities,
       lastEntityId: const IdUid(4, 6894683450146198376),
       lastIndexId: const IdUid(3, 6369646154956444029),
-      lastRelationId: const IdUid(0, 0),
+      lastRelationId: const IdUid(1, 5473346048667747771),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [8108166947537495174],
       retiredIndexUids: const [7485740281930158389],
@@ -132,7 +147,8 @@ ModelDefinition getObjectBoxModel() {
         3744637546667393341,
         6907622731959549502,
         3464322506574893699,
-        6005979652544907125
+        6005979652544907125,
+        1276408424731658357
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -217,6 +233,7 @@ ModelDefinition getObjectBoxModel() {
         model: _entities[2],
         toOneRelations: (TaskDate object) => [],
         toManyRelations: (TaskDate object) => {
+              RelInfo<TaskDate>.toMany(1, object.id): object.taskGroups,
               RelInfo<Task>.toOneBacklink(
                       8, object.id, (Task srcObject) => srcObject.taskDate):
                   object.tasks
@@ -226,9 +243,11 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (TaskDate object, fb.Builder fbb) {
-          fbb.startTable(3);
+          fbb.startTable(6);
           fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.date.millisecondsSinceEpoch);
+          fbb.addInt64(2, object.year);
+          fbb.addInt64(3, object.month);
+          fbb.addInt64(4, object.day);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -237,9 +256,13 @@ ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
 
           final object = TaskDate(
-              date: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0)))
+              year: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
+              month:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0),
+              day: const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0))
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          InternalToManyAccess.setRelInfo(object.taskGroups, store,
+              RelInfo<TaskDate>.toMany(1, object.id), store.box<TaskDate>());
           InternalToManyAccess.setRelInfo(
               object.tasks,
               store,
@@ -290,7 +313,18 @@ class TaskDate_ {
   /// see [TaskDate.id]
   static final id = QueryIntegerProperty<TaskDate>(_entities[2].properties[0]);
 
-  /// see [TaskDate.date]
-  static final date =
+  /// see [TaskDate.year]
+  static final year =
       QueryIntegerProperty<TaskDate>(_entities[2].properties[1]);
+
+  /// see [TaskDate.month]
+  static final month =
+      QueryIntegerProperty<TaskDate>(_entities[2].properties[2]);
+
+  /// see [TaskDate.day]
+  static final day = QueryIntegerProperty<TaskDate>(_entities[2].properties[3]);
+
+  /// see [TaskDate.taskGroups]
+  static final taskGroups =
+      QueryRelationToMany<TaskDate, TaskGroup>(_entities[2].relations[0]);
 }

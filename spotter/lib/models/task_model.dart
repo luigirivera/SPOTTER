@@ -12,9 +12,7 @@ class Task {
   final taskGroup = ToOne<TaskGroup>();
   final taskDate = ToOne<TaskDate>();
 
-  Task(
-      {required this.taskDescription,
-      required this.completed});
+  Task({required this.taskDescription, required this.completed});
 
   @override
   String toString() =>
@@ -40,10 +38,21 @@ class TaskGroup {
 class TaskDate {
   @Id()
   int id = 0;
-  DateTime date;
+  int year;
+  int month;
+  int day;
 
   @Backlink()
-  final ToMany<Task>tasks = ToMany<Task>();
+  final ToMany<Task> tasks = ToMany<Task>();
 
-  TaskDate({required this.date});
+  final ToMany<TaskGroup> taskGroups = ToMany<TaskGroup>();
+
+  TaskDate({required this.year, required this.month, required this.day});
+
+  bool compareTo(TaskDate otherTaskDate){
+    if(year == otherTaskDate.year && month == otherTaskDate.month && day == otherTaskDate.day){
+      return true;
+    }
+    return false;
+  }
 }

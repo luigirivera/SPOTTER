@@ -64,7 +64,7 @@
     },
     {
       "id": "4:6894683450146198376",
-      "lastPropertyId": "2:1276408424731658357",
+      "lastPropertyId": "5:670442149101728455",
       "name": "TaskDate",
       "properties": [
         {
@@ -74,17 +74,33 @@
           "flags": 1
         },
         {
-          "id": "2:1276408424731658357",
-          "name": "date",
-          "type": 10
+          "id": "3:157017507726260566",
+          "name": "year",
+          "type": 6
+        },
+        {
+          "id": "4:8688360419597907777",
+          "name": "month",
+          "type": 6
+        },
+        {
+          "id": "5:670442149101728455",
+          "name": "day",
+          "type": 6
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "1:5473346048667747771",
+          "name": "taskGroups",
+          "targetId": "3:2244299741876127042"
+        }
+      ]
     }
   ],
   "lastEntityId": "4:6894683450146198376",
   "lastIndexId": "3:6369646154956444029",
-  "lastRelationId": "0:0",
+  "lastRelationId": "1:5473346048667747771",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
@@ -99,7 +115,8 @@
     3744637546667393341,
     6907622731959549502,
     3464322506574893699,
-    6005979652544907125
+    6005979652544907125,
+    1276408424731658357
   ],
   "retiredRelationUids": [],
   "version": 1
