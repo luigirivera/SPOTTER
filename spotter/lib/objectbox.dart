@@ -37,7 +37,7 @@ class ObjectBox {
 
   Future initTaskCollection() async {
     return await taskCollection.doc(uid).set({
-      'Task Groups': ['General']
+      'groups': ['General'],
     });
   }
 
@@ -60,8 +60,8 @@ class ObjectBox {
   List<Task> getTaskListByGroup(String taskGroup) =>
       _findTaskGroup(taskGroup)!.tasks.toList();
 
-  List<TaskGroup> getTaskGroupByDate(DateTime date) =>
-      _findTaskGroupsByDate(date);
+  List<TaskGroup> getTaskGroupsByDate(DateTime date) =>
+      _findTaskDate(date).taskGroups.toList();
 
   List<Task> getTaskListByGroupAndDate(DateTime date, TaskGroup group) => _findTaskListByGroupAndDate(date, group);
 
@@ -75,19 +75,11 @@ class ObjectBox {
         .collection(taskGroup)
         .doc(task.taskDescription)
         .set({
-      'Task Description': task.taskDescription,
-      'taskGroup': taskGroup,
+      'description': task.taskDescription,
+      'group': taskGroup,
       'completed': task.completed,
     });
     taskList.put(task);
-  }
-
-  Future addTaskGroup(String taskGroup) async {
-    List<String> taskGroupList = await _getFirebaseTaskGroups();
-    taskGroupList.add(taskGroup);
-    taskCollection.doc(uid).set({'Task Groups': taskGroups});
-
-    taskGroups.put(TaskGroup(taskGroup: taskGroup));
   }
 
   TaskDate addTaskDate(DateTime date) {
@@ -97,11 +89,19 @@ class ObjectBox {
     return newTaskDate;
   }
 
+  Future addTaskGroup(String taskGroup) async {
+    List<String> taskGroupList = await _getFirebaseTaskGroups();
+    taskGroupList.add(taskGroup);
+    await taskCollection.doc(uid).set({'groups': taskGroupList});
+
+    taskGroups.put(TaskGroup(taskGroup: taskGroup));
+  }
+
   Future deleteTaskGroup(String taskGroup) async {
     List<String> taskGroupList = await _getFirebaseTaskGroups();
     int index = taskGroupList.indexOf(taskGroup);
     taskGroupList.removeAt(index);
-    taskCollection.doc(uid).set({'Task Groups': taskGroups});
+    await taskCollection.doc(uid).set({'groups': taskGroupList});
 
     TaskGroup group = _findTaskGroup(taskGroup)!;
     taskGroups.remove(group.id);
@@ -131,14 +131,9 @@ class ObjectBox {
     return null;
   }
 
-  List<TaskGroup> _findTaskGroupsByDate(DateTime date) {
-    TaskDate tempTaskDate = getTaskDate(date);
-    return tempTaskDate.taskGroups.toList();
-  }
-
   List<Task> _findTaskListByGroupAndDate(DateTime date, TaskGroup group){
     List<Task> tempTaskList = group.tasks;
-    List<Task> resultTaskList = List.empty();
+    List<Task> resultTaskList = List.empty(growable: true);
     TaskDate tempTaskDate = getTaskDate(date);
     for(var task in tempTaskList){
       if(task.taskDate.target!.compareTo(tempTaskDate)){
@@ -152,7 +147,7 @@ class ObjectBox {
   ///The "id" of the TaskDate obj is needed to assign correctly
   TaskDate _findTaskDate(DateTime date) {
     if (taskDate.isEmpty()) {
-      return addTaskDate(date);
+     addTaskDate(date);
     }
 
     List<TaskDate> tempDateList = getTaskDateList();
@@ -180,7 +175,7 @@ class ObjectBox {
     List dynamicList = [];
     List<String> taskGroups = <String>[];
     await taskCollection.doc(uid).get().then((value) {
-      dynamicList = value['Task Groups'];
+      dynamicList = value.toString().contains('groups') ? value['groups'] : List.empty(growable: true);
     });
     taskGroups = dynamicList.cast<String>();
 

@@ -143,14 +143,12 @@ class _SignUpState extends State<SignUp> {
                                       )),
                                   onPressed: () async {
                                     /** This will only be valid iff both of
-                               * the validators above return null
-                               */
+                                    * the validators above return null
+                                    */
                                     if (_formKey.currentState!.validate()) {
                                       setState(() {
                                         _loading = true;
                                       });
-                                      // debugPrint(email);
-                                      // debugPrint(password);
                                       dynamic result = await _auth.registerEP(
                                           email, password);
 

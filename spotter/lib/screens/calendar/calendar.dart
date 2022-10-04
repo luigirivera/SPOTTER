@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../home/tasks.dart';
+
 class Calendar extends StatefulWidget {
   const Calendar({Key? key}) : super(key: key);
 
@@ -12,6 +14,7 @@ class _CalendarState extends State<Calendar> {
   /// Try to avoid "late" initialization or the calendar will look trippy
   /// I tried to fill in below variables with some defaults
   static DateTime? _selectedDay;
+  bool _daySelected = false;
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month; //setting a default
 
@@ -19,6 +22,7 @@ class _CalendarState extends State<Calendar> {
     setState(() {
       _selectedDay = selectedDay;
       _focusedDay = focusedDay;
+      _daySelected = true;
     });
   }
 
@@ -61,7 +65,7 @@ class _CalendarState extends State<Calendar> {
           outsideDaysVisible: false,
         ),
       ),
-      Center(child: SizedBox(height: 50, child: Text('${_selectedDay?.year}, ${_selectedDay?.month}, ${_selectedDay?.day}')))
+      Expanded(child:_daySelected?TaskList(date: _selectedDay!):Container()),
     ]);
   }
 }

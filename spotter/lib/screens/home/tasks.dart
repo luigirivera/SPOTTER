@@ -17,14 +17,15 @@ class TaskBoard extends StatelessWidget {
           border: Border.all(color: Colors.blue, width: 5),
           borderRadius: const BorderRadius.all(Radius.circular(40)),
         ),
-        child: const TaskList(),
+        child: TaskList(date: DateTime.now()),
       ),
     );
   }
 }
 
 class TaskList extends StatefulWidget {
-  const TaskList({Key? key}) : super(key: key);
+  final DateTime date;
+  const TaskList({Key? key, required this.date}) : super(key: key);
 
   @override
   State<TaskList> createState() => _TaskListState();
@@ -33,13 +34,14 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
-    List<Task> taskList = objectbox.getTaskListByDate(DateTime.now());
+    List<Task> taskList = objectbox.getTaskListByDate(widget.date);
     return Column(children: [
       SizedBox(
         height: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <IconButton>[
+            ///A button to add a new task
             IconButton(
               icon: const Icon(
                 Icons.add_circle,
@@ -50,20 +52,22 @@ class _TaskListState extends State<TaskList> {
                     context: context,
                     barrierDismissible: true,
                     builder: (context) {
-                      return const AddTask();
+                      return const AddTaskAndGroup();
                     }).then((value) {
                   setState(() {});
                 });
               },
               tooltip: 'Add new tasks',
             ),
+
+            ///Button for pop out view of the task board
             IconButton(
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          TaskPopOutPage(date: DateTime.now()),
+                          TaskPopOutPage(date: widget.date),
                     )).then((value) {
                   setState(() {});
                 });
@@ -74,6 +78,8 @@ class _TaskListState extends State<TaskList> {
           ],
         ),
       ),
+
+      ///The actual task list itself
       Expanded(
           child: ListView.builder(
               padding: const EdgeInsets.all(10),
@@ -83,10 +89,9 @@ class _TaskListState extends State<TaskList> {
                 final i = index ~/ 2;
                 final check = taskList[i].completed;
 
-                /** Putting tasks onto the task board */
                 return ListTile(
                   title: Text(
-                      'Task: ${taskList[i].taskDescription} Group: ${taskList[i].taskGroup}'),
+                      'Task: ${taskList[i].taskDescription}\nGroup: ${taskList[i].taskGroup.target!.taskGroup}\nTime: ${taskList[i].taskDate.target!.year}/${taskList[i].taskDate.target!.month}/${taskList[i].taskDate.target!.day}'),
                   leading:
                       const Icon(Icons.arrow_forward_ios, color: Colors.orange),
                   trailing: IconButton(
@@ -130,7 +135,7 @@ class TaskPopOutPage extends StatefulWidget {
 class _TaskPopOutPageState extends State<TaskPopOutPage> {
   @override
   Widget build(BuildContext context) {
-    List<TaskGroup> taskGroup = objectbox.getTaskGroupByDate(widget.date);
+    List<TaskGroup> taskGroup = objectbox.getTaskGroupsByDate(widget.date);
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -154,79 +159,106 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
             },
           ),
         ),
-        body: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: ListView.builder(
-              itemCount: taskGroup.length,
-              itemBuilder: (BuildContext context, int index) {
-                //This is for the '+ add group', it's not supposed to be in the list
-                if (index == 0) {
-                  return const Divider();
-                }
-                if (index.isEven) return const Divider();
-                final i = index ~/ 2;
-                List<Task> taskList = objectbox.getTaskListByGroupAndDate(
-                    widget.date, taskGroup[i]);
-                return Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 5,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
+
+        ///This SizedBox houses a nested ListView structure.
+        ///Outer ListView are the groups
+        ///Inner ListView are the tasks of the groups
+        ///Only showing tasks of a given day (passed as a variable to this class)
+        body: Column(children: [
+          SizedBox(
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <IconButton>[
+                ///A button to add a new task
+                IconButton(
+                  icon: const Icon(
+                    Icons.add_circle,
+                    color: Colors.orange,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (context) {
+                          return const AddTaskAndGroup();
+                        }).then((value) {
+                      setState(() {});
+                    });
+                  },
+                  tooltip: 'Add new tasks',
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+              child: ListView.builder(
+            itemCount: taskGroup.length * 2,
+            itemBuilder: (BuildContext context, int index) {
+              if (index.isOdd) return const Divider();
+              final i = index ~/ 2;
+              List<Task> taskList = objectbox.getTaskListByGroupAndDate(
+                  widget.date, taskGroup[i]);
+              return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 3,
                     ),
-                    child: ListView.builder(
-                      itemCount: taskList.length * 2,
-                      itemBuilder: (BuildContext context, int innerIndex) {
-                        if(innerIndex == 0) {
-                          return ListTile(
-                            title: Text(taskGroup[i].taskGroup),
-                            tileColor: Colors.yellow,
-                          );
-                        }
-
-                        if (innerIndex.isOdd) return const Divider();
-                        final j = index ~/ 2;
-                        bool check = taskList[j].completed;
-
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ListView.builder(
+                    ///The shrinkwrap and physics are necessary to avoid ListView nesting error
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: taskList.length * 2 + 1,
+                    itemBuilder: (BuildContext context, int innerIndex) {
+                      if (innerIndex == 0) {
                         return ListTile(
-                          title: Text(
-                              'Task: ${taskList[j].taskDescription}'),
-                          leading: const Icon(Icons.arrow_forward_ios,
-                              color: Colors.orange),
-                          trailing: IconButton(
-                            icon: Icon(
-                              check
-                                  ? Icons.check_box_outlined
-                                  : Icons.check_box_outline_blank_rounded,
-                              color:
-                                  check ? Colors.orange.shade900 : Colors.black,
-                              semanticLabel: check ? 'Completed' : 'Incomplete',
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if (check) {
-                                  taskList[j].completed = false;
-
-                                  ///Update task to the list
-                                  objectbox.addTask(taskList[j]);
-                                } else {
-                                  taskList[j].completed = true;
-
-                                  ///Update task to the list
-                                  objectbox.addTask(taskList[j]);
-                                }
-                              });
-                            },
-                          ),
+                          title: Text(taskGroup[i].taskGroup),
+                          tileColor: Colors.yellow,
                         );
-                      },
-                    ));
-              },
-            ))
-        //^ do group length
-        );
+                      }
+
+                      if (innerIndex.isEven) return const Divider();
+                      final j = index ~/ 2;
+                      bool check = taskList[j].completed;
+
+                      return ListTile(
+                        title: Text('Task: ${taskList[j].taskDescription}'),
+                        leading: const Icon(Icons.arrow_forward_ios,
+                            color: Colors.orange),
+                        trailing: IconButton(
+                          icon: Icon(
+                            check
+                                ? Icons.check_box_outlined
+                                : Icons.check_box_outline_blank_rounded,
+                            color:
+                                check ? Colors.orange.shade900 : Colors.black,
+                            semanticLabel: check ? 'Completed' : 'Incomplete',
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              if (check) {
+                                taskList[j].completed = false;
+
+                                ///Update task to the list
+                                objectbox.addTask(taskList[j]);
+                              } else {
+                                taskList[j].completed = true;
+
+                                ///Update task to the list
+                                objectbox.addTask(taskList[j]);
+                              }
+                            });
+                          },
+                        ),
+                      );
+                    },
+                  ));
+            },
+          ))
+        ]));
   }
 }

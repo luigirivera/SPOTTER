@@ -59,7 +59,7 @@ class AuthService {
       UserCredential userCred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = userCred.user;
-      objectbox.initTaskCollection();
+      await objectbox.initTaskCollection();
       return _spotterUser(user);
     } on FirebaseAuthException catch (error) {
       //This is the specific error catching method found on documentation
