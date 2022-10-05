@@ -104,34 +104,51 @@ class _TaskListState extends State<TaskList> {
 
                 return ListTile(
                   title: Text(
-                      'Task: ${taskList[i].taskDescription}\nGroup: ${taskList[i].taskGroup.target!.taskGroup}\nTime: ${taskList[i].taskDate.target!.year}/${taskList[i].taskDate.target!.month}/${taskList[i].taskDate.target!.day}'),
+                    taskList[i].taskDescription,
+                    style: const TextStyle(fontSize: 15),
+                  ),
                   leading:
                       const Icon(Icons.arrow_forward_ios, color: Colors.orange),
-                  trailing: IconButton(
-                    icon: Icon(
-                      check
-                          ? Icons.check_box_outlined
-                          : Icons.check_box_outline_blank_rounded,
-                      color: check ? Colors.orange.shade900 : Colors.black,
-                      semanticLabel: check ? 'Completed' : 'Incomplete',
-                      size: 30,
+                  trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                    IconButton(
+                      icon: Icon(
+                        check
+                            ? Icons.check_box_outlined
+                            : Icons.check_box_outline_blank_rounded,
+                        color: check ? Colors.orange.shade900 : Colors.black,
+                        semanticLabel: check ? 'Completed' : 'Incomplete',
+                        size: 30,
+                      ),
+
+                      ///Update the completion status of the task
+                      ///Put setState after onPressed; setState can't be async
+                      onPressed: () async {
+                        if (check) {
+                          taskList[i].completed = false;
+
+                          ///Overwrite
+                          await objectbox.addTask(taskList[i]);
+                        } else {
+                          taskList[i].completed = true;
+                          await objectbox.addTask(taskList[i]);
+                        }
+                        setState(() {});
+                      },
                     ),
-
-                    ///Update the completion status of the task
-                    ///Put setState after onPressed; setState can't be async
-                    onPressed: () async {
-                      if (check) {
-                        taskList[i].completed = false;
-
-                        ///Overwrite
-                        await objectbox.addTask(taskList[i]);
-                      } else {
-                        taskList[i].completed = true;
-                        await objectbox.addTask(taskList[i]);
-                      }
-                      setState(() {});
-                    },
-                  ),
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return EditTask(
+                                  task: taskList[i], date: widget.date);
+                            }).then((value) {
+                          setState(() {});
+                        });
+                      },
+                    )
+                  ]),
                 );
               })),
     ]);
@@ -148,6 +165,8 @@ class TaskPopOutPage extends StatefulWidget {
 }
 
 class _TaskPopOutPageState extends State<TaskPopOutPage> {
+  bool deletionMade = false;
+  List<Task> taskList = List.empty(growable: true);
   @override
   Widget build(BuildContext context) {
     List<TaskGroup> taskGroup = objectbox.getTaskGroupsByDate(widget.date);
@@ -203,6 +222,17 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
                   },
                   tooltip: 'Add new tasks',
                 ),
+
+                ///Button for deleting tasks
+                IconButton(
+                  onPressed: () async {
+                    deletionMade = await objectbox.deleteSelectedTasks(
+                        taskList, widget.date);
+                    setState(() {});
+                  },
+                  icon: const Icon(Icons.delete),
+                  tooltip: 'Delete selected',
+                ),
               ],
             ),
           ),
@@ -240,35 +270,52 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
                       bool check = taskList[j].completed;
 
                       return ListTile(
-                        title: Text('Task: ${taskList[j].taskDescription}'),
+                        title: Text(taskList[j].taskDescription,
+                            style: const TextStyle(fontSize: 15)),
                         leading: const Icon(Icons.arrow_forward_ios,
                             color: Colors.orange),
-                        trailing: IconButton(
-                          icon: Icon(
-                            check
-                                ? Icons.check_box_outlined
-                                : Icons.check_box_outline_blank_rounded,
-                            color:
-                                check ? Colors.orange.shade900 : Colors.black,
-                            semanticLabel: check ? 'Completed' : 'Incomplete',
-                            size: 30,
+                        trailing:
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                          IconButton(
+                            icon: Icon(
+                              check
+                                  ? Icons.check_box_outlined
+                                  : Icons.check_box_outline_blank_rounded,
+                              color:
+                                  check ? Colors.orange.shade900 : Colors.black,
+                              semanticLabel: check ? 'Completed' : 'Incomplete',
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                if (check) {
+                                  taskList[j].completed = false;
+
+                                  ///Update task to the list
+                                  objectbox.addTask(taskList[j]);
+                                } else {
+                                  taskList[j].completed = true;
+
+                                  ///Update task to the list
+                                  objectbox.addTask(taskList[j]);
+                                }
+                              });
+                            },
                           ),
-                          onPressed: () {
-                            setState(() {
-                              if (check) {
-                                taskList[j].completed = false;
-
-                                ///Update task to the list
-                                objectbox.addTask(taskList[j]);
-                              } else {
-                                taskList[j].completed = true;
-
-                                ///Update task to the list
-                                objectbox.addTask(taskList[j]);
-                              }
-                            });
-                          },
-                        ),
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return EditTask(
+                                        task: taskList[i], date: widget.date);
+                                  }).then((value) {
+                                setState(() {});
+                              });
+                            },
+                          )
+                        ]),
                       );
                     },
                   ));

@@ -16,7 +16,7 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
   ///This date is subjected to change if user picked another
   ///The change will be reflected on the screen
   DateTime date = DateTime.now();
-  List<String> weekdays = [
+  final List<String> weekdays = [
     'Monday',
     'Tuesday',
     'Wednesday',
@@ -219,30 +219,152 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
 }
 
 class EditTask extends StatefulWidget {
-  const EditTask({Key? key}) : super(key: key);
+  final Task task;
+  final DateTime date;
+
+  const EditTask({Key? key, required this.task, required this.date})
+      : super(key: key);
 
   @override
   State<EditTask> createState() => _EditTaskState();
 }
 
 class _EditTaskState extends State<EditTask> {
+  final List<String> weekdays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
+  final _formKey = GlobalKey<FormState>();
+  String newDescription = '';
+  bool descriptionChanged = false;
+
+  String newGroup = '';
+  bool groupChanged = false;
+
+  DateTime newDate = DateTime.now();
+  bool dateChanged = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Edit Task"),
-      ),
-      body: Column(
-        children: const [
-          //Name box
-          //Description box
-          //Group
-          //Date picker
-          //Time picker
-          //Priority picker
-          //Save button
-        ],
-      ),
+    newDate = widget.date;
+    return AlertDialog(
+      content: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.3,
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  ///Task description input text box form field
+                  TextFormField(
+                    initialValue: widget.task.taskDescription,
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue.shade800),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        hintText: "What is your new task?",
+                        filled: true,
+                        fillColor: Colors.grey.shade200),
+
+                    /** Help in validating formats */
+                    validator: (value) =>
+                        value!.isEmpty ? 'Enter a task here' : null,
+                    onChanged: (value) {
+                      setState(() {
+                        newDescription = value;
+                        descriptionChanged = true;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 10),
+
+                  ///Task group drop down form
+                  DropdownButtonFormField<String>(
+                      menuMaxHeight: 300,
+                      value: widget.task.taskGroup.target!.taskGroup,
+                      items: objectbox.getTaskGroupList().map((taskGroupValue) {
+                        return DropdownMenuItem<String>(
+                            value: taskGroupValue.taskGroup,
+                            child: Text(taskGroupValue.taskGroup));
+                      }).toList(),
+                      onChanged: (value) {
+                        newGroup = value.toString();
+                        groupChanged = true;
+                      }),
+                  const SizedBox(height: 20),
+
+                  ///The date picker section
+                  Text('${newDate.month} / ${newDate.day} / ${newDate.year}'),
+                  Text(weekdays[newDate.weekday - 1]),
+                  TextButton(
+                      onPressed: () async {
+                        DateTime? temp = await showDatePicker(
+                            context: context,
+                            initialDate: widget.date,
+                            confirmText: 'Okay',
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2100));
+                        if (temp != null) {
+                          newDate = temp;
+                        }
+                        setState(() {});
+                      },
+                      child: const Text('Pick a Date'))
+                ],
+              ))),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel Editing'),
+        ),
+        TextButton(
+          onPressed: () {
+            Task newTask = widget.task;
+            TaskDate newTaskDate = objectbox.getTaskDate(newDate);
+            TaskDate tempTaskDate = widget.task.taskDate.target!;
+            TaskGroup newTaskGroup = objectbox.getTaskGroup(newGroup);
+
+            if (descriptionChanged) {
+              newTask.taskDescription = newDescription;
+            }
+            if (groupChanged) {
+              newTask.taskGroup.target = newTaskGroup;
+              newTaskGroup.tasks.add(newTask);
+              newTaskGroup.tasks.applyToDb();
+            }
+            if (dateChanged) {
+              newTask.taskDate.target = newTaskDate;
+              newTaskDate.tasks.add(newTask);
+              newTaskDate.taskGroups.add(newTaskGroup);
+
+              newTaskDate.taskGroups.applyToDb();
+              newTaskDate.tasks.applyToDb();
+            }
+            if (tempTaskDate.tasks.isEmpty) {
+              objectbox.deleteTaskDate(tempTaskDate);
+            }
+
+            if (descriptionChanged || groupChanged || dateChanged) {
+              objectbox.addTask(newTask);
+            }
+
+            Navigator.of(context).pop();
+          },
+          child: const Text('Finish'),
+        )
+      ],
     );
   }
 }
