@@ -75,10 +75,18 @@ class _TaskListState extends State<TaskList> {
               icon: const Icon(Icons.output),
               tooltip: 'View in a pop out',
             ),
+
+            ///Button for deleting tasks
+            IconButton(
+              onPressed: (){
+
+              },
+              icon: const Icon(Icons.delete),
+              tooltip: 'Delete selected',
+            ),
           ],
         ),
       ),
-
       ///The actual task list itself
       Expanded(
           child: ListView.builder(

@@ -1,7 +1,7 @@
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'main.dart';
 import 'models/task_model.dart';
 import 'objectbox.g.dart';
 
@@ -13,7 +13,6 @@ class ObjectBox {
   late final Box<Task> taskList;
   late final Box<TaskDate> taskDate;
 
-  final String? uid = FirebaseAuth.instance.currentUser?.uid;
   final CollectionReference taskCollection =
       FirebaseFirestore.instance.collection('Tasks');
 
@@ -36,7 +35,7 @@ class ObjectBox {
   }
 
   Future initTaskCollection() async {
-    return await taskCollection.doc(uid).set({
+    return await taskCollection.doc(userUid).set({
       'groups': ['General'],
     });
   }
@@ -68,10 +67,10 @@ class ObjectBox {
   ///==////////////////////////////////////////////////////////////////
 
   ///Objectbox Management ------------------------------------------///
-  void addTask(Task task) {
+  Future addTask(Task task) async {
     String taskGroup = task.taskGroup.target!.taskGroup;
-    taskCollection
-        .doc(uid)
+    await taskCollection
+        .doc(userUid!)
         .collection(taskGroup)
         .doc(task.taskDescription)
         .set({
@@ -92,7 +91,7 @@ class ObjectBox {
   Future addTaskGroup(String taskGroup) async {
     List<String> taskGroupList = await _getFirebaseTaskGroups();
     taskGroupList.add(taskGroup);
-    await taskCollection.doc(uid).set({'groups': taskGroupList});
+    await taskCollection.doc(userUid).set({'groups': taskGroupList});
 
     taskGroups.put(TaskGroup(taskGroup: taskGroup));
   }
@@ -101,7 +100,7 @@ class ObjectBox {
     List<String> taskGroupList = await _getFirebaseTaskGroups();
     int index = taskGroupList.indexOf(taskGroup);
     taskGroupList.removeAt(index);
-    await taskCollection.doc(uid).set({'groups': taskGroupList});
+    await taskCollection.doc(userUid).set({'groups': taskGroupList});
 
     TaskGroup group = _findTaskGroup(taskGroup)!;
     taskGroups.remove(group.id);
@@ -167,14 +166,14 @@ class ObjectBox {
   ///Firebase Management ------------------------------------------///
   Future ifCollectionExistsOnFirebase(String taskGroup) async {
     var snapshot =
-        await taskCollection.doc(uid).collection(taskGroup).limit(1).get();
+        await taskCollection.doc(userUid).collection(taskGroup).limit(1).get();
     return snapshot.docs.isNotEmpty;
   }
 
   Future _getFirebaseTaskGroups() async {
     List dynamicList = [];
     List<String> taskGroups = <String>[];
-    await taskCollection.doc(uid).get().then((value) {
+    await taskCollection.doc(userUid).get().then((value) {
       dynamicList = value.toString().contains('groups') ? value['groups'] : List.empty(growable: true);
     });
     taskGroups = dynamicList.cast<String>();
