@@ -25,6 +25,7 @@ class TaskBoard extends StatelessWidget {
 
 class TaskList extends StatefulWidget {
   final DateTime date;
+
   const TaskList({Key? key, required this.date}) : super(key: key);
 
   @override
@@ -32,6 +33,8 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
+  bool deletionMade = false;
+
   @override
   Widget build(BuildContext context) {
     List<Task> taskList = objectbox.getTaskListByDate(widget.date);
@@ -66,8 +69,7 @@ class _TaskListState extends State<TaskList> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          TaskPopOutPage(date: widget.date),
+                      builder: (context) => TaskPopOutPage(date: widget.date),
                     )).then((value) {
                   setState(() {});
                 });
@@ -78,8 +80,10 @@ class _TaskListState extends State<TaskList> {
 
             ///Button for deleting tasks
             IconButton(
-              onPressed: (){
-
+              onPressed: () async {
+                deletionMade =
+                    await objectbox.deleteSelectedTasks(taskList, widget.date);
+                setState(() {});
               },
               icon: const Icon(Icons.delete),
               tooltip: 'Delete selected',
@@ -87,6 +91,7 @@ class _TaskListState extends State<TaskList> {
           ],
         ),
       ),
+
       ///The actual task list itself
       Expanded(
           child: ListView.builder(
@@ -111,18 +116,20 @@ class _TaskListState extends State<TaskList> {
                       semanticLabel: check ? 'Completed' : 'Incomplete',
                       size: 30,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        if (check) {
-                          taskList[i].completed = false;
 
-                          ///Overwrite
-                          objectbox.addTask(taskList[i]);
-                        } else {
-                          taskList[i].completed = true;
-                          objectbox.addTask(taskList[i]);
-                        }
-                      });
+                    ///Update the completion status of the task
+                    ///Put setState after onPressed; setState can't be async
+                    onPressed: () async {
+                      if (check) {
+                        taskList[i].completed = false;
+
+                        ///Overwrite
+                        await objectbox.addTask(taskList[i]);
+                      } else {
+                        taskList[i].completed = true;
+                        await objectbox.addTask(taskList[i]);
+                      }
+                      setState(() {});
                     },
                   ),
                 );

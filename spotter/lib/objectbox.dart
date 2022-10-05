@@ -62,7 +62,8 @@ class ObjectBox {
   List<TaskGroup> getTaskGroupsByDate(DateTime date) =>
       _findTaskDate(date).taskGroups.toList();
 
-  List<Task> getTaskListByGroupAndDate(DateTime date, TaskGroup group) => _findTaskListByGroupAndDate(date, group);
+  List<Task> getTaskListByGroupAndDate(DateTime date, TaskGroup group) =>
+      _findTaskListByGroupAndDate(date, group);
 
   ///==////////////////////////////////////////////////////////////////
 
@@ -79,6 +80,19 @@ class ObjectBox {
       'completed': task.completed,
     });
     taskList.put(task);
+  }
+
+  Future deleteSelectedTasks(List<Task> taskListToDelete, DateTime date) async {
+    bool deletionMade = false;
+    for(var task in taskListToDelete){
+      if(task.completed == true){
+        await deleteTask(task);
+        deletionMade = true;
+      }
+    }
+    TaskDate tempTaskDate = getTaskDate(date);
+    if(tempTaskDate.tasks.isEmpty){deleteTaskDate(tempTaskDate);}
+    return deletionMade;
   }
 
   TaskDate addTaskDate(DateTime date) {
@@ -106,10 +120,15 @@ class ObjectBox {
     taskGroups.remove(group.id);
   }
 
-  void deleteTask(Task task) {
+  Future deleteTask(Task task) async {
     if (!task.taskDate.hasValue) {
       deleteTaskDate(task.taskDate.target!);
     }
+    await taskCollection
+        .doc(userUid)
+        .collection(task.taskGroup.target!.taskGroup)
+        .doc(task.taskDescription)
+        .delete();
     taskList.remove(task.id);
   }
 
@@ -130,12 +149,12 @@ class ObjectBox {
     return null;
   }
 
-  List<Task> _findTaskListByGroupAndDate(DateTime date, TaskGroup group){
+  List<Task> _findTaskListByGroupAndDate(DateTime date, TaskGroup group) {
     List<Task> tempTaskList = group.tasks;
     List<Task> resultTaskList = List.empty(growable: true);
     TaskDate tempTaskDate = getTaskDate(date);
-    for(var task in tempTaskList){
-      if(task.taskDate.target!.compareTo(tempTaskDate)){
+    for (var task in tempTaskList) {
+      if (task.taskDate.target!.compareTo(tempTaskDate)) {
         resultTaskList.add(task);
       }
     }
@@ -146,7 +165,7 @@ class ObjectBox {
   ///The "id" of the TaskDate obj is needed to assign correctly
   TaskDate _findTaskDate(DateTime date) {
     if (taskDate.isEmpty()) {
-     addTaskDate(date);
+      addTaskDate(date);
     }
 
     List<TaskDate> tempDateList = getTaskDateList();
@@ -174,7 +193,9 @@ class ObjectBox {
     List dynamicList = [];
     List<String> taskGroups = <String>[];
     await taskCollection.doc(userUid).get().then((value) {
-      dynamicList = value.toString().contains('groups') ? value['groups'] : List.empty(growable: true);
+      dynamicList = value.toString().contains('groups')
+          ? value['groups']
+          : List.empty(growable: true);
     });
     taskGroups = dynamicList.cast<String>();
 
