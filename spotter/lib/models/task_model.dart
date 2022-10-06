@@ -42,7 +42,7 @@ class TaskDate {
   int month;
   int day;
 
-  final taskGroups = ToMany<TaskGroup>();
+  final ToMany<TaskGroup> taskGroups = ToMany<TaskGroup>();
 
   @Backlink()
   final ToMany<Task> tasks = ToMany<Task>();
