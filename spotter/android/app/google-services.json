@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "59204674157-n61ger0cg529mvilr9uqqk3ugk3c466s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loucy.spotter",
+            "certificate_hash": "be8677e222b4e81390d9003735db457ceba93288"
+          }
+        },
+        {
+          "client_id": "59204674157-rfq1mfhg1pk9jn3voc5c4mcin76hkv4v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loucy.spotter",
+            "certificate_hash": "a56793a51ae3117c0596166fd6538b56fea9fbc1"
+          }
+        },
+        {
           "client_id": "59204674157-17ujke0e509c8j35edjt4qqa2273650a.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -195,7 +195,18 @@ class _SignInState extends State<SignIn> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20)),
                                     ))),
-                            SignInButton(Buttons.GoogleDark, onPressed: () {}),
+                            SignInButton(Buttons.GoogleDark, onPressed: () {
+                              setState(() {
+                                loading = true;
+                              });
+                              _auth.googleLogin().then((result) {
+                                if (result == null) {
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                }
+                              });
+                            }),
                             const SizedBox(height: 25),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
