@@ -21,10 +21,6 @@ class ObjectBox {
     taskGroups = Box<TaskGroup>(store);
     taskList = Box<Task>(store);
     taskDate = Box<TaskDate>(store);
-    if (taskGroups.isEmpty()) {
-      taskGroups.put(TaskGroup(taskGroup: '+ Add a New Group'));
-      taskGroups.put(TaskGroup(taskGroup: 'General'));
-    }
   }
 
   static Future<ObjectBox> open() async {
@@ -35,6 +31,8 @@ class ObjectBox {
   }
 
   Future initTaskCollection() async {
+    taskGroups.put(TaskGroup(taskGroup: '+ Add a New Group'));
+    taskGroups.put(TaskGroup(taskGroup: 'General'));
     return await taskCollection.doc(userUid).set({
       'groups': ['General'],
     });
@@ -43,6 +41,14 @@ class ObjectBox {
   ///==////////////////////////////////////////////////////////////////
 
   /// Getters ------------------------------------------------------///
+
+  ///I read that map iteration cannot skip item, so this is the data pre-processing
+  List<TaskGroup> getTaskGroupListWithoutAddOption() {
+    List<TaskGroup> tempTaskGroup = getTaskGroupList();
+    tempTaskGroup.removeAt(0);
+    return tempTaskGroup;
+  }
+
   List<TaskGroup> getTaskGroupList() => taskGroups.getAll().toList();
 
   List<Task> getTaskList() => taskList.getAll().toList();
@@ -84,14 +90,16 @@ class ObjectBox {
 
   Future deleteSelectedTasks(List<Task> taskListToDelete, DateTime date) async {
     bool deletionMade = false;
-    for(var task in taskListToDelete){
-      if(task.completed == true){
+    for (var task in taskListToDelete) {
+      if (task.completed == true) {
         await deleteTask(task);
         deletionMade = true;
       }
     }
     TaskDate tempTaskDate = getTaskDate(date);
-    if(tempTaskDate.tasks.isEmpty){deleteTaskDate(tempTaskDate);}
+    if (tempTaskDate.tasks.isEmpty) {
+      deleteTaskDate(tempTaskDate);
+    }
     return deletionMade;
   }
 

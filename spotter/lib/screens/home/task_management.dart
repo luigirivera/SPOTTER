@@ -292,7 +292,9 @@ class _EditTaskState extends State<EditTask> {
                   DropdownButtonFormField<String>(
                       menuMaxHeight: 300,
                       value: widget.task.taskGroup.target!.taskGroup,
-                      items: objectbox.getTaskGroupList().map((taskGroupValue) {
+                      items: objectbox
+                          .getTaskGroupListWithoutAddOption()
+                          .map((taskGroupValue) {
                         return DropdownMenuItem<String>(
                             value: taskGroupValue.taskGroup,
                             child: Text(taskGroupValue.taskGroup));
@@ -318,6 +320,7 @@ class _EditTaskState extends State<EditTask> {
                           newDate = temp;
                         }
                         setState(() {});
+                        dateChanged = true;
                       },
                       child: const Text('Pick a Date'))
                 ],
@@ -330,24 +333,54 @@ class _EditTaskState extends State<EditTask> {
           child: const Text('Cancel Editing'),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             Task newTask = widget.task;
             TaskDate newTaskDate = objectbox.getTaskDate(newDate);
             TaskDate tempTaskDate = widget.task.taskDate.target!;
             TaskGroup newTaskGroup = objectbox.getTaskGroup(newGroup);
+            TaskGroup tempTaskGroup = widget.task.taskGroup.target!;
 
             if (descriptionChanged) {
               newTask.taskDescription = newDescription;
             }
             if (groupChanged) {
+              tempTaskDate.tasks.add(newTask);
+              tempTaskDate.tasks.remove(widget.task);
+              tempTaskDate.tasks.applyToDb();
+
+              //for some reason the list, let alone the objectbox, can't
+              //find the 'General' task group object, maybe it is because it's
+              // the data relation messing it up or because
+              //it wasn't created through objectbox instance
+              // , but instead upon user register.
+              //I can only do it this way.
+              List<TaskGroup> taskGroupListCopy =
+                  tempTaskDate.taskGroups.toList();
+              tempTaskDate.taskGroups.clear();
+              tempTaskDate.taskGroups.applyToDb();
+              taskGroupListCopy.add(newTaskGroup);
+              for (var taskGrp in taskGroupListCopy) {
+                if (tempTaskGroup.taskGroup != taskGrp.taskGroup) {
+                  tempTaskDate.taskGroups.add(taskGrp);
+                  tempTaskDate.taskGroups.applyToDb();
+                }
+              }
+
+              newTask.taskGroup.target!.tasks.remove(newTask);
+              newTask.taskGroup.target!.tasks.applyToDb();
+
               newTask.taskGroup.target = newTaskGroup;
               newTaskGroup.tasks.add(newTask);
               newTaskGroup.tasks.applyToDb();
             }
             if (dateChanged) {
+              tempTaskDate.tasks.remove(widget.task);
+              tempTaskDate.taskGroups.remove(widget.task.taskGroup.target);
+
               newTask.taskDate.target = newTaskDate;
               newTaskDate.tasks.add(newTask);
               newTaskDate.taskGroups.add(newTaskGroup);
+              newTaskDate.taskGroups.remove(widget.task.taskGroup.target!);
 
               newTaskDate.taskGroups.applyToDb();
               newTaskDate.tasks.applyToDb();
@@ -356,11 +389,9 @@ class _EditTaskState extends State<EditTask> {
               objectbox.deleteTaskDate(tempTaskDate);
             }
 
-            if (descriptionChanged || groupChanged || dateChanged) {
-              objectbox.addTask(newTask);
-            }
-
-            Navigator.of(context).pop();
+            await objectbox
+                .addTask(newTask)
+                .then((value) => Navigator.of(context).pop());
           },
           child: const Text('Finish'),
         )

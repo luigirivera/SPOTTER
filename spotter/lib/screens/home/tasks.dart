@@ -105,7 +105,11 @@ class _TaskListState extends State<TaskList> {
                 return ListTile(
                   title: Text(
                     taskList[i].taskDescription,
-                    style: const TextStyle(fontSize: 15),
+                    style: check
+                        ? const TextStyle(
+                            fontSize: 15,
+                            decoration: TextDecoration.lineThrough)
+                        : const TextStyle(fontSize: 15),
                   ),
                   leading:
                       const Icon(Icons.arrow_forward_ios, color: Colors.orange),
@@ -166,7 +170,7 @@ class TaskPopOutPage extends StatefulWidget {
 
 class _TaskPopOutPageState extends State<TaskPopOutPage> {
   bool deletionMade = false;
-  List<Task> taskList = List.empty(growable: true);
+
   @override
   Widget build(BuildContext context) {
     List<TaskGroup> taskGroup = objectbox.getTaskGroupsByDate(widget.date);
@@ -227,7 +231,7 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
                 IconButton(
                   onPressed: () async {
                     deletionMade = await objectbox.deleteSelectedTasks(
-                        taskList, widget.date);
+                        objectbox.getTaskListByDate(widget.date), widget.date);
                     setState(() {});
                   },
                   icon: const Icon(Icons.delete),
@@ -264,14 +268,17 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
                           tileColor: Colors.yellow,
                         );
                       }
-
                       if (innerIndex.isEven) return const Divider();
-                      final j = index ~/ 2;
+                      final j = (innerIndex - 1) ~/ 2;
                       bool check = taskList[j].completed;
 
                       return ListTile(
                         title: Text(taskList[j].taskDescription,
-                            style: const TextStyle(fontSize: 15)),
+                            style: check
+                                ? const TextStyle(
+                                    fontSize: 15,
+                                    decoration: TextDecoration.lineThrough)
+                                : const TextStyle(fontSize: 15)),
                         leading: const Icon(Icons.arrow_forward_ios,
                             color: Colors.orange),
                         trailing:
@@ -286,20 +293,19 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
                               semanticLabel: check ? 'Completed' : 'Incomplete',
                               size: 30,
                             ),
-                            onPressed: () {
-                              setState(() {
-                                if (check) {
-                                  taskList[j].completed = false;
+                            onPressed: () async {
+                              if (check) {
+                                taskList[j].completed = false;
 
-                                  ///Update task to the list
-                                  objectbox.addTask(taskList[j]);
-                                } else {
-                                  taskList[j].completed = true;
+                                ///Update task to the list
+                                await objectbox.addTask(taskList[j]);
+                              } else {
+                                taskList[j].completed = true;
 
-                                  ///Update task to the list
-                                  objectbox.addTask(taskList[j]);
-                                }
-                              });
+                                ///Update task to the list
+                                await objectbox.addTask(taskList[j]);
+                              }
+                              setState(() {});
                             },
                           ),
                           IconButton(
@@ -309,7 +315,7 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
                                   context: context,
                                   builder: (context) {
                                     return EditTask(
-                                        task: taskList[i], date: widget.date);
+                                        task: taskList[j], date: widget.date);
                                   }).then((value) {
                                 setState(() {});
                               });
