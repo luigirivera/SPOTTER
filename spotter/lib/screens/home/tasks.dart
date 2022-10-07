@@ -33,8 +33,6 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  bool deletionMade = false;
-
   @override
   Widget build(BuildContext context) {
     List<Task> taskList = objectbox.getTaskListByDate(widget.date);
@@ -55,7 +53,7 @@ class _TaskListState extends State<TaskList> {
                     context: context,
                     barrierDismissible: true,
                     builder: (context) {
-                      return const AddTaskAndGroup();
+                      return AddTaskAndGroup(date: widget.date);
                     }).then((value) {
                   setState(() {});
                 });
@@ -81,8 +79,7 @@ class _TaskListState extends State<TaskList> {
             ///Button for deleting tasks
             IconButton(
               onPressed: () async {
-                deletionMade =
-                    await objectbox.deleteSelectedTasks(taskList, widget.date);
+                await objectbox.deleteSelectedTasks(taskList, widget.date);
                 setState(() {});
               },
               icon: const Icon(Icons.delete),
@@ -93,6 +90,7 @@ class _TaskListState extends State<TaskList> {
       ),
 
       ///The actual task list itself
+      taskList.isEmpty ? const Expanded(child: Text('It\'s empty')) :
       Expanded(
           child: ListView.builder(
               padding: const EdgeInsets.all(10),
@@ -219,7 +217,7 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
                         context: context,
                         barrierDismissible: true,
                         builder: (context) {
-                          return const AddTaskAndGroup();
+                          return AddTaskAndGroup(date: widget.date);
                         }).then((value) {
                       setState(() {});
                     });

@@ -3,7 +3,8 @@ import '../../main.dart';
 import '../../models/task_model.dart';
 
 class AddTaskAndGroup extends StatefulWidget {
-  const AddTaskAndGroup({Key? key}) : super(key: key);
+  final DateTime date;
+  const AddTaskAndGroup({Key? key, required this.date}) : super(key: key);
 
   @override
   State<AddTaskAndGroup> createState() => _AddTaskAndGroupState();
@@ -32,6 +33,7 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
 
   @override
   Widget build(BuildContext context) {
+    date = widget.date;
     ///Using a StatefulBuilder to wrap the AlertDialogs to ensure they rebuild as desired
     ///showDialog doesn't work here due to different return types
 
