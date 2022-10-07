@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>59204674157-s6jdegockuqhomeon84tbu8m86i7uvlb.apps.googleusercontent.com</string>
+	<string>59204674157-nrj73pv57dl4r0s4nob9fd78opgke78d.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.59204674157-s6jdegockuqhomeon84tbu8m86i7uvlb</string>
+	<string>com.googleusercontent.apps.59204674157-nrj73pv57dl4r0s4nob9fd78opgke78d</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>59204674157-n61ger0cg529mvilr9uqqk3ugk3c466s.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAxeWPshlwBigZbh-zviuWkcH050dlIqsU</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,23 +15,23 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.spotter</string>
+	<string>com.loucy.spotter</string>
 	<key>PROJECT_ID</key>
 	<string>spotter-4627a</string>
 	<key>STORAGE_BUCKET</key>
 	<string>spotter-4627a.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:59204674157:ios:c8783c82bac8237fda9564</string>
+	<string>1:59204674157:ios:c1dd9c3e09dacf81da9564</string>
 	<key>DATABASE_URL</key>
 	<string>https://spotter-4627a-default-rtdb.firebaseio.com</string>
 </dict>
