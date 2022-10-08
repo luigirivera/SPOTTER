@@ -59,39 +59,24 @@ class _StudySessionState extends State<StudySession> {
           milliseconds++;
 
           switch (minutes) {
-            //new tree phase every 5 minutes
-            case 5:
+            //new tree phase every 6 minutes
+            case 6:
               treePhase = 2;
               break;
-            case 10:
+            case 12:
               treePhase = 3;
               break;
-            case 15:
+            case 18:
               treePhase = 4;
               break;
-            case 20:
+            case 24:
               treePhase = 5;
               break;
-            case 25:
+            case 30:
               treePhase = 6;
               break;
             case 30:
               treePhase = 7;
-              break;
-            case 35:
-              treePhase = 8;
-              break;
-            case 40:
-              treePhase = 9;
-              break;
-            case 45:
-              treePhase = 10;
-              break;
-            case 50:
-              treePhase = 11;
-              break;
-            case 55:
-              treePhase = 12;
               break;
           }
 
@@ -103,12 +88,14 @@ class _StudySessionState extends State<StudySession> {
             seconds = 0;
             minutes++;
           }
+
+          if (minutes == 30) {
+            treePhase = 1;
+            completedTrees++;
+          }
           if (minutes == 60) {
             minutes = 0;
             hours++;
-
-            treePhase = 1;
-            completedTrees++;
           }
           if (seconds < 10) {
             secondsString = "0" + seconds.toString();
@@ -133,39 +120,24 @@ class _StudySessionState extends State<StudySession> {
           milliseconds++;
 
           switch (minutes) {
-            //new tree phase every 5 minutes
-            case 5:
+            //new tree phase every 6 minutes
+            case 6:
               treePhase = 2;
               break;
-            case 10:
+            case 12:
               treePhase = 3;
               break;
-            case 15:
+            case 18:
               treePhase = 4;
               break;
-            case 20:
+            case 24:
               treePhase = 5;
               break;
-            case 25:
+            case 30:
               treePhase = 6;
               break;
             case 30:
               treePhase = 7;
-              break;
-            case 35:
-              treePhase = 8;
-              break;
-            case 40:
-              treePhase = 9;
-              break;
-            case 45:
-              treePhase = 10;
-              break;
-            case 50:
-              treePhase = 11;
-              break;
-            case 55:
-              treePhase = 12;
               break;
           }
 
@@ -177,12 +149,14 @@ class _StudySessionState extends State<StudySession> {
             seconds = 0;
             minutes++;
           }
+          if (minutes == 30) {
+            treePhase = 1;
+            completedTrees++;
+          }
+
           if (minutes == 60) {
             minutes = 0;
             hours++;
-
-            treePhase = 1;
-            completedTrees++;
           }
           if (seconds < 10) {
             secondsString = "0" + seconds.toString();
