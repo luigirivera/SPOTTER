@@ -183,66 +183,70 @@ class _StudySessionState extends State<StudySession> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(25),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text("$hoursString:$minutesString:$secondsString",
-                style: const TextStyle(fontSize: 50, color: Colors.black)),
-            SizedBox(
-              height: 100,
+    return Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/beach.png'), fit: BoxFit.fill)),
+        child: Padding(
+          padding: EdgeInsets.all(25),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text("$hoursString:$minutesString:$secondsString",
+                    style: const TextStyle(fontSize: 50, color: Colors.black)),
+                SizedBox(
+                  height: 100,
+                ),
+                Expanded(
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                          "Tree Phase: $treePhase\nTrees Completed: $completedTrees",
+                          style: const TextStyle(
+                              fontSize: 20, color: Colors.black))),
+                ),
+                Expanded(
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                                foregroundColor: Colors.black,
+                                //rounded corners
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    side: const BorderSide(
+                                        color: Colors.black, width: 2))),
+                            onPressed: isTimerRunning ? stop : start,
+                            child: Text(isTimerRunning ? "Stop" : "Start"),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                                foregroundColor: Colors.black,
+                                //rounded corners
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    side: const BorderSide(
+                                        color: Colors.black, width: 2))),
+                            onPressed: reset,
+                            child: Text("Reset"),
+                          ),
+                        ],
+                      )),
+                )
+              ],
             ),
-            Expanded(
-              child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                      "Tree Phase: $treePhase\nTrees Completed: $completedTrees",
-                      style:
-                          const TextStyle(fontSize: 20, color: Colors.black))),
-            ),
-            Expanded(
-              child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: Colors.black,
-                            //rounded corners
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                    color: Colors.black, width: 2))),
-                        onPressed: isTimerRunning ? stop : start,
-                        child: Text(isTimerRunning ? "Stop" : "Start"),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: Colors.black,
-                            //rounded corners
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                    color: Colors.black, width: 2))),
-                        onPressed: reset,
-                        child: Text("Reset"),
-                      ),
-                    ],
-                  )),
-            )
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
