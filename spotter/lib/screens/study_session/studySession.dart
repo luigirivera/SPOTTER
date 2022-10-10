@@ -59,7 +59,7 @@ class _StudySessionState extends State<StudySession> {
         setState(() {
           milliseconds++;
 
-          switch (minutes) {
+          switch (minutes % 5) {
             //new tree phase every minute
             case 1:
               treePhase = 2;
@@ -72,6 +72,7 @@ class _StudySessionState extends State<StudySession> {
               break;
             case 4:
               treePhase = 5;
+              newTree = true;
               break;
           }
 
@@ -84,8 +85,9 @@ class _StudySessionState extends State<StudySession> {
             minutes++;
           }
 
-          if (minutes % 5 == 0 && minutes != 0) {
+          if (minutes % 5 == 0 && newTree) {
             treePhase = 1;
+            newTree = !newTree;
             completedTrees++;
           }
           if (minutes == 60) {
