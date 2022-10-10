@@ -17,6 +17,7 @@ class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
+  bool signup = false;
   bool hidePassword = true;
   String email = '';
   String password = '';
@@ -27,28 +28,9 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
         backgroundColor: Colors.blue.shade200,
         appBar: AppBar(
-            backgroundColor: Colors.orange,
-            title: const Text("Sign in"),
-            actions: <Widget>[
-              TextButton.icon(
-                  onPressed: () async {
-                    dynamic result = await _auth.anonSignIn();
-                    if (result == null) {
-                      debugPrint('error signing in');
-                    } else {
-                      debugPrint('signed in \n$result\n');
-                      debugPrint(result.uid);
-                    }
-                  },
-                  icon: const Icon(Icons.person),
-                  label: const Text("Guest Login"),
-                  style: TextButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: const BorderSide(color: Colors.white)))),
-            ]),
+          backgroundColor: Colors.orange,
+          title: const Text("Sign in"),
+        ),
         body: loading
             ? const Loading()
             : SafeArea(
@@ -149,73 +131,149 @@ class _SignInState extends State<SignIn> {
                             const SizedBox(height: 10),
 
                             ///Sign in button section
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 80.0),
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        elevation: 0,
-                                        backgroundColor: Colors.transparent,
-                                        foregroundColor: Colors.blue.shade800,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 15),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          side: BorderSide(
-                                              color: Colors.blue.shade800,
-                                              width: 3),
-                                        )),
-                                    onPressed: () async {
-                                      if (_formKey.currentState!.validate()) {
-                                        setState(() {
-                                          loading = true;
-                                        });
-                                        dynamic result = await _auth.signInEP(
-                                            email, password);
-                                        if (result is! SpotterUser) {
+                            if (!signup) ...[
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 80.0),
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          elevation: 0,
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor: Colors.blue.shade800,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            side: BorderSide(
+                                                color: Colors.blue.shade800,
+                                                width: 3),
+                                          )),
+                                      onPressed: () async {
+                                        if (_formKey.currentState!.validate()) {
                                           setState(() {
-                                            // error = result;
-                                            Fluttertoast.showToast(
-                                                msg: result,
-                                                toastLength: Toast.LENGTH_LONG,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 5,
-                                                backgroundColor: Colors.black,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                            loading = false;
+                                            loading = true;
                                           });
+                                          dynamic result = await _auth.signInEP(
+                                              email, password);
+                                          if (result is! SpotterUser) {
+                                            setState(() {
+                                              // error = result;
+                                              Fluttertoast.showToast(
+                                                  msg: result,
+                                                  toastLength:
+                                                      Toast.LENGTH_LONG,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 5,
+                                                  backgroundColor: Colors.black,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
+                                              loading = false;
+                                            });
+                                          }
+                                          Navigator.of(context).pop();
                                         }
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                    child: const Center(
+                                      },
+                                      child: const Center(
+                                        child: Text("Sign in",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20)),
+                                      ))),
+                              const SizedBox(height: 25),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text("Don't have an account?"),
+                                  TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          signup = true;
+                                        });
+                                      },
+                                      child: Text("Sign up",
+                                          style: TextStyle(
+                                              color: Colors.blue.shade800,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20)))
+                                ],
+                              ),
+                            ] else ...[
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 80.0),
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          elevation: 0,
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor: Colors.blue.shade800,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            side: BorderSide(
+                                                color: Colors.blue.shade800,
+                                                width: 3),
+                                          )),
+                                      onPressed: () async {
+                                        /** This will only be valid iff both of
+                                    * the validators above return null
+                                    */
+                                        if (_formKey.currentState!.validate()) {
+                                          setState(() {
+                                            loading = true;
+                                          });
+                                          dynamic result = await _auth
+                                              .registerEP(email, password);
+
+                                          /** result (from Future) is either String type or SpotterUser type */
+                                          if (result is! SpotterUser) {
+                                            setState(() {
+                                              Fluttertoast.showToast(
+                                                  msg: result,
+                                                  toastLength:
+                                                      Toast.LENGTH_LONG,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 5,
+                                                  backgroundColor: Colors.black,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
+                                              loading = false;
+                                            });
+                                          } else {
+                                            if (!mounted) return;
+                                            Navigator.of(context).pop();
+
+                                            //_db.makeCollection(result.uid);
+                                          }
+                                        }
+                                      },
+                                      child: const Center(
+                                        child: Text("Sign up",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20)),
+                                      ))),
+                              const SizedBox(height: 25),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text("Have an account?"),
+                                  TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          signup = false;
+                                        });
+                                      },
                                       child: Text("Sign in",
                                           style: TextStyle(
+                                              color: Colors.blue.shade800,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 20)),
-                                    ))),
-                            const SizedBox(height: 25),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("Don't have an account?"),
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SignUp()));
-                                    },
-                                    child: Text("Sign up",
-                                        style: TextStyle(
-                                            color: Colors.blue.shade800,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20)))
-                              ],
-                            ),
+                                              fontSize: 20)))
+                                ],
+                              ),
+                            ],
                             const SizedBox(height: 12),
                             Text(error,
                                 style: const TextStyle(
