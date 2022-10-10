@@ -22,6 +22,7 @@ class _StudySessionState extends State<StudySession> {
 
   Timer? timer;
   bool isTimerRunning = false;
+  bool newTree = false;
 
   int treePhase = 1;
   int completedTrees = 0;
@@ -59,24 +60,18 @@ class _StudySessionState extends State<StudySession> {
           milliseconds++;
 
           switch (minutes) {
-            //new tree phase every 6 minutes
-            case 6:
+            //new tree phase every minute
+            case 1:
               treePhase = 2;
               break;
-            case 12:
+            case 2:
               treePhase = 3;
               break;
-            case 18:
+            case 3:
               treePhase = 4;
               break;
-            case 24:
+            case 4:
               treePhase = 5;
-              break;
-            case 30:
-              treePhase = 6;
-              break;
-            case 30:
-              treePhase = 7;
               break;
           }
 
@@ -89,7 +84,7 @@ class _StudySessionState extends State<StudySession> {
             minutes++;
           }
 
-          if (minutes == 30) {
+          if (minutes % 5 == 0 && minutes != 0) {
             treePhase = 1;
             completedTrees++;
           }
@@ -120,24 +115,18 @@ class _StudySessionState extends State<StudySession> {
           milliseconds++;
 
           switch (minutes) {
-            //new tree phase every 6 minutes
-            case 6:
+            //new tree phase every minute
+            case 1:
               treePhase = 2;
               break;
-            case 12:
+            case 2:
               treePhase = 3;
               break;
-            case 18:
+            case 3:
               treePhase = 4;
               break;
-            case 24:
+            case 4:
               treePhase = 5;
-              break;
-            case 30:
-              treePhase = 6;
-              break;
-            case 30:
-              treePhase = 7;
               break;
           }
 
@@ -149,7 +138,7 @@ class _StudySessionState extends State<StudySession> {
             seconds = 0;
             minutes++;
           }
-          if (minutes == 30) {
+          if (minutes % 5 == 0 && minutes != 0) {
             treePhase = 1;
             completedTrees++;
           }
