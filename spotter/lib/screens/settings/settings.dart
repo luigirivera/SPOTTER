@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotter/screens/settings/settings_sign_in.dart';
 import 'package:spotter/services/auth_service.dart';
 import 'dart:io' show Platform;
 import 'package:google_sign_in/google_sign_in.dart';
@@ -79,26 +80,32 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (_auth.currentUser!.isAnon == true) ...[
-                      SignInButton(Buttons.GoogleDark, onPressed: () {
-                        setState(() {
-                          loading = true;
-                        });
-                        _auth.googleLogin().then((result) {
-                          if (result == null) {
+                    if (_auth.currentUser!.isAnon == true)
+                      Column(
+                        children: [
+                          SignInButton(Buttons.GoogleDark, onPressed: () {
                             setState(() {
-                              loading = false;
+                              loading = true;
                             });
-                          }
-                        });
-                      }),
-                    ],
+                            _auth.googleLogin().then((result) {
+                              if (result == null) {
+                                setState(() {
+                                  loading = false;
+                                });
+                              }
+                            });
+                          }),
+                          SignInButton(Buttons.Email, onPressed: () {
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const SignIn()))
+                                .then((value) => setState(() {}));
+                          }),
+                        ],
+                      )
                   ],
                 ),
-
-                if (_auth.currentUser!.isAnon == true)
-                  SignInButton(Buttons.Email, onPressed: () {}),
-
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomCenter,
