@@ -60,6 +60,15 @@ class _HomeState extends State<Home> {
         ),
 
         iconTheme: const IconThemeData(color: Colors.orange),
+
+        actions: _barIndexSelected == 2
+            ? [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.shopping_cart),
+                ),
+              ]
+            : null,
       ),
 
       ///Bottom screen selection row

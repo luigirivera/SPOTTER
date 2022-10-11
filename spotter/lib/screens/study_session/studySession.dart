@@ -126,7 +126,7 @@ class _StudySessionState extends State<StudySession> {
   }
 
   void dispose() {
-    timer!.cancel();
+    timer?.cancel();
     super.dispose();
   }
 
