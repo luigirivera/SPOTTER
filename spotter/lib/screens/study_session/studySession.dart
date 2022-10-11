@@ -53,123 +53,81 @@ class _StudySessionState extends State<StudySession> {
     });
   }
 
+  void updateTimer() {
+    setState(() {
+      milliseconds++;
+
+      switch (minutes % 5) {
+        //new tree phase every minute
+        case 1:
+          treePhase = 2;
+          break;
+        case 2:
+          treePhase = 3;
+          break;
+        case 3:
+          treePhase = 4;
+          break;
+        case 4:
+          treePhase = 5;
+          newTree = true;
+          break;
+      }
+
+      if (milliseconds == 1000) {
+        milliseconds = 0;
+        seconds++;
+      }
+      if (seconds == 60) {
+        seconds = 0;
+        minutes++;
+      }
+
+      if (minutes % 5 == 0 && newTree) {
+        treePhase = 1;
+        newTree = !newTree;
+        completedTrees++;
+      }
+      if (minutes == 60) {
+        minutes = 0;
+        hours++;
+      }
+      if (seconds < 10) {
+        secondsString = "0" + seconds.toString();
+      } else {
+        secondsString = seconds.toString();
+      }
+      if (minutes < 10) {
+        minutesString = "0" + minutes.toString();
+      } else {
+        minutesString = minutes.toString();
+      }
+      if (hours < 10) {
+        hoursString = "0" + hours.toString();
+      } else {
+        hoursString = hours.toString();
+      }
+    });
+  }
+
   void start() {
     if (Platform.isAndroid) {
       timer = Timer.periodic(const Duration(microseconds: 1), (timer) {
-        setState(() {
-          milliseconds++;
-
-          switch (minutes % 5) {
-            //new tree phase every minute
-            case 1:
-              treePhase = 2;
-              break;
-            case 2:
-              treePhase = 3;
-              break;
-            case 3:
-              treePhase = 4;
-              break;
-            case 4:
-              treePhase = 5;
-              newTree = true;
-              break;
-          }
-
-          if (milliseconds == 1000) {
-            milliseconds = 0;
-            seconds++;
-          }
-          if (seconds == 60) {
-            seconds = 0;
-            minutes++;
-          }
-
-          if (minutes % 5 == 0 && newTree) {
-            treePhase = 1;
-            newTree = !newTree;
-            completedTrees++;
-          }
-          if (minutes == 60) {
-            minutes = 0;
-            hours++;
-          }
-          if (seconds < 10) {
-            secondsString = "0" + seconds.toString();
-          } else {
-            secondsString = seconds.toString();
-          }
-          if (minutes < 10) {
-            minutesString = "0" + minutes.toString();
-          } else {
-            minutesString = minutes.toString();
-          }
-          if (hours < 10) {
-            hoursString = "0" + hours.toString();
-          } else {
-            hoursString = hours.toString();
-          }
-        });
+        updateTimer();
       });
     } else {
       timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
-        setState(() {
-          milliseconds++;
-
-          switch (minutes) {
-            //new tree phase every minute
-            case 1:
-              treePhase = 2;
-              break;
-            case 2:
-              treePhase = 3;
-              break;
-            case 3:
-              treePhase = 4;
-              break;
-            case 4:
-              treePhase = 5;
-              break;
-          }
-
-          if (milliseconds == 1000) {
-            milliseconds = 0;
-            seconds++;
-          }
-          if (seconds == 60) {
-            seconds = 0;
-            minutes++;
-          }
-          if (minutes % 5 == 0 && minutes != 0) {
-            treePhase = 1;
-            completedTrees++;
-          }
-
-          if (minutes == 60) {
-            minutes = 0;
-            hours++;
-          }
-          if (seconds < 10) {
-            secondsString = "0" + seconds.toString();
-          } else {
-            secondsString = seconds.toString();
-          }
-          if (minutes < 10) {
-            minutesString = "0" + minutes.toString();
-          } else {
-            minutesString = minutes.toString();
-          }
-          if (hours < 10) {
-            hoursString = "0" + hours.toString();
-          } else {
-            hoursString = hours.toString();
-          }
-        });
+        updateTimer();
       });
     }
     setState(() {
       isTimerRunning = true;
     });
+  }
+
+  void dispose() {
+    timer!.cancel();
+    super.dispose();
   }
 
   @override
