@@ -177,7 +177,10 @@ class _StudySessionState extends State<StudySession> {
     return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/beach.png'), fit: BoxFit.fill)),
+                image: AssetImage(completedTrees <= 6
+                    ? 'assets/Trees/Trees-$completedTrees.png'
+                    : 'assets/Trees/Trees-6.png'),
+                fit: BoxFit.fill)),
         child: Padding(
           padding: EdgeInsets.all(25),
           child: Center(
