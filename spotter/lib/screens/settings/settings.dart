@@ -22,7 +22,10 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
   Widget build(BuildContext context) {
     //Dialog for Quitting as anon
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("Cancel",
+          style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.bold)),
       onPressed: () {
         Navigator.of(context).pop();
       },

@@ -136,8 +136,8 @@ class _StudySessionState extends State<StudySession> {
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(completedTrees <= 6
-                    ? 'assets/Trees/Trees-$completedTrees.png'
-                    : 'assets/Trees/Trees-6.png'),
+                    ? 'assets/themes/trees/Trees-$completedTrees.png'
+                    : 'assets/themes/trees/Trees-6.png'),
                 fit: BoxFit.fill)),
         child: Padding(
           padding: EdgeInsets.all(25),

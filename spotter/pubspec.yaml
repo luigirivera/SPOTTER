@@ -83,7 +83,9 @@ flutter:
     - assets/bg2.png
     - assets/banner.png
     - assets/nothing.png
-    - assets/Trees/
+    - assets/themes/
+    - assets/themes/thumbnails/
+    - assets/themes/trees/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
