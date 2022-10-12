@@ -7,3 +7,7 @@ All files are using the 'objectbox' object instance imported from main.dart
 If you create a new object and link it (via ToMany or ToOne) to one of the object box objects, it will creates a new object in the database
 
 flutter pub run build_runner build --delete-conflicting-outputs
+
+creating a lot of date objects in objectbox
+
+found out through task_management that, apparently setState{() {}} placing matters. If you place variable change before it, then it won't function the way you want to sometimes. Place it inside

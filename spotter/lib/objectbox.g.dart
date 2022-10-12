@@ -81,7 +81,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(4, 6894683450146198376),
       name: 'TaskDate',
-      lastPropertyId: const IdUid(5, 670442149101728455),
+      lastPropertyId: const IdUid(6, 4997147112644763886),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -90,19 +90,9 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(3, 157017507726260566),
-            name: 'year',
-            type: 6,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 8688360419597907777),
-            name: 'month',
-            type: 6,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 670442149101728455),
-            name: 'day',
-            type: 6,
+            id: const IdUid(6, 4997147112644763886),
+            name: 'date',
+            type: 10,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -148,7 +138,10 @@ ModelDefinition getObjectBoxModel() {
         6907622731959549502,
         3464322506574893699,
         6005979652544907125,
-        1276408424731658357
+        1276408424731658357,
+        157017507726260566,
+        8688360419597907777,
+        670442149101728455
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -243,11 +236,9 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (TaskDate object, fb.Builder fbb) {
-          fbb.startTable(6);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
-          fbb.addInt64(2, object.year);
-          fbb.addInt64(3, object.month);
-          fbb.addInt64(4, object.day);
+          fbb.addInt64(5, object.date.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -256,10 +247,8 @@ ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
 
           final object = TaskDate(
-              year: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
-              month:
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0),
-              day: const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0))
+              date: DateTime.fromMillisecondsSinceEpoch(
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0)))
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           InternalToManyAccess.setRelInfo(object.taskGroups, store,
               RelInfo<TaskDate>.toMany(1, object.id), store.box<TaskDate>());
@@ -313,16 +302,9 @@ class TaskDate_ {
   /// see [TaskDate.id]
   static final id = QueryIntegerProperty<TaskDate>(_entities[2].properties[0]);
 
-  /// see [TaskDate.year]
-  static final year =
+  /// see [TaskDate.date]
+  static final date =
       QueryIntegerProperty<TaskDate>(_entities[2].properties[1]);
-
-  /// see [TaskDate.month]
-  static final month =
-      QueryIntegerProperty<TaskDate>(_entities[2].properties[2]);
-
-  /// see [TaskDate.day]
-  static final day = QueryIntegerProperty<TaskDate>(_entities[2].properties[3]);
 
   /// see [TaskDate.taskGroups]
   static final taskGroups =

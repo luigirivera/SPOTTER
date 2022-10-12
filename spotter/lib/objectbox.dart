@@ -104,8 +104,7 @@ class ObjectBox {
   }
 
   TaskDate addTaskDate(DateTime date) {
-    TaskDate newTaskDate =
-        TaskDate(year: date.year, month: date.month, day: date.day);
+    TaskDate newTaskDate = TaskDate(date: date);
     taskDate.put(newTaskDate);
     return newTaskDate;
   }
@@ -162,7 +161,7 @@ class ObjectBox {
     List<Task> resultTaskList = List.empty(growable: true);
     TaskDate tempTaskDate = getTaskDate(date);
     for (var task in tempTaskList) {
-      if (task.taskDate.target!.compareTo(tempTaskDate)) {
+      if (task.taskDate.target!.date.compareTo(tempTaskDate.date) == 0) {
         resultTaskList.add(task);
       }
     }
@@ -177,10 +176,11 @@ class ObjectBox {
     }
 
     List<TaskDate> tempDateList = getTaskDateList();
+
     for (var tempDate in tempDateList) {
-      if (tempDate.year == date.year &&
-          tempDate.month == date.month &&
-          tempDate.day == date.day) {
+      if (tempDate.date.day == date.day &&
+          tempDate.date.month == date.month &&
+          tempDate.date.year == date.year) {
         return tempDate;
       }
     }

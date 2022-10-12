@@ -20,21 +20,41 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(color: Colors.brown[300]),
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/bg2.png'), fit: BoxFit.cover)),
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Column(
-          children: const [
-            SizedBox(
-                height: 30,
-                child: Text('Task Completed Per Week',
-                    style: TextStyle(fontSize: 20))),
-            TaskCompletionGraph(),
-            SizedBox(height: 20),
-            SizedBox(
-                height: 30,
-                child: Text('Study Sessions Time Per Week',
-                    style: TextStyle(fontSize: 20))),
-            StudySessionTimeGraph(),
+          children: [
+            const SizedBox(height: 10),
+            Container(
+                height: 25,
+                width: 400,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/banner.png'),
+                        fit: BoxFit.fill)),
+                child: const Center(
+                    child: Text('Task Completed',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)))),
+            const SizedBox(height: 5),
+            const TaskCompletionGraph(),
+            const SizedBox(height: 10),
+            Container(
+                height: 25,
+                width: 400,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/banner.png'),
+                        fit: BoxFit.fill)),
+                child: const Center(
+                    child: Text('Study Sessions Time',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)))),
+            const SizedBox(height: 5),
+            const StudySessionTimeGraph(),
+            const SizedBox(height: 20),
           ],
         ));
   }
@@ -177,7 +197,7 @@ class _TaskCompletionGraphState extends State<TaskCompletionGraph> {
 
   Widget weekdayAbbreviation(double value, TitleMeta meta) {
     const style = TextStyle(
-      color: Colors.white,
+      color: Colors.blueGrey,
       fontWeight: FontWeight.bold,
       fontSize: 15,
     );
@@ -231,17 +251,22 @@ class _TaskCompletionGraphState extends State<TaskCompletionGraph> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height / 2 - 130,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Colors.green[200],
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Container(
-          padding: const EdgeInsets.all(15),
-          child: BarChart(taskCompletedData())),
-    );
+    return Expanded(
+        child: Container(
+            padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+            decoration: BoxDecoration(
+              color: Colors.green[700],
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.green[200],
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Container(
+                  padding: const EdgeInsets.all(15),
+                  child: BarChart(taskCompletedData())),
+            )));
   }
 }
 
@@ -257,18 +282,18 @@ class _StudySessionTimeGraphState extends State<StudySessionTimeGraph> {
   int touchedIndex = -1;
 
   BarChartGroupData taskCompletedDataGroup(
-      int weekday,
-      double height, {
-        bool isTouched = false,
-        double width = 25,
-        List<int> showTooltips = const [],
-      }) {
+    int weekday,
+    double height, {
+    bool isTouched = false,
+    double width = 25,
+    List<int> showTooltips = const [],
+  }) {
     return BarChartGroupData(
       x: weekday,
       barRods: [
         BarChartRodData(
           toY: isTouched ? height + 1 : height,
-          color: isTouched ? Colors.blue[500] : Colors.blue[100],
+          color: isTouched ? Colors.blue[600] : Colors.blue[300],
           width: width,
           borderSide: isTouched
               ? const BorderSide(color: Colors.yellow, width: 5)
@@ -286,9 +311,9 @@ class _StudySessionTimeGraphState extends State<StudySessionTimeGraph> {
   }
 
   List<BarChartGroupData> showData() => List.generate(7, (index) {
-    return taskCompletedDataGroup(index, sampleTaskCompletionData[index],
-        isTouched: index == touchedIndex);
-  });
+        return taskCompletedDataGroup(index, sampleTaskCompletionData[index],
+            isTouched: index == touchedIndex);
+      });
 
   BarChartData taskCompletedData() {
     return BarChartData(
@@ -381,7 +406,7 @@ class _StudySessionTimeGraphState extends State<StudySessionTimeGraph> {
 
   Widget weekdayAbbreviation(double value, TitleMeta meta) {
     const style = TextStyle(
-      color: Colors.white,
+      color: Colors.blueGrey,
       fontWeight: FontWeight.bold,
       fontSize: 15,
     );
@@ -435,16 +460,21 @@ class _StudySessionTimeGraphState extends State<StudySessionTimeGraph> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height / 2 - 130,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Colors.orange[300],
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Container(
-          padding: const EdgeInsets.all(15),
-          child: BarChart(taskCompletedData())),
-    );
+    return Expanded(
+        child: Container(
+            padding: const EdgeInsets.fromLTRB(0, 0, 15, 15),
+            decoration: BoxDecoration(
+              color: Colors.orange[700],
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.orange[200],
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Container(
+                  padding: const EdgeInsets.all(15),
+                  child: BarChart(taskCompletedData())),
+            )));
   }
 }
