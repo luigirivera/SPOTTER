@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotter/screens/study_session/marketplace.dart';
+import 'package:spotter/screens/study_session/themes.dart';
 import '../statistics/statistics.dart';
 import '../settings/settings.dart';
 import '../calendar/calendar.dart';
@@ -68,12 +68,10 @@ class _HomeState extends State<Home> {
                     icon: IconButton(
                         onPressed: () {},
                         icon: const Icon(Icons.shopping_cart)),
-                    label: const Text('Marketplace'),
+                    label: const Text('Themes'),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MarketPlace()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Themes()));
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.transparent,
