@@ -38,21 +38,12 @@ class TaskGroup {
 class TaskDate {
   @Id()
   int id = 0;
-  int year;
-  int month;
-  int day;
+  DateTime date;
 
   final ToMany<TaskGroup> taskGroups = ToMany<TaskGroup>();
 
   @Backlink()
   final ToMany<Task> tasks = ToMany<Task>();
 
-  TaskDate({required this.year, required this.month, required this.day});
-
-  bool compareTo(TaskDate otherTaskDate){
-    if(year == otherTaskDate.year && month == otherTaskDate.month && day == otherTaskDate.day){
-      return true;
-    }
-    return false;
-  }
+  TaskDate({required this.date});
 }

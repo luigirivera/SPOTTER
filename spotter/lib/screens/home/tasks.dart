@@ -38,10 +38,10 @@ class _TaskListState extends State<TaskList> {
     List<Task> taskList = objectbox.getTaskListByDate(widget.date);
     return Column(children: [
       SizedBox(
-        height: 50,
+        height: 20,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <IconButton>[
+          children: [
             ///A button to add a new task
             IconButton(
               icon: const Icon(
@@ -85,12 +85,13 @@ class _TaskListState extends State<TaskList> {
               icon: const Icon(Icons.delete),
               tooltip: 'Delete selected',
             ),
+            // Text('${widget.date.year}/${widget.date.month}/${widget.date.day}   ${taskDate.date.year}/${taskDate.date.month}/${taskDate.date.day}'),
           ],
         ),
       ),
 
       ///The actual task list itself
-      taskList.isEmpty ? const Expanded(child: Text('It\'s empty')) :
+      taskList.isEmpty ? Expanded(child: Container(decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/nothing.png'))),)) :
       Expanded(
           child: ListView.builder(
               padding: const EdgeInsets.all(10),

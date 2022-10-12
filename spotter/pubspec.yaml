@@ -79,6 +79,10 @@ flutter:
     - assets/beach.png
     - assets/spotter_home.riv
     - assets/sea_appbar.png
+    - assets/stats_background.png
+    - assets/bg2.png
+    - assets/banner.png
+    - assets/nothing.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

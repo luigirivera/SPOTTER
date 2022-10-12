@@ -4,6 +4,7 @@ import '../../models/task_model.dart';
 
 class AddTaskAndGroup extends StatefulWidget {
   final DateTime date;
+
   const AddTaskAndGroup({Key? key, required this.date}) : super(key: key);
 
   @override
@@ -16,7 +17,7 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
 
   ///This date is subjected to change if user picked another
   ///The change will be reflected on the screen
-  DateTime date = DateTime.now();
+  late DateTime date;
   final List<String> weekdays = [
     'Monday',
     'Tuesday',
@@ -26,14 +27,19 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
     'Saturday',
     'Sunday'
   ];
-  String? newGroup;
-  String description = '';
+  String? newTaskGroupName;
+  String newDescription = '';
   String group = "General";
   bool completed = false;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     date = widget.date;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ///Using a StatefulBuilder to wrap the AlertDialogs to ensure they rebuild as desired
     ///showDialog doesn't work here due to different return types
 
@@ -68,7 +74,7 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
                       return '';
                     },
                     onChanged: (value) {
-                      newGroup = value;
+                      newTaskGroupName = value;
                     },
                   )),
             ),
@@ -87,8 +93,8 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
               ///Skip if no inputs are present
               TextButton(
                 onPressed: () async {
-                  if (newGroup != null) {
-                    await objectbox.addTaskGroup(newGroup!);
+                  if (newTaskGroupName != null) {
+                    await objectbox.addTaskGroup(newTaskGroupName!);
                     isAddingGroup = false;
                   }
                   setState(() {});
@@ -129,7 +135,7 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
                               value!.isEmpty ? 'Enter a task here' : null,
                           onChanged: (value) {
                             setState(() {
-                              description = value;
+                              newDescription = value;
                             });
                           },
                         ),
@@ -174,9 +180,10 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100));
                               if (temp != null) {
-                                date = temp;
+                                setState(() {
+                                  date = temp;
+                                });
                               }
-                              setState(() {});
                             },
                             child: const Text('Pick a Date'))
                       ],
@@ -189,9 +196,9 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
                 child: const Text('Cancel'),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   Task newTask = Task(
-                    taskDescription: description,
+                    taskDescription: newDescription,
                     completed: completed,
                   );
 
@@ -201,17 +208,13 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
                   ///Data relations
                   newTask.taskDate.target = taskDate;
                   newTask.taskGroup.target = taskGroup;
-                  taskGroup.tasks.add(newTask);
-                  taskDate.tasks.add(newTask);
                   taskDate.taskGroups.add(taskGroup);
 
                   taskDate.taskGroups.applyToDb();
-                  taskDate.tasks.applyToDb();
-                  taskGroup.tasks.applyToDb();
 
-                  objectbox.addTask(newTask);
-
-                  Navigator.of(context).pop();
+                  await objectbox
+                      .addTask(newTask)
+                      .then((value) => Navigator.of(context).pop());
                 },
                 child: const Text('Okay'),
               )
@@ -241,19 +244,24 @@ class _EditTaskState extends State<EditTask> {
     'Saturday',
     'Sunday'
   ];
+
   final _formKey = GlobalKey<FormState>();
   String newDescription = '';
-  bool descriptionChanged = false;
-
   String newGroup = '';
-  bool groupChanged = false;
-
   DateTime newDate = DateTime.now();
-  bool dateChanged = false;
+
+  @override
+  void initState() {
+    super.initState();
+    newDescription = widget.task.taskDescription;
+    newGroup = widget.task.taskGroup.target!.taskGroup;
+    newDate = widget.task.taskDate.target!.date;
+  }
+
+  bool groupChanged = false;
 
   @override
   Widget build(BuildContext context) {
-    newDate = widget.date;
     return AlertDialog(
       content: SizedBox(
           height: MediaQuery.of(context).size.height * 0.3,
@@ -264,7 +272,7 @@ class _EditTaskState extends State<EditTask> {
                 children: [
                   ///Task description input text box form field
                   TextFormField(
-                    initialValue: widget.task.taskDescription,
+                    initialValue: newDescription,
                     decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
@@ -284,7 +292,6 @@ class _EditTaskState extends State<EditTask> {
                     onChanged: (value) {
                       setState(() {
                         newDescription = value;
-                        descriptionChanged = true;
                       });
                     },
                   ),
@@ -293,7 +300,7 @@ class _EditTaskState extends State<EditTask> {
                   ///Task group drop down form
                   DropdownButtonFormField<String>(
                       menuMaxHeight: 300,
-                      value: widget.task.taskGroup.target!.taskGroup,
+                      value: newGroup,
                       items: objectbox
                           .getTaskGroupListWithoutAddOption()
                           .map((taskGroupValue) {
@@ -303,26 +310,24 @@ class _EditTaskState extends State<EditTask> {
                       }).toList(),
                       onChanged: (value) {
                         newGroup = value.toString();
-                        groupChanged = true;
                       }),
                   const SizedBox(height: 20),
 
                   ///The date picker section
-                  Text('${newDate.month} / ${newDate.day} / ${newDate.year}'),
-                  Text(weekdays[newDate.weekday - 1]),
+                  Text('${newDate.month} / ${newDate.day}/ ${newDate.year}'),
                   TextButton(
                       onPressed: () async {
                         DateTime? temp = await showDatePicker(
                             context: context,
-                            initialDate: widget.date,
+                            initialDate: newDate,
                             confirmText: 'Okay',
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2100));
                         if (temp != null) {
-                          newDate = temp;
+                          setState(() {
+                            newDate = temp;
+                          });
                         }
-                        setState(() {});
-                        dateChanged = true;
                       },
                       child: const Text('Pick a Date'))
                 ],
@@ -336,59 +341,33 @@ class _EditTaskState extends State<EditTask> {
         ),
         TextButton(
           onPressed: () async {
-            Task newTask = widget.task;
-            TaskDate newTaskDate = objectbox.getTaskDate(newDate);
-            TaskDate tempTaskDate = widget.task.taskDate.target!;
-            TaskGroup newTaskGroup = objectbox.getTaskGroup(newGroup);
-            TaskGroup tempTaskGroup = widget.task.taskGroup.target!;
+            await objectbox.deleteTask(widget.task);
 
-            if (descriptionChanged) {
-              newTask.taskDescription = newDescription;
-            }
-            if (groupChanged) {
-              tempTaskDate.tasks.add(newTask);
-              tempTaskDate.tasks.remove(widget.task);
-              tempTaskDate.tasks.applyToDb();
+            Task newTask =
+                Task(taskDescription: newDescription, completed: false);
 
-              //for some reason the list, let alone the objectbox, can't
-              //find the 'General' task group object, maybe it is because it's
-              // the data relation messing it up or because
-              //it wasn't created through objectbox instance
-              // , but instead upon user register.
-              //I can only do it this way.
-              List<TaskGroup> taskGroupListCopy =
-                  tempTaskDate.taskGroups.toList();
-              tempTaskDate.taskGroups.clear();
-              tempTaskDate.taskGroups.applyToDb();
-              taskGroupListCopy.add(newTaskGroup);
-              for (var taskGrp in taskGroupListCopy) {
-                if (tempTaskGroup.taskGroup != taskGrp.taskGroup) {
-                  tempTaskDate.taskGroups.add(taskGrp);
-                  tempTaskDate.taskGroups.applyToDb();
+            newTask.taskGroup.target = objectbox.getTaskGroup(newGroup);
+            newTask.taskDate.target = objectbox.getTaskDate(newDate);
+
+            if (groupChanged &&
+                objectbox
+                    .getTaskListByGroupAndDate(
+                        newDate,
+                        objectbox.getTaskGroup(
+                            widget.task.taskGroup.target!.taskGroup))
+                    .isEmpty) {
+              TaskGroup oldTaskGroup = widget.task.taskGroup.target!;
+              List<TaskGroup> tempTaskGroup =
+                  objectbox.getTaskGroupsByDate(newDate);
+              tempTaskGroup.add(objectbox.getTaskGroup(newGroup));
+              newTask.taskDate.target!.taskGroups.clear();
+              newTask.taskDate.target!.taskGroups.applyToDb();
+              for (var group in tempTaskGroup) {
+                if (group.taskGroup != oldTaskGroup.taskGroup) {
+                  newTask.taskDate.target!.taskGroups.add(group);
                 }
               }
-
-              newTask.taskGroup.target!.tasks.remove(newTask);
-              newTask.taskGroup.target!.tasks.applyToDb();
-
-              newTask.taskGroup.target = newTaskGroup;
-              newTaskGroup.tasks.add(newTask);
-              newTaskGroup.tasks.applyToDb();
-            }
-            if (dateChanged) {
-              tempTaskDate.tasks.remove(widget.task);
-              tempTaskDate.taskGroups.remove(widget.task.taskGroup.target);
-
-              newTask.taskDate.target = newTaskDate;
-              newTaskDate.tasks.add(newTask);
-              newTaskDate.taskGroups.add(newTaskGroup);
-              newTaskDate.taskGroups.remove(widget.task.taskGroup.target!);
-
-              newTaskDate.taskGroups.applyToDb();
-              newTaskDate.tasks.applyToDb();
-            }
-            if (tempTaskDate.tasks.isEmpty) {
-              objectbox.deleteTaskDate(tempTaskDate);
+              newTask.taskDate.target!.taskGroups.applyToDb();
             }
 
             await objectbox
