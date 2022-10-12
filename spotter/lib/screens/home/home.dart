@@ -5,6 +5,7 @@ import '../settings/settings.dart';
 import '../calendar/calendar.dart';
 import 'task_screen.dart';
 import '../study_session/studySession.dart';
+import '../../main.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key, required this.title}) : super(key: key);
@@ -65,9 +66,7 @@ class _HomeState extends State<Home> {
         actions: _barIndexSelected == 2
             ? <Widget>[
                 TextButton.icon(
-                    icon: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.shopping_cart)),
+                    icon: const Icon(Icons.image),
                     label: const Text('Themes'),
                     onPressed: () {
                       Navigator.push(context,

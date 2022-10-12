@@ -12,7 +12,19 @@ class _ThemesState extends State<Themes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Themes'),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context, "Back");
+            },
+            icon: const Icon(Icons.arrow_back)),
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+            image: AssetImage('assets/sea_appbar.png'),
+            fit: BoxFit.fill,
+          )),
+        ),
       ),
       body: const Center(
         child: Text('Themes'),
