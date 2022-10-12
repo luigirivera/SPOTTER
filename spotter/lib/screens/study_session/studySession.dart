@@ -22,6 +22,7 @@ class _StudySessionState extends State<StudySession> {
 
   Timer? timer;
   bool isTimerRunning = false;
+  bool newTree = false;
 
   int treePhase = 1;
   int completedTrees = 0;
@@ -58,40 +59,20 @@ class _StudySessionState extends State<StudySession> {
         setState(() {
           milliseconds++;
 
-          switch (minutes) {
-            //new tree phase every 5 minutes
-            case 5:
+          switch (minutes % 5) {
+            //new tree phase every minute
+            case 1:
               treePhase = 2;
               break;
-            case 10:
+            case 2:
               treePhase = 3;
               break;
-            case 15:
+            case 3:
               treePhase = 4;
               break;
-            case 20:
+            case 4:
               treePhase = 5;
-              break;
-            case 25:
-              treePhase = 6;
-              break;
-            case 30:
-              treePhase = 7;
-              break;
-            case 35:
-              treePhase = 8;
-              break;
-            case 40:
-              treePhase = 9;
-              break;
-            case 45:
-              treePhase = 10;
-              break;
-            case 50:
-              treePhase = 11;
-              break;
-            case 55:
-              treePhase = 12;
+              newTree = true;
               break;
           }
 
@@ -103,12 +84,15 @@ class _StudySessionState extends State<StudySession> {
             seconds = 0;
             minutes++;
           }
+
+          if (minutes % 5 == 0 && newTree) {
+            treePhase = 1;
+            newTree = !newTree;
+            completedTrees++;
+          }
           if (minutes == 60) {
             minutes = 0;
             hours++;
-
-            treePhase = 1;
-            completedTrees++;
           }
           if (seconds < 10) {
             secondsString = "0" + seconds.toString();
@@ -133,39 +117,18 @@ class _StudySessionState extends State<StudySession> {
           milliseconds++;
 
           switch (minutes) {
-            //new tree phase every 5 minutes
-            case 5:
+            //new tree phase every minute
+            case 1:
               treePhase = 2;
               break;
-            case 10:
+            case 2:
               treePhase = 3;
               break;
-            case 15:
+            case 3:
               treePhase = 4;
               break;
-            case 20:
+            case 4:
               treePhase = 5;
-              break;
-            case 25:
-              treePhase = 6;
-              break;
-            case 30:
-              treePhase = 7;
-              break;
-            case 35:
-              treePhase = 8;
-              break;
-            case 40:
-              treePhase = 9;
-              break;
-            case 45:
-              treePhase = 10;
-              break;
-            case 50:
-              treePhase = 11;
-              break;
-            case 55:
-              treePhase = 12;
               break;
           }
 
@@ -177,12 +140,14 @@ class _StudySessionState extends State<StudySession> {
             seconds = 0;
             minutes++;
           }
+          if (minutes % 5 == 0 && minutes != 0) {
+            treePhase = 1;
+            completedTrees++;
+          }
+
           if (minutes == 60) {
             minutes = 0;
             hours++;
-
-            treePhase = 1;
-            completedTrees++;
           }
           if (seconds < 10) {
             secondsString = "0" + seconds.toString();
@@ -209,66 +174,70 @@ class _StudySessionState extends State<StudySession> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(25),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text("$hoursString:$minutesString:$secondsString",
-                style: const TextStyle(fontSize: 50, color: Colors.black)),
-            SizedBox(
-              height: 100,
+    return Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/beach.png'), fit: BoxFit.fill)),
+        child: Padding(
+          padding: EdgeInsets.all(25),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text("$hoursString:$minutesString:$secondsString",
+                    style: const TextStyle(fontSize: 50, color: Colors.black)),
+                SizedBox(
+                  height: 100,
+                ),
+                Expanded(
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                          "Tree Phase: $treePhase\nTrees Completed: $completedTrees",
+                          style: const TextStyle(
+                              fontSize: 20, color: Colors.black))),
+                ),
+                Expanded(
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                                foregroundColor: Colors.black,
+                                //rounded corners
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    side: const BorderSide(
+                                        color: Colors.black, width: 2))),
+                            onPressed: isTimerRunning ? stop : start,
+                            child: Text(isTimerRunning ? "Stop" : "Start"),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                                foregroundColor: Colors.black,
+                                //rounded corners
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    side: const BorderSide(
+                                        color: Colors.black, width: 2))),
+                            onPressed: reset,
+                            child: Text("Reset"),
+                          ),
+                        ],
+                      )),
+                )
+              ],
             ),
-            Expanded(
-              child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                      "Tree Phase: $treePhase\nTrees Completed: $completedTrees",
-                      style:
-                          const TextStyle(fontSize: 20, color: Colors.black))),
-            ),
-            Expanded(
-              child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: Colors.black,
-                            //rounded corners
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                    color: Colors.black, width: 2))),
-                        onPressed: isTimerRunning ? stop : start,
-                        child: Text(isTimerRunning ? "Stop" : "Start"),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: Colors.black,
-                            //rounded corners
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                    color: Colors.black, width: 2))),
-                        onPressed: reset,
-                        child: Text("Reset"),
-                      ),
-                    ],
-                  )),
-            )
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
