@@ -11,7 +11,7 @@ class Themes extends StatefulWidget {
 }
 
 class _ThemesState extends State<Themes> {
-  List<String> files = List.generate(0, (index) => "");
+  List<String> files = List.empty(growable: true);
 
   @override
   void initState() {
@@ -26,9 +26,12 @@ class _ThemesState extends State<Themes> {
 
     List<String> thumbnails = manifestMap.keys.where((String key) => key.contains('assets/themes/thumbnails/') && key.contains('.png')).toList();
 
-    files = List.generate(thumbnails.length, (index) => thumbnails[index]);
-
+    setState(() {
+      files = List.generate(thumbnails.length, (index) => thumbnails[index]);
+    });
     
+
+
   }
   @override
   Widget build(BuildContext context) {
