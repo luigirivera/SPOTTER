@@ -85,7 +85,7 @@ flutter:
     - assets/nothing.png
     - assets/themes/
     - assets/themes/thumbnails/
-    - assets/themes/trees/
+    - assets/themes/1_trees/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

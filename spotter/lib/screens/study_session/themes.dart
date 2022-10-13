@@ -11,6 +11,8 @@ class Themes extends StatefulWidget {
 }
 
 class _ThemesState extends State<Themes> {
+  int _selectedIndex = -1;
+  bool _newSelected = false;
   List<String> files = List.empty(growable: true);
 
   @override
@@ -29,9 +31,6 @@ class _ThemesState extends State<Themes> {
     setState(() {
       files = List.generate(thumbnails.length, (index) => thumbnails[index]);
     });
-    
-
-
   }
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class _ThemesState extends State<Themes> {
         title: const Text('Themes'),
         leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, _selectedIndex);
             },
             icon: const Icon(Icons.arrow_back)),
         elevation: 0,
@@ -57,7 +56,12 @@ class _ThemesState extends State<Themes> {
         children: files.map((file){
           return GestureDetector(
             onTap: () {
-              print(file);
+              setState(() {
+                _selectedIndex = files.indexOf(file);
+                _newSelected = true;
+              });
+
+              print(_selectedIndex);
             },
             child: Container(
               margin: const EdgeInsets.all(10),
