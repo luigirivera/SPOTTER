@@ -150,10 +150,10 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
                                 .taskGroup,
                             items: objectbox
                                 .getTaskGroupList()
-                                .map((taskGroupValue) {
+                                .map((value) {
                               return DropdownMenuItem<String>(
-                                  value: taskGroupValue.taskGroup,
-                                  child: Text(taskGroupValue.taskGroup));
+                                  value: value.taskGroup,
+                                  child: Text(value.taskGroup));
                             }).toList(),
                             onChanged: (value) {
                               if (value.toString() == '+ Add a New Group') {

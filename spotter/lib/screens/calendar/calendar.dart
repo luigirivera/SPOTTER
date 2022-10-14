@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../home/tasks.dart';
@@ -65,7 +66,14 @@ class _CalendarState extends State<Calendar> {
             /** Customizing UI */
             calendarStyle: const CalendarStyle(
               outsideDaysVisible: false,
+              cellMargin: EdgeInsets.all(0),
+              todayDecoration: BoxDecoration(color: Colors.lightBlueAccent, shape: BoxShape.circle),
+              todayTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              markerDecoration: BoxDecoration(color: Colors.orange, shape: BoxShape.rectangle),
+              selectedDecoration: BoxDecoration(color: Colors.orange, shape: BoxShape.rectangle),
+              selectedTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
+            rowHeight: 50,
           ),
           Expanded(
               child:

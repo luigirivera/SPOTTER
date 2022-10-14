@@ -5,6 +5,7 @@ import 'package:spotter/screens/settings/settings_sign_in.dart';
 import 'package:spotter/services/auth_service.dart';
 import 'dart:io';
 import 'package:spotter/main.dart';
+
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
@@ -172,10 +173,15 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                             objectbox.taskDate.removeAll();
                                             objectbox.taskList.removeAll();
 
-                                            await _auth.signOut();
-                                            if (!mounted) return;
-                                            Navigator.popUntil(context,
-                                                ModalRoute.withName("/"));
+                                            await _auth.deleteUser();
+                                            await objectbox.taskCollection
+                                                .doc(userUid!)
+                                                .delete()
+                                                .then((value) =>
+                                                    Navigator.popUntil(
+                                                        context,
+                                                        ModalRoute.withName(
+                                                            "/")));
                                           },
                                           child: const Text('Log me out')),
                                       TextButton(
