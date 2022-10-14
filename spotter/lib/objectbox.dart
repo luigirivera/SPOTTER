@@ -140,6 +140,9 @@ class ObjectBox {
   }
 
   Future deleteTask(Task task) async {
+    DateTime tempDate = task.taskDate.target!.date;
+    String tempGroup = task.taskGroup.target!.taskGroup;
+    TaskGroup tempTaskGroup = task.taskGroup.target!;
     if (!task.taskDate.hasValue) {
       deleteTaskDate(task.taskDate.target!);
     }
