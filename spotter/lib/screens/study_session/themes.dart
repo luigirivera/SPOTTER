@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import '../../main.dart';
+import '../../models/session_model.dart';
 
 class Themes extends StatefulWidget {
   const Themes({Key? key}) : super(key: key);
@@ -11,7 +13,7 @@ class Themes extends StatefulWidget {
 }
 
 class _ThemesState extends State<Themes> {
-  int _selectedIndex = -1;
+  int _selectedIndex = objectbox.getTheme().index;
   bool _newSelected = false;
   List<String> files = List.empty(growable: true);
 
@@ -21,26 +23,30 @@ class _ThemesState extends State<Themes> {
     super.initState();
   }
 
-  loadThumbnails(BuildContext context) async
-  {
-    var assetsFile = await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
+  loadThumbnails(BuildContext context) async {
+    var assetsFile =
+        await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
     final Map<String, dynamic> manifestMap = json.decode(assetsFile);
 
-    List<String> thumbnails = manifestMap.keys.where((String key) => key.contains('assets/themes/thumbnails/') && key.contains('.png')).toList();
+    List<String> thumbnails = manifestMap.keys
+        .where((String key) =>
+            key.contains('assets/themes/thumbnails/') && key.contains('.png'))
+        .toList();
 
     setState(() {
       files = List.generate(thumbnails.length, (index) => thumbnails[index]);
     });
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Themes'),
         leading: IconButton(
             onPressed: () {
-              Navigator.pop(context, _selectedIndex);
+              objectbox.setTheme(StudyTheme(index: _selectedIndex));
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.arrow_back)),
         elevation: 0,
@@ -53,22 +59,20 @@ class _ThemesState extends State<Themes> {
         ),
       ),
       body: Column(
-        children: files.map((file){
+        children: files.map((file) {
           return GestureDetector(
             onTap: () {
               setState(() {
                 _selectedIndex = files.indexOf(file);
                 _newSelected = true;
               });
-
-              print(_selectedIndex);
             },
             child: Container(
               margin: const EdgeInsets.all(10),
               child: Image.asset(file),
             ),
           );
-          }).toList(),
+        }).toList(),
       ),
     );
   }

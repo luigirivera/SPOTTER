@@ -52,7 +52,8 @@ class ObjectBox {
     return tempTaskGroup;
   }
 
-  StudyTheme getTheme() => theme.getAll().isEmpty ? StudyTheme(index: -1) : theme.getAll().first;
+  StudyTheme getTheme() =>
+      theme.getAll().isEmpty ? StudyTheme(index: -1) : theme.getAll().first;
 
   List<TaskGroup> getTaskGroupList() => taskGroups.getAll().toList();
 
@@ -79,6 +80,12 @@ class ObjectBox {
   ///==////////////////////////////////////////////////////////////////
 
   ///Objectbox Management ------------------------------------------///
+
+  Future setTheme(StudyTheme theme) async {
+    this.theme.removeAll();
+    this.theme.put(theme);
+  }
+
   Future addTask(Task task) async {
     String taskGroup = task.taskGroup.target!.taskGroup;
     await taskCollection
@@ -142,6 +149,22 @@ class ObjectBox {
         .doc(task.taskDescription)
         .delete();
     taskList.remove(task.id);
+
+    if (getTaskListByGroupAndDate(tempDate, getTaskGroup(tempGroup)).isEmpty) {
+      TaskGroup oldTaskGroup = tempTaskGroup;
+      List<TaskGroup> tempTaskGroupList =
+          objectbox.getTaskGroupsByDate(tempDate);
+      TaskDate taskDate = task.taskDate.target!;
+
+      taskDate.taskGroups.clear();
+      taskDate.taskGroups.applyToDb();
+      for (var group in tempTaskGroupList) {
+        if (group.taskGroup != oldTaskGroup.taskGroup) {
+          taskDate.taskGroups.add(group);
+        }
+      }
+      taskDate.taskGroups.applyToDb();
+    }
   }
 
   void deleteTaskDate(TaskDate date) {
