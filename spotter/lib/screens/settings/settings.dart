@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:spotter/screens/settings/settings_sign_in.dart';
 import 'package:spotter/services/auth_service.dart';
-import 'dart:io' show Platform;
-import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:io';
+import 'package:spotter/main.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 import '../loading/loading.dart';
@@ -48,7 +51,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                 const SizedBox(
                   height: 70,
                 ),
-                Text(
+                const Text(
                   "Settings",
                   style: TextStyle(
                     fontSize: 20,
@@ -73,7 +76,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                 ),
 
                 if (_auth.currentUser!.isAnon == true)
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
 
@@ -120,6 +123,38 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                 side: const BorderSide(
                                     color: Colors.black, width: 2))),
                         onPressed: () async {
+                          if (_auth.currentUser!.isAnon!) {
+                            return showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Are you sure?'),
+                                    content: const SizedBox(
+                                      height: 100,
+                                      child: Text(
+                                          'If you sign out now your data will be lost unless an account is created.\n\nDo you wish to proceed?'),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                          onPressed: () async {
+                                            objectbox.taskGroups.removeAll();
+                                            objectbox.taskDate.removeAll();
+                                            objectbox.taskList.removeAll();
+
+                                            await _auth.signOut();
+                                            if (!mounted) return;
+                                            Navigator.popUntil(context, ModalRoute.withName("/"));
+                                          },
+                                          child: const Text('Log me out')),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Take me back')),
+                                    ],
+                                  );
+                                });
+                          }
                           await _auth.signOut();
                           if (!mounted) return;
                           Navigator.popUntil(context, ModalRoute.withName("/"));
@@ -127,7 +162,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                         child: const Text('Log Out')),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
               ],

@@ -128,6 +128,9 @@ class ObjectBox {
   }
 
   Future deleteTask(Task task) async {
+    DateTime tempDate = task.taskDate.target!.date;
+    String tempGroup = task.taskGroup.target!.taskGroup;
+    TaskGroup tempTaskGroup = task.taskGroup.target!;
     if (!task.taskDate.hasValue) {
       deleteTaskDate(task.taskDate.target!);
     }
@@ -137,6 +140,21 @@ class ObjectBox {
         .doc(task.taskDescription)
         .delete();
     taskList.remove(task.id);
+
+    if (getTaskListByGroupAndDate(tempDate, getTaskGroup(tempGroup)).isEmpty) {
+      TaskGroup oldTaskGroup = tempTaskGroup;
+      List<TaskGroup> tempTaskGroupList = objectbox.getTaskGroupsByDate(tempDate);
+      TaskDate taskDate = task.taskDate.target!;
+
+      taskDate.taskGroups.clear();
+      taskDate.taskGroups.applyToDb();
+      for (var group in tempTaskGroupList) {
+        if (group.taskGroup != oldTaskGroup.taskGroup) {
+          taskDate.taskGroups.add(group);
+        }
+      }
+      taskDate.taskGroups.applyToDb();
+    }
   }
 
   void deleteTaskDate(TaskDate date) {

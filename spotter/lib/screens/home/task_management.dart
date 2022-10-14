@@ -345,30 +345,11 @@ class _EditTaskState extends State<EditTask> {
 
             Task newTask =
                 Task(taskDescription: newDescription, completed: false);
-
-            newTask.taskGroup.target = objectbox.getTaskGroup(newGroup);
+            TaskGroup newTaskGroup = objectbox.getTaskGroup(newGroup);
+            newTask.taskGroup.target = newTaskGroup;
             newTask.taskDate.target = objectbox.getTaskDate(newDate);
-
-            if (groupChanged &&
-                objectbox
-                    .getTaskListByGroupAndDate(
-                        newDate,
-                        objectbox.getTaskGroup(
-                            widget.task.taskGroup.target!.taskGroup))
-                    .isEmpty) {
-              TaskGroup oldTaskGroup = widget.task.taskGroup.target!;
-              List<TaskGroup> tempTaskGroup =
-                  objectbox.getTaskGroupsByDate(newDate);
-              tempTaskGroup.add(objectbox.getTaskGroup(newGroup));
-              newTask.taskDate.target!.taskGroups.clear();
-              newTask.taskDate.target!.taskGroups.applyToDb();
-              for (var group in tempTaskGroup) {
-                if (group.taskGroup != oldTaskGroup.taskGroup) {
-                  newTask.taskDate.target!.taskGroups.add(group);
-                }
-              }
-              newTask.taskDate.target!.taskGroups.applyToDb();
-            }
+            newTask.taskDate.target!.taskGroups.add(newTaskGroup);
+            newTask.taskDate.target!.taskGroups.applyToDb();
 
             await objectbox
                 .addTask(newTask)

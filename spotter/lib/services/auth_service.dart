@@ -43,6 +43,7 @@ class AuthService {
       /** These class names are different than the demonstration due to updates in API*/
       UserCredential userCred = await _auth.signInAnonymously();
       User? user = userCred.user;
+      await objectbox.initTaskCollection();
       return _spotterUser(user!);
     } catch (e) {
       debugPrint(e.toString());

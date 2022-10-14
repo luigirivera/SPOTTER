@@ -25,7 +25,7 @@ class _TaskScreenState extends State<TaskScreen> {
           //
           //The second section; Text box.
           Container(
-            height: 100,
+            height: 50,
           ),
           //
           //
