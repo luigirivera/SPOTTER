@@ -25,7 +25,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
   Widget build(BuildContext context) {
     //Dialog for Quitting as anon
     Widget cancelButton = TextButton(
-      child: Text("Cancel",
+      child: Text("Take me back",
           style: TextStyle(
               color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold)),
@@ -34,9 +34,13 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
-      onPressed: () {
-        _auth.signOut();
+      child: Text("Log me out"),
+      onPressed: () async {
+        objectbox.taskGroups.removeAll();
+        objectbox.taskDate.removeAll();
+        objectbox.taskList.removeAll();
+
+        await _auth.signOut();
         if (!mounted) return;
         Navigator.popUntil(context, ModalRoute.withName("/"));
       },
@@ -44,9 +48,12 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
 
     // set up the AlertDialog
     AlertDialog anonQuitAlert = AlertDialog(
-      title: Text("Log Out?"),
-      content: Text(
-          "Quitting from a Guest Account will result in losing all your data. Are you sure you want to continue?"),
+      title: Text("Are you sure?"),
+      content: const SizedBox(
+        height: 100,
+        child: Text(
+            'If you sign out now your data will be lost unless an account is created.\n\nDo you wish to proceed?'),
+      ),
       actions: [
         cancelButton,
         continueButton,
@@ -157,35 +164,8 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                           if (_auth.currentUser!.isAnon!) {
                             return showDialog(
                                 context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('Are you sure?'),
-                                    content: const SizedBox(
-                                      height: 100,
-                                      child: Text(
-                                          'If you sign out now your data will be lost unless an account is created.\n\nDo you wish to proceed?'),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                          onPressed: () async {
-                                            objectbox.taskGroups.removeAll();
-                                            objectbox.taskDate.removeAll();
-                                            objectbox.taskList.removeAll();
-
-                                            await _auth.signOut();
-                                            if (!mounted) return;
-                                            Navigator.popUntil(context,
-                                                ModalRoute.withName("/"));
-                                          },
-                                          child: const Text('Log me out')),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('Take me back')),
-                                    ],
-                                  );
-                                });
+                                builder: (BuildContext context) =>
+                                    anonQuitAlert);
                           }
                           await _auth.signOut();
                           if (!mounted) return;
