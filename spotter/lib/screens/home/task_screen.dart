@@ -15,7 +15,7 @@ class _TaskScreenState extends State<TaskScreen> {
     return Container(
         decoration: const BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/beach.png'), fit: BoxFit.fill)),
+                image: AssetImage('assets/beach.png'), fit: BoxFit.cover)),
         child: Column(children: [
           //
           //

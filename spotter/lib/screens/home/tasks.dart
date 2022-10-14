@@ -38,7 +38,7 @@ class _TaskListState extends State<TaskList> {
     List<Task> taskList = objectbox.getTaskListByDate(widget.date);
     return Column(children: [
       SizedBox(
-        height: 20,
+        height: 30,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -91,7 +91,7 @@ class _TaskListState extends State<TaskList> {
       ),
 
       ///The actual task list itself
-      taskList.isEmpty ? Expanded(child: Container(decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/nothing.png'))),)) :
+      taskList.isEmpty ? Expanded(child: Container(decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/nothing2.png'))),)) :
       Expanded(
           child: ListView.builder(
               padding: const EdgeInsets.all(10),

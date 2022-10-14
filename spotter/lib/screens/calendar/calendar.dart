@@ -34,38 +34,42 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      TableCalendar(
-        focusedDay: _focusedDay,
-        firstDay: DateTime.utc(1970, 1, 1),
-        lastDay: DateTime.utc(2199, 12, 31),
-        headerVisible: true,
-        // weekNumbersVisible: true,
-        shouldFillViewport: false,
+    return Container(
+        color: Colors.white54,
+        child: Column(children: [
+          TableCalendar(
+            focusedDay: _focusedDay,
+            firstDay: DateTime.utc(1970, 1, 1),
+            lastDay: DateTime.utc(2199, 12, 31),
+            headerVisible: true,
+            // weekNumbersVisible: true,
+            shouldFillViewport: false,
 
-        /** Adding interactivity */
-        selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-        onDaySelected: _onDaySelected,
+            /** Adding interactivity */
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            onDaySelected: _onDaySelected,
 
-        /** Included for the ability to change calendar format
+            /** Included for the ability to change calendar format
          * This is activated by the button on the calendar title
          */
-        calendarFormat: _calendarFormat,
-        onFormatChanged: _onFormatChanged,
+            calendarFormat: _calendarFormat,
+            onFormatChanged: _onFormatChanged,
 
-        /** This is to prevent losing the focus of the main day
+            /** This is to prevent losing the focus of the main day
          * For now I can only see this being helpful in hot reload
          */
-        onPageChanged: (focusedDay) {
-          _focusedDay = focusedDay;
-        },
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+            },
 
-        /** Customizing UI */
-        calendarStyle: const CalendarStyle(
-          outsideDaysVisible: false,
-        ),
-      ),
-      Expanded(child:_daySelected?TaskList(date: _selectedDay!):Container()),
-    ]);
+            /** Customizing UI */
+            calendarStyle: const CalendarStyle(
+              outsideDaysVisible: false,
+            ),
+          ),
+          Expanded(
+              child:
+                  _daySelected ? TaskList(date: _selectedDay!) : Container()),
+        ]));
   }
 }
