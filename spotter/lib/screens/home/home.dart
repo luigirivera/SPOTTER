@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spotter/screens/study_session/themes.dart';
 import '../statistics/statistics.dart';
 import '../settings/settings.dart';
 import '../calendar/calendar.dart';
 import 'task_screen.dart';
 import '../study_session/studySession.dart';
+import '../../main.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key, required this.title}) : super(key: key);
@@ -60,6 +62,22 @@ class _HomeState extends State<Home> {
         ),
 
         iconTheme: const IconThemeData(color: Colors.orange),
+
+        actions: _barIndexSelected == 2
+            ? <Widget>[
+                TextButton.icon(
+                    icon: const Icon(Icons.image),
+                    label: const Text('Themes'),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Themes()));
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.orange,
+                    )),
+              ]
+            : null,
       ),
 
       ///Bottom screen selection row

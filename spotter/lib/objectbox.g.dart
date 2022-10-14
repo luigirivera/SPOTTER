@@ -14,6 +14,7 @@ import 'package:objectbox/internal.dart'; // generated code can access "internal
 import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import 'models/session_model.dart';
 import 'models/task_model.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
@@ -103,7 +104,26 @@ final _entities = <ModelEntity>[
       ],
       backlinks: <ModelBacklink>[
         ModelBacklink(name: 'tasks', srcEntity: 'Task', srcField: '')
-      ])
+      ]),
+  ModelEntity(
+      id: const IdUid(6, 5945979529088856067),
+      name: 'StudyTheme',
+      lastPropertyId: const IdUid(2, 5166880150451166563),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 6328427022553728420),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 5166880150451166563),
+            name: 'index',
+            type: 6,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[])
 ];
 
 /// Open an ObjectBox store with the model declared in this file.
@@ -126,11 +146,11 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(4, 6894683450146198376),
+      lastEntityId: const IdUid(6, 5945979529088856067),
       lastIndexId: const IdUid(3, 6369646154956444029),
       lastRelationId: const IdUid(1, 5473346048667747771),
       lastSequenceId: const IdUid(0, 0),
-      retiredEntityUids: const [8108166947537495174],
+      retiredEntityUids: const [8108166947537495174, 8960039917790828058],
       retiredIndexUids: const [7485740281930158389],
       retiredPropertyUids: const [
         8985378110078263766,
@@ -141,7 +161,9 @@ ModelDefinition getObjectBoxModel() {
         1276408424731658357,
         157017507726260566,
         8688360419597907777,
-        670442149101728455
+        670442149101728455,
+        7755749066108277002,
+        8363835032810571706
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -259,6 +281,31 @@ ModelDefinition getObjectBoxModel() {
                   8, object.id, (Task srcObject) => srcObject.taskDate),
               store.box<TaskDate>());
           return object;
+        }),
+    StudyTheme: EntityDefinition<StudyTheme>(
+        model: _entities[3],
+        toOneRelations: (StudyTheme object) => [],
+        toManyRelations: (StudyTheme object) => {},
+        getId: (StudyTheme object) => object.id,
+        setId: (StudyTheme object, int id) {
+          object.id = id;
+        },
+        objectToFB: (StudyTheme object, fb.Builder fbb) {
+          fbb.startTable(3);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.index);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = StudyTheme(
+              index: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+
+          return object;
         })
   };
 
@@ -309,4 +356,15 @@ class TaskDate_ {
   /// see [TaskDate.taskGroups]
   static final taskGroups =
       QueryRelationToMany<TaskDate, TaskGroup>(_entities[2].relations[0]);
+}
+
+/// [StudyTheme] entity fields to define ObjectBox queries.
+class StudyTheme_ {
+  /// see [StudyTheme.id]
+  static final id =
+      QueryIntegerProperty<StudyTheme>(_entities[3].properties[0]);
+
+  /// see [StudyTheme.index]
+  static final index =
+      QueryIntegerProperty<StudyTheme>(_entities[3].properties[1]);
 }

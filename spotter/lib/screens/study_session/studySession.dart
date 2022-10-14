@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'dart:io';
+import '../../models/session_model.dart';
+import '../../main.dart';
 
 class StudySession extends StatefulWidget {
   const StudySession({Key? key}) : super(key: key);
@@ -11,6 +14,9 @@ class StudySession extends StatefulWidget {
 }
 
 class _StudySessionState extends State<StudySession> {
+  StudyTheme theme = objectbox.getTheme();
+
+
   int milliseconds = 0;
   int seconds = 0;
   int minutes = 0;
@@ -53,118 +59,71 @@ class _StudySessionState extends State<StudySession> {
     });
   }
 
+  void updateTimer() {
+    setState(() {
+      milliseconds++;
+
+      switch (minutes % 5) {
+        //new tree phase every minute
+        case 1:
+          treePhase = 2;
+          break;
+        case 2:
+          treePhase = 3;
+          break;
+        case 3:
+          treePhase = 4;
+          break;
+        case 4:
+          treePhase = 5;
+          newTree = true;
+          break;
+      }
+
+      if (milliseconds == 1000) {
+        milliseconds = 0;
+        seconds++;
+      }
+      if (seconds == 60) {
+        seconds = 0;
+        minutes++;
+      }
+
+      if (minutes % 5 == 0 && newTree) {
+        treePhase = 1;
+        newTree = !newTree;
+        completedTrees++;
+      }
+      if (minutes == 60) {
+        minutes = 0;
+        hours++;
+      }
+      if (seconds < 10) {
+        secondsString = "0" + seconds.toString();
+      } else {
+        secondsString = seconds.toString();
+      }
+      if (minutes < 10) {
+        minutesString = "0" + minutes.toString();
+      } else {
+        minutesString = minutes.toString();
+      }
+      if (hours < 10) {
+        hoursString = "0" + hours.toString();
+      } else {
+        hoursString = hours.toString();
+      }
+    });
+  }
+
   void start() {
     if (Platform.isAndroid) {
       timer = Timer.periodic(const Duration(microseconds: 1), (timer) {
-        setState(() {
-          milliseconds++;
-
-          switch (minutes % 5) {
-            //new tree phase every minute
-            case 1:
-              treePhase = 2;
-              break;
-            case 2:
-              treePhase = 3;
-              break;
-            case 3:
-              treePhase = 4;
-              break;
-            case 4:
-              treePhase = 5;
-              newTree = true;
-              break;
-          }
-
-          if (milliseconds == 1000) {
-            milliseconds = 0;
-            seconds++;
-          }
-          if (seconds == 60) {
-            seconds = 0;
-            minutes++;
-          }
-
-          if (minutes % 5 == 0 && newTree) {
-            treePhase = 1;
-            newTree = !newTree;
-            completedTrees++;
-          }
-          if (minutes == 60) {
-            minutes = 0;
-            hours++;
-          }
-          if (seconds < 10) {
-            secondsString = "0" + seconds.toString();
-          } else {
-            secondsString = seconds.toString();
-          }
-          if (minutes < 10) {
-            minutesString = "0" + minutes.toString();
-          } else {
-            minutesString = minutes.toString();
-          }
-          if (hours < 10) {
-            hoursString = "0" + hours.toString();
-          } else {
-            hoursString = hours.toString();
-          }
-        });
+        updateTimer();
       });
     } else {
       timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
-        setState(() {
-          milliseconds++;
-
-          switch (minutes) {
-            //new tree phase every minute
-            case 1:
-              treePhase = 2;
-              break;
-            case 2:
-              treePhase = 3;
-              break;
-            case 3:
-              treePhase = 4;
-              break;
-            case 4:
-              treePhase = 5;
-              break;
-          }
-
-          if (milliseconds == 1000) {
-            milliseconds = 0;
-            seconds++;
-          }
-          if (seconds == 60) {
-            seconds = 0;
-            minutes++;
-          }
-          if (minutes % 5 == 0 && minutes != 0) {
-            treePhase = 1;
-            completedTrees++;
-          }
-
-          if (minutes == 60) {
-            minutes = 0;
-            hours++;
-          }
-          if (seconds < 10) {
-            secondsString = "0" + seconds.toString();
-          } else {
-            secondsString = seconds.toString();
-          }
-          if (minutes < 10) {
-            minutesString = "0" + minutes.toString();
-          } else {
-            minutesString = minutes.toString();
-          }
-          if (hours < 10) {
-            hoursString = "0" + hours.toString();
-          } else {
-            hoursString = hours.toString();
-          }
-        });
+        updateTimer();
       });
     }
     setState(() {
@@ -172,12 +131,39 @@ class _StudySessionState extends State<StudySession> {
     });
   }
 
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    initTheme();
+    super.initState();
+  }
+
+  void initTheme() async {
+    print(theme.index);
+    final manifestJson = await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
+    final folders = json.decode(manifestJson).keys.where((String key) => key.startsWith('assets/themes/')).toList();
+
+    print(manifestJson);
+  }
+
   @override
   Widget build(BuildContext context) {
+    
+   
     return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/beach.png'), fit: BoxFit.cover)),
+                // image: AssetImage('assets/beach.png'), fit: BoxFit.fill)
+                image: AssetImage(completedTrees <= 6
+                    ? 'assets/themes/1_trees/Trees-$completedTrees.png'
+                    : 'assets/themes/1_trees/Trees-6.png'),
+                fit: BoxFit.fill)
+                ),
+                
         child: Padding(
           padding: EdgeInsets.all(25),
           child: Center(
