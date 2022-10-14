@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'dart:io';
+import '../../models/session_model.dart';
+import '../../main.dart';
 
 class StudySession extends StatefulWidget {
   const StudySession({Key? key}) : super(key: key);
@@ -11,6 +14,9 @@ class StudySession extends StatefulWidget {
 }
 
 class _StudySessionState extends State<StudySession> {
+  StudyTheme theme = objectbox.getTheme();
+
+
   int milliseconds = 0;
   int seconds = 0;
   int minutes = 0;
@@ -131,13 +137,29 @@ class _StudySessionState extends State<StudySession> {
   }
 
   @override
+  void initState() {
+    initTheme();
+    super.initState();
+  }
+
+  void initTheme() async {
+    print(theme.index);
+    final manifestJson = await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
+    final folders = json.decode(manifestJson).keys.where((String key) => key.startsWith('assets/themes/')).toList();
+
+    print(manifestJson);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    
+   
     return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(completedTrees <= 6
-                    ? 'assets/themes/trees/Trees-$completedTrees.png'
-                    : 'assets/themes/trees/Trees-6.png'),
+                    ? 'assets/themes/1_trees/Trees-$completedTrees.png'
+                    : 'assets/themes/1_trees/Trees-6.png'),
                 fit: BoxFit.fill)),
         child: Padding(
           padding: EdgeInsets.all(25),

@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart';
 import 'models/task_model.dart';
+import 'models/session_model.dart';
 import 'objectbox.g.dart';
 
 class ObjectBox {
@@ -12,6 +13,7 @@ class ObjectBox {
   late final Box<TaskGroup> taskGroups;
   late final Box<Task> taskList;
   late final Box<TaskDate> taskDate;
+  late final Box<StudyTheme> theme;
 
   final CollectionReference taskCollection =
       FirebaseFirestore.instance.collection('Tasks');
@@ -21,6 +23,7 @@ class ObjectBox {
     taskGroups = Box<TaskGroup>(store);
     taskList = Box<Task>(store);
     taskDate = Box<TaskDate>(store);
+    theme = Box<StudyTheme>(store);
   }
 
   static Future<ObjectBox> open() async {
@@ -48,6 +51,8 @@ class ObjectBox {
     tempTaskGroup.removeAt(0);
     return tempTaskGroup;
   }
+
+  StudyTheme getTheme() => theme.getAll().isEmpty ? StudyTheme(index: -1) : theme.getAll().first;
 
   List<TaskGroup> getTaskGroupList() => taskGroups.getAll().toList();
 

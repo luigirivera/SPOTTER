@@ -1,8 +1,10 @@
 import 'package:objectbox/objectbox.dart';
 
 @Entity()
-class Theme {
+class StudyTheme {
   @Id()
   int id = 0; //don't delete this. it's for objectbox
   int index;
+
+  StudyTheme({required this.index});
 }
