@@ -139,7 +139,6 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                             objectbox.taskDate.removeAll();
                                             objectbox.taskList.removeAll();
 
-                                            await _auth.deleteUser();
                                             await objectbox.taskCollection
                                                 .doc(userUid!)
                                                 .delete()
@@ -148,6 +147,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                                         context,
                                                         ModalRoute.withName(
                                                             "/")));
+                                            await _auth.deleteUser();
                                           },
                                           child: const Text('Log me out')),
                                       TextButton(

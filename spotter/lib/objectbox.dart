@@ -203,7 +203,7 @@ class ObjectBox {
     List<TaskDate> tempDateList = getTaskDateList();
 
     for (var tempDate in tempDateList) {
-      debugPrint('\nDebug Print Date: ${tempDate.date.day}/${tempDate.date.month}/${tempDate.date.year}\n');
+      debugPrint('\nDebug Print Date: ${date.day}/${date.month}/${date.year}\n');
       if (tempDate.date.day == date.day &&
           tempDate.date.month == date.month &&
           tempDate.date.year == date.year) {
