@@ -6,6 +6,8 @@ import 'models/task_model.dart';
 import 'models/session_model.dart';
 import 'objectbox.g.dart';
 
+import 'package:flutter/material.dart';
+
 class ObjectBox {
   ObjectBox();
 
@@ -152,22 +154,6 @@ class ObjectBox {
         .doc(task.taskDescription)
         .delete();
     taskList.remove(task.id);
-
-    if (getTaskListByGroupAndDate(tempDate, getTaskGroup(tempGroup)).isEmpty) {
-      TaskGroup oldTaskGroup = tempTaskGroup;
-      List<TaskGroup> tempTaskGroupList =
-          objectbox.getTaskGroupsByDate(tempDate);
-      TaskDate taskDate = task.taskDate.target!;
-
-      taskDate.taskGroups.clear();
-      taskDate.taskGroups.applyToDb();
-      for (var group in tempTaskGroupList) {
-        if (group.taskGroup != oldTaskGroup.taskGroup) {
-          taskDate.taskGroups.add(group);
-        }
-      }
-      taskDate.taskGroups.applyToDb();
-    }
   }
 
   void deleteTaskDate(TaskDate date) {
@@ -209,6 +195,8 @@ class ObjectBox {
     List<TaskDate> tempDateList = getTaskDateList();
 
     for (var tempDate in tempDateList) {
+      debugPrint(
+          '\nDebug Print Date: ${date.day}/${date.month}/${date.year}\n');
       if (tempDate.date.day == date.day &&
           tempDate.date.month == date.month &&
           tempDate.date.year == date.year) {

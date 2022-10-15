@@ -35,7 +35,7 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
-    List<Task> taskList = objectbox.getTaskListByDate(widget.date);
+    List<Task> taskList = objectbox.getTaskList();
     return Column(children: [
       SizedBox(
         height: 30,
@@ -85,7 +85,6 @@ class _TaskListState extends State<TaskList> {
               icon: const Icon(Icons.delete),
               tooltip: 'Delete selected',
             ),
-            // Text('${widget.date.year}/${widget.date.month}/${widget.date.day}   ${taskDate.date.year}/${taskDate.date.month}/${taskDate.date.day}'),
           ],
         ),
       ),

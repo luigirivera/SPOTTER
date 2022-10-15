@@ -23,6 +23,10 @@ class AuthService {
     await _auth.signInWithCredential(credential);
   }
 
+  Future deleteUser() async {
+    await _auth.currentUser!.delete();
+  }
+
   //create user object based on User
   SpotterUser _spotterUser(User? user) {
     return SpotterUser(uid: user?.uid, isAnon: user?.isAnonymous);
@@ -43,6 +47,7 @@ class AuthService {
       /** These class names are different than the demonstration due to updates in API*/
       UserCredential userCred = await _auth.signInAnonymously();
       User? user = userCred.user;
+      await objectbox.initTaskCollection();
       return _spotterUser(user!);
     } catch (e) {
       debugPrint(e.toString());
