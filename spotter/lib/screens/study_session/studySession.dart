@@ -171,6 +171,9 @@ class _StudySessionState extends State<StudySession> {
     }
 
     fileName = selectedTheme.split(RegExp(r'_'))[1].split(r'/')[0];
+
+    print(selectedTheme);
+    print(fileName);
   }
 
   @override

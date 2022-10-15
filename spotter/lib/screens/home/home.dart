@@ -70,7 +70,12 @@ class _HomeState extends State<Home> {
                     label: const Text('Themes'),
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Themes()));
+                              MaterialPageRoute(builder: (context) => Themes()))
+                          .then((value) => {
+                                setState(() {
+                                  //do nothing
+                                })
+                              });
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.transparent,
