@@ -15,7 +15,9 @@ class StudySession extends StatefulWidget {
 
 class _StudySessionState extends State<StudySession> {
   StudyTheme theme = objectbox.getTheme();
-
+  final String themeFolder = 'assets/themes/';
+  String selectedTheme = '1_trees/';
+  String fileName = 'trees';
 
   int milliseconds = 0;
   int seconds = 0;
@@ -30,8 +32,8 @@ class _StudySessionState extends State<StudySession> {
   bool isTimerRunning = false;
   bool newTree = false;
 
-  int treePhase = 1;
-  int completedTrees = 0;
+  int phase = 1;
+  int completed = 0;
 
   void stop() {
     timer!.cancel();
@@ -54,8 +56,8 @@ class _StudySessionState extends State<StudySession> {
       minutesString = "00";
       hoursString = "00";
 
-      treePhase = 1;
-      completedTrees = 0;
+      phase = 1;
+      completed = 0;
     });
   }
 
@@ -66,16 +68,16 @@ class _StudySessionState extends State<StudySession> {
       switch (minutes % 5) {
         //new tree phase every minute
         case 1:
-          treePhase = 2;
+          phase = 2;
           break;
         case 2:
-          treePhase = 3;
+          phase = 3;
           break;
         case 3:
-          treePhase = 4;
+          phase = 4;
           break;
         case 4:
-          treePhase = 5;
+          phase = 5;
           newTree = true;
           break;
       }
@@ -90,9 +92,9 @@ class _StudySessionState extends State<StudySession> {
       }
 
       if (minutes % 5 == 0 && newTree) {
-        treePhase = 1;
+        phase = 1;
         newTree = !newTree;
-        completedTrees++;
+        completed++;
       }
       if (minutes == 60) {
         minutes = 0;
@@ -144,26 +146,48 @@ class _StudySessionState extends State<StudySession> {
 
   void initTheme() async {
     print(theme.index);
-    final manifestJson = await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
-    final folders = json.decode(manifestJson).keys.where((String key) => key.startsWith('assets/themes/')).toList();
+    var assetsFile =
+        await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
+    final Map<String, dynamic> manifestMap = json.decode(assetsFile);
 
-    print(manifestJson);
+    List<String> thumbnails = manifestMap.keys
+        .where((String key) =>
+            key.contains('assets/themes/thumbnails/') && key.contains('.png'))
+        .toList();
+
+    //grab folder names from file names
+    thumbnails = thumbnails.map((e) {
+      return e
+          .split(RegExp(r'assets/themes/thumbnails/'))[1]
+          .split(RegExp(r'\.'))[0];
+    }).toList();
+
+    print(thumbnails);
+
+    if (theme.index < 0) {
+      selectedTheme = '${thumbnails[0]}/';
+    } else {
+      selectedTheme = '${thumbnails[theme.index]}/';
+    }
+
+    fileName = selectedTheme.split(RegExp(r'_'))[1].split(r'/')[0];
+
+    print(fileName);
+    print(selectedTheme);
+
+    print('$themeFolder$selectedTheme$fileName-$completed.png');
   }
 
   @override
   Widget build(BuildContext context) {
-    
-   
     return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
                 // image: AssetImage('assets/beach.png'), fit: BoxFit.fill)
-                image: AssetImage(completedTrees <= 6
-                    ? 'assets/themes/1_trees/Trees-$completedTrees.png'
+                image: AssetImage(completed <= 6
+                    ? '$themeFolder$selectedTheme$fileName-$completed.png'
                     : 'assets/themes/1_trees/Trees-6.png'),
-                fit: BoxFit.fill)
-                ),
-                
+                fit: BoxFit.fill)),
         child: Padding(
           padding: EdgeInsets.all(25),
           child: Center(
@@ -179,7 +203,7 @@ class _StudySessionState extends State<StudySession> {
                   child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                          "Tree Phase: $treePhase\nTrees Completed: $completedTrees",
+                          "Tree Phase: $phase\nTrees Completed: $completed",
                           style: const TextStyle(
                               fontSize: 20, color: Colors.black))),
                 ),
