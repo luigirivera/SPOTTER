@@ -171,11 +171,6 @@ class _StudySessionState extends State<StudySession> {
     }
 
     fileName = selectedTheme.split(RegExp(r'_'))[1].split(r'/')[0];
-
-    print(fileName);
-    print(selectedTheme);
-
-    print('$themeFolder$selectedTheme$fileName-$completed.png');
   }
 
   @override
@@ -186,7 +181,7 @@ class _StudySessionState extends State<StudySession> {
                 // image: AssetImage('assets/beach.png'), fit: BoxFit.fill)
                 image: AssetImage(completed <= 6
                     ? '$themeFolder$selectedTheme$fileName-$completed.png'
-                    : 'assets/themes/1_trees/Trees-6.png'),
+                    : '$themeFolder$selectedTheme$fileName-6.png'),
                 fit: BoxFit.fill)),
         child: Padding(
           padding: EdgeInsets.all(25),
