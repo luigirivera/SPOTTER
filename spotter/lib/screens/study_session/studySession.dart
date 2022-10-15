@@ -16,8 +16,8 @@ class StudySession extends StatefulWidget {
 class _StudySessionState extends State<StudySession> {
   StudyTheme theme = objectbox.getTheme();
   final String themeFolder = 'assets/themes/';
-  String selectedTheme = '1_trees/';
-  String fileName = 'trees';
+  String selectedTheme = '${objectbox.getTheme().folder}/';
+  String fileName = objectbox.getTheme().name;
 
   int milliseconds = 0;
   int seconds = 0;

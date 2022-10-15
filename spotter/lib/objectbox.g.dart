@@ -108,7 +108,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(6, 5945979529088856067),
       name: 'StudyTheme',
-      lastPropertyId: const IdUid(2, 5166880150451166563),
+      lastPropertyId: const IdUid(5, 431531247899342397),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -120,6 +120,16 @@ final _entities = <ModelEntity>[
             id: const IdUid(2, 5166880150451166563),
             name: 'index',
             type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 540112357152437798),
+            name: 'folder',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 431531247899342397),
+            name: 'name',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -163,7 +173,8 @@ ModelDefinition getObjectBoxModel() {
         8688360419597907777,
         670442149101728455,
         7755749066108277002,
-        8363835032810571706
+        8363835032810571706,
+        7899523933318003368
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -291,9 +302,13 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (StudyTheme object, fb.Builder fbb) {
-          fbb.startTable(3);
+          final folderOffset = fbb.writeString(object.folder);
+          final nameOffset = fbb.writeString(object.name);
+          fbb.startTable(6);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.index);
+          fbb.addOffset(2, folderOffset);
+          fbb.addOffset(4, nameOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -302,7 +317,11 @@ ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
 
           final object = StudyTheme(
-              index: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+              index: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              folder: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, ''),
+              name: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 12, ''))
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
@@ -367,4 +386,12 @@ class StudyTheme_ {
   /// see [StudyTheme.index]
   static final index =
       QueryIntegerProperty<StudyTheme>(_entities[3].properties[1]);
+
+  /// see [StudyTheme.folder]
+  static final folder =
+      QueryStringProperty<StudyTheme>(_entities[3].properties[2]);
+
+  /// see [StudyTheme.name]
+  static final name =
+      QueryStringProperty<StudyTheme>(_entities[3].properties[3]);
 }

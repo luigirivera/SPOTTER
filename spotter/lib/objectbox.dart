@@ -54,8 +54,9 @@ class ObjectBox {
     return tempTaskGroup;
   }
 
-  StudyTheme getTheme() =>
-      theme.getAll().isEmpty ? StudyTheme(index: -1) : theme.getAll().first;
+  StudyTheme getTheme() => theme.getAll().isEmpty
+      ? StudyTheme(index: -1, folder: "1_trees/", name: "trees")
+      : theme.getAll().first;
 
   List<TaskGroup> getTaskGroupList() => taskGroups.getAll().toList();
 

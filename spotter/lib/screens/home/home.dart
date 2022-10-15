@@ -6,6 +6,7 @@ import '../calendar/calendar.dart';
 import 'task_screen.dart';
 import '../study_session/studySession.dart';
 import '../../main.dart';
+import '../loading/loading.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key, required this.title}) : super(key: key);
@@ -18,6 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _barIndexSelected = 0;
+  bool loading = false;
 
   void _onBarTap(int index) {
     setState(() {
@@ -68,14 +70,17 @@ class _HomeState extends State<Home> {
                 TextButton.icon(
                     icon: const Icon(Icons.image),
                     label: const Text('Themes'),
-                    onPressed: () {
-                      Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Themes()))
-                          .then((value) => {
-                                setState(() {
-                                  //do nothing
-                                })
-                              });
+                    onPressed: () async {
+                      setState(() {
+                        loading = true;
+                      });
+                      final result = await Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Themes()));
+
+                      print(result);
+                      setState(() {
+                        loading = result;
+                      });
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.transparent,
@@ -87,7 +92,7 @@ class _HomeState extends State<Home> {
 
       ///Bottom screen selection row
       drawer: const SettingsDrawer(),
-      body: _screens[_barIndexSelected],
+      body: loading ? const Loading() : _screens[_barIndexSelected],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.grey,
         unselectedItemColor: Colors.black,
