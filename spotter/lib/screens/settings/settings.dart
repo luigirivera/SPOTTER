@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:spotter/screens/settings/settings_sign_in.dart';
 import 'package:spotter/services/auth_service.dart';
-import 'dart:io';
 import 'package:spotter/main.dart';
-
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
@@ -24,36 +20,6 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    //Dialog for Quitting as anon
-    Widget cancelButton = TextButton(
-      child: Text("Cancel",
-          style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.bold)),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-    Widget continueButton = TextButton(
-      child: Text("Continue"),
-      onPressed: () {
-        _auth.signOut();
-        if (!mounted) return;
-        Navigator.popUntil(context, ModalRoute.withName("/"));
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog anonQuitAlert = AlertDialog(
-      title: Text("Log Out?"),
-      content: Text(
-          "Quitting from a Guest Account will result in losing all your data. Are you sure you want to continue?"),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
-
     //Dialog for About
     Dialog aboutPopup = Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),

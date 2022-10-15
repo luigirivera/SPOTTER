@@ -6,6 +6,8 @@ import 'models/task_model.dart';
 import 'models/session_model.dart';
 import 'objectbox.g.dart';
 
+import 'package:flutter/material.dart';
+
 class ObjectBox {
   ObjectBox();
 
@@ -201,6 +203,7 @@ class ObjectBox {
     List<TaskDate> tempDateList = getTaskDateList();
 
     for (var tempDate in tempDateList) {
+      debugPrint('\nDebug Print Date: ${tempDate.date.day}/${tempDate.date.month}/${tempDate.date.year}\n');
       if (tempDate.date.day == date.day &&
           tempDate.date.month == date.month &&
           tempDate.date.year == date.year) {
