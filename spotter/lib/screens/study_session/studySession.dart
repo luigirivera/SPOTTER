@@ -44,7 +44,9 @@ class _StudySessionState extends State<StudySession> {
   }
 
   void reset() {
-    timer!.cancel();
+    if (timer != null) {
+      timer!.cancel();
+    }
 
     setState(() {
       isTimerRunning = false;
