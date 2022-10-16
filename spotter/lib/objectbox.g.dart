@@ -82,7 +82,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(4, 6894683450146198376),
       name: 'TaskDate',
-      lastPropertyId: const IdUid(6, 4997147112644763886),
+      lastPropertyId: const IdUid(10, 2904426658388335482),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -91,9 +91,24 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(6, 4997147112644763886),
-            name: 'date',
-            type: 10,
+            id: const IdUid(7, 8729241759794953062),
+            name: 'year',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 3999079546073260376),
+            name: 'month',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 3456104568692523990),
+            name: 'day',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 2904426658388335482),
+            name: 'weekday',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -163,7 +178,8 @@ ModelDefinition getObjectBoxModel() {
         8688360419597907777,
         670442149101728455,
         7755749066108277002,
-        8363835032810571706
+        8363835032810571706,
+        4997147112644763886
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -258,9 +274,12 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (TaskDate object, fb.Builder fbb) {
-          fbb.startTable(7);
+          fbb.startTable(11);
           fbb.addInt64(0, object.id);
-          fbb.addInt64(5, object.date.millisecondsSinceEpoch);
+          fbb.addInt64(6, object.year);
+          fbb.addInt64(7, object.month);
+          fbb.addInt64(8, object.day);
+          fbb.addInt64(9, object.weekday);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -269,8 +288,12 @@ ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
 
           final object = TaskDate(
-              date: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0)))
+              year: const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0),
+              month:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0),
+              day: const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0),
+              weekday:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0))
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           InternalToManyAccess.setRelInfo(object.taskGroups, store,
               RelInfo<TaskDate>.toMany(1, object.id), store.box<TaskDate>());
@@ -349,9 +372,20 @@ class TaskDate_ {
   /// see [TaskDate.id]
   static final id = QueryIntegerProperty<TaskDate>(_entities[2].properties[0]);
 
-  /// see [TaskDate.date]
-  static final date =
+  /// see [TaskDate.year]
+  static final year =
       QueryIntegerProperty<TaskDate>(_entities[2].properties[1]);
+
+  /// see [TaskDate.month]
+  static final month =
+      QueryIntegerProperty<TaskDate>(_entities[2].properties[2]);
+
+  /// see [TaskDate.day]
+  static final day = QueryIntegerProperty<TaskDate>(_entities[2].properties[3]);
+
+  /// see [TaskDate.weekday]
+  static final weekday =
+      QueryIntegerProperty<TaskDate>(_entities[2].properties[4]);
 
   /// see [TaskDate.taskGroups]
   static final taskGroups =

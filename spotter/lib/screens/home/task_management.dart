@@ -246,16 +246,16 @@ class _EditTaskState extends State<EditTask> {
   ];
 
   final _formKey = GlobalKey<FormState>();
-  String newDescription = '';
-  String newGroup = '';
-  DateTime newDate = DateTime.now();
+  late String newDescription;
+  late String newGroup;
+  late DateTime newDate;
 
   @override
   void initState() {
     super.initState();
     newDescription = widget.task.taskDescription;
     newGroup = widget.task.taskGroup.target!.taskGroup;
-    newDate = widget.task.taskDate.target!.date;
+    newDate = widget.date;
   }
 
   bool groupChanged = false;

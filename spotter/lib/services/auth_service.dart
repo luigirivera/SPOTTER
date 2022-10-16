@@ -27,7 +27,7 @@ class AuthService {
     await _auth.currentUser!.delete();
   }
 
-  //create user object based on User
+  ///create user object based on User
   SpotterUser _spotterUser(User? user) {
     return SpotterUser(uid: user?.uid, isAnon: user?.isAnonymous);
   }

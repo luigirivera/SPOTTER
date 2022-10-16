@@ -5,7 +5,6 @@ import '../settings/settings.dart';
 import '../calendar/calendar.dart';
 import 'task_screen.dart';
 import '../study_session/studySession.dart';
-import '../../main.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key, required this.title}) : super(key: key);
@@ -70,7 +69,7 @@ class _HomeState extends State<Home> {
                     label: const Text('Themes'),
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Themes()));
+                          MaterialPageRoute(builder: (context) => const Themes()));
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.transparent,

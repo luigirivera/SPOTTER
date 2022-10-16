@@ -10,7 +10,6 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<SpotterUser>(context);
-    debugPrint(user.toString());
 
     //return either authenticate or home page
     if (user.uid == null) {

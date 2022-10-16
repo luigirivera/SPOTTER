@@ -6,8 +6,6 @@ import 'models/task_model.dart';
 import 'models/session_model.dart';
 import 'objectbox.g.dart';
 
-import 'package:flutter/material.dart';
-
 class ObjectBox {
   ObjectBox();
 
@@ -54,7 +52,8 @@ class ObjectBox {
     return tempTaskGroup;
   }
 
-  StudyTheme getTheme() => theme.getAll().isEmpty ? StudyTheme(index: -1) : theme.getAll().first;
+  StudyTheme getTheme() =>
+      theme.getAll().isEmpty ? StudyTheme(index: -1) : theme.getAll().first;
 
   List<TaskGroup> getTaskGroupList() => taskGroups.getAll().toList();
 
@@ -75,7 +74,7 @@ class ObjectBox {
   List<TaskGroup> getTaskGroupsByDate(DateTime date) =>
       _findTaskDate(date).taskGroups.toList();
 
-  List<Task> getTaskListByGroupAndDate(DateTime date, TaskGroup group) =>
+  List<Task> getTaskListByGroupAndDate(TaskDate date, TaskGroup group) =>
       _findTaskListByGroupAndDate(date, group);
 
   ///==////////////////////////////////////////////////////////////////
@@ -103,15 +102,16 @@ class ObjectBox {
         deletionMade = true;
       }
     }
-    TaskDate tempTaskDate = getTaskDate(date);
-    if (tempTaskDate.tasks.isEmpty) {
-      deleteTaskDate(tempTaskDate);
-    }
+
     return deletionMade;
   }
 
   TaskDate addTaskDate(DateTime date) {
-    TaskDate newTaskDate = TaskDate(date: date);
+    TaskDate newTaskDate = TaskDate(
+        year: date.year,
+        month: date.month,
+        day: date.day,
+        weekday: date.weekday);
     taskDate.put(newTaskDate);
     return newTaskDate;
   }
@@ -135,12 +135,12 @@ class ObjectBox {
   }
 
   Future deleteTask(Task task) async {
-    DateTime tempDate = task.taskDate.target!.date;
-    String tempGroup = task.taskGroup.target!.taskGroup;
-    TaskGroup tempTaskGroup = task.taskGroup.target!;
+    TaskDate oldTaskDate = task.taskDate.target!;
+    TaskGroup oldTaskGroup = task.taskGroup.target!;
     if (!task.taskDate.hasValue) {
       deleteTaskDate(task.taskDate.target!);
     }
+
     await taskCollection
         .doc(userUid)
         .collection(task.taskGroup.target!.taskGroup)
@@ -148,19 +148,26 @@ class ObjectBox {
         .delete();
     taskList.remove(task.id);
 
-    if (getTaskListByGroupAndDate(tempDate, getTaskGroup(tempGroup)).isEmpty) {
-      TaskGroup oldTaskGroup = tempTaskGroup;
-      List<TaskGroup> tempTaskGroupList = objectbox.getTaskGroupsByDate(tempDate);
-      TaskDate taskDate = task.taskDate.target!;
+    if (_findTaskListByGroupAndDate(
+            oldTaskDate, oldTaskGroup)
+        .isEmpty) {
 
-      taskDate.taskGroups.clear();
-      taskDate.taskGroups.applyToDb();
-      for (var group in tempTaskGroupList) {
-        if (group.taskGroup != oldTaskGroup.taskGroup) {
-          taskDate.taskGroups.add(group);
+      List<TaskGroup> taskGroupList = oldTaskDate.taskGroups.toList();
+      List<TaskGroup> resultTaskGroupList = List.empty(growable: true);
+      oldTaskDate.taskGroups.clear();
+      oldTaskDate.taskGroups.applyToDb();
+
+      for(var taskGroup in taskGroupList){
+        if(taskGroup.taskGroup != oldTaskGroup.taskGroup){
+          resultTaskGroupList.add(taskGroup);
         }
       }
-      taskDate.taskGroups.applyToDb();
+      oldTaskDate.taskGroups.addAll(resultTaskGroupList);
+      oldTaskDate.taskGroups.applyToDb();
+    }
+
+    if (oldTaskDate.tasks.isEmpty) {
+      deleteTaskDate(oldTaskDate);
     }
   }
 
@@ -181,20 +188,18 @@ class ObjectBox {
     return null;
   }
 
-  List<Task> _findTaskListByGroupAndDate(DateTime date, TaskGroup group) {
+  List<Task> _findTaskListByGroupAndDate(TaskDate date, TaskGroup group) {
     List<Task> tempTaskList = group.tasks;
     List<Task> resultTaskList = List.empty(growable: true);
-    TaskDate tempTaskDate = getTaskDate(date);
+
     for (var task in tempTaskList) {
-      if (task.taskDate.target!.date.compareTo(tempTaskDate.date) == 0) {
+      if (task.taskDate.target!.compareTo(date)) {
         resultTaskList.add(task);
       }
     }
     return resultTaskList;
   }
 
-  ///This is for assigning the object relations
-  ///The "id" of the TaskDate obj is needed to assign correctly
   TaskDate _findTaskDate(DateTime date) {
     if (taskDate.isEmpty()) {
       addTaskDate(date);
@@ -203,10 +208,9 @@ class ObjectBox {
     List<TaskDate> tempDateList = getTaskDateList();
 
     for (var tempDate in tempDateList) {
-      debugPrint('\nDebug Print Date: ${date.day}/${date.month}/${date.year}\n');
-      if (tempDate.date.day == date.day &&
-          tempDate.date.month == date.month &&
-          tempDate.date.year == date.year) {
+      if (tempDate.year == date.year &&
+          tempDate.month == date.month &&
+          tempDate.day == date.day) {
         return tempDate;
       }
     }
