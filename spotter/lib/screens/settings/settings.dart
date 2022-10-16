@@ -138,6 +138,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                             objectbox.taskGroups.removeAll();
                                             objectbox.taskDate.removeAll();
                                             objectbox.taskList.removeAll();
+                                            objectbox.theme.removeAll();
 
                                             await objectbox.taskCollection
                                                 .doc(userUid!)
@@ -154,7 +155,11 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: const Text('Take me back')),
+                                          child: const Text('Take me back',
+                                              style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontWeight:
+                                                      FontWeight.bold))),
                                     ],
                                   );
                                 });

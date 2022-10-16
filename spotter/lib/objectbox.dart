@@ -53,7 +53,7 @@ class ObjectBox {
   }
 
   StudyTheme getTheme() => theme.getAll().isEmpty
-      ? StudyTheme(index: -1, folder: "1_trees/", name: "trees")
+      ? StudyTheme(index: -1, folder: "1_trees", name: "trees")
       : theme.getAll().first;
 
   List<TaskGroup> getTaskGroupList() => taskGroups.getAll().toList();
