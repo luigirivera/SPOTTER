@@ -35,7 +35,7 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
-    List<Task> taskList = objectbox.getTaskList();
+    List<Task> taskList = objectbox.getTaskListByDate(widget.date);
     return Column(children: [
       SizedBox(
         height: 30,
@@ -245,7 +245,7 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
               if (index.isOdd) return const Divider();
               final i = index ~/ 2;
               List<Task> taskList = objectbox.getTaskListByGroupAndDate(
-                  widget.date, taskGroup[i]);
+                  objectbox.getTaskDate(widget.date), taskGroup[i]);
               return Container(
                   decoration: BoxDecoration(
                     border: Border.all(
