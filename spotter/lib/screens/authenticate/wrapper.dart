@@ -15,7 +15,6 @@ class Wrapper extends StatelessWidget {
     if (user.uid == null) {
       return const SignIn();
     } else {
-      debugPrint('Le debug print: ${user.uid}');
       return const Home(title: 'Spotter');
     }
   }

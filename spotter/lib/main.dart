@@ -9,7 +9,6 @@ import 'scrollHighlightRemove.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 late final ObjectBox objectbox;
-final String? userUid = FirebaseAuth.instance.currentUser?.uid;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

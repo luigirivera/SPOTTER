@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spotter/screens/settings/settings_sign_in.dart';
 import 'package:spotter/services/auth_service.dart';
@@ -140,14 +141,14 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                             objectbox.taskList.removeAll();
 
                                             await objectbox.taskCollection
-                                                .doc(userUid!)
-                                                .delete()
-                                                .then((value) =>
-                                                    Navigator.popUntil(
-                                                        context,
-                                                        ModalRoute.withName(
-                                                            "/")));
-                                            await _auth.deleteUser();
+                                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                                .delete();
+
+                                            await _auth.deleteUser().then((value) =>
+                                                Navigator.popUntil(
+                                                    context,
+                                                    ModalRoute.withName(
+                                                        "/")));
                                           },
                                           child: const Text('Log me out')),
                                       TextButton(

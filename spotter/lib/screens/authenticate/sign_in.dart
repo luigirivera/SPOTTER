@@ -36,8 +36,8 @@ class _SignInState extends State<SignIn> {
                     if (result == null) {
                       debugPrint('error signing in');
                     } else {
-                      debugPrint('signed in \n$result\n');
-                      debugPrint(result.uid);
+                      debugPrint('\nsigned in : $result');
+                      debugPrint('${result.uid}\n');
                     }
                   },
                   icon: const Icon(Icons.person),
