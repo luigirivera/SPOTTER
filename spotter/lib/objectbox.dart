@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:spotter/main.dart';
 import 'models/task_model.dart';
 import 'models/session_model.dart';
 import 'objectbox.g.dart';
@@ -233,12 +233,10 @@ class ObjectBox {
   }
 
   Future _getFirebaseTaskGroups() async {
-    List dynamicList = [];
-    List<String> taskGroups = <String>[];
+    List dynamicList = List.empty(growable: true);
+    List<String> taskGroups = List.empty(growable: true);
     await taskCollection.doc(FirebaseAuth.instance.currentUser!.uid).get().then((value) {
-      dynamicList = value.toString().contains('groups')
-          ? value['groups']
-          : List.empty(growable: true);
+      dynamicList = value['groups'];
     });
     taskGroups = dynamicList.cast<String>();
 

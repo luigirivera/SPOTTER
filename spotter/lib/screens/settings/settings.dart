@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:spotter/screens/settings/settings_sign_in.dart';
 import 'package:spotter/services/auth_service.dart';
 import 'package:spotter/main.dart';
+
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
@@ -142,14 +143,16 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                             objectbox.theme.removeAll();
 
                                             await objectbox.taskCollection
-                                                .doc(FirebaseAuth.instance.currentUser!.uid)
-                                                .delete();
-
-                                            await _auth.deleteUser().then((value) =>
-                                                Navigator.popUntil(
-                                                    context,
-                                                    ModalRoute.withName(
-                                                        "/")));
+                                                .doc(FirebaseAuth
+                                                    .instance.currentUser!.uid)
+                                                .delete()
+                                                .whenComplete(() async {
+                                              await _auth.deleteUser();
+                                            }).then((value) =>
+                                                    Navigator.popUntil(
+                                                        context,
+                                                        ModalRoute.withName(
+                                                            "/")));
                                           },
                                           child: const Text('Log me out')),
                                       TextButton(

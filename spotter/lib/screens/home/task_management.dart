@@ -2,6 +2,26 @@ import 'package:flutter/material.dart';
 import '../../main.dart';
 import '../../models/task_model.dart';
 
+Future _addTask(
+    String description, String group, DateTime date, bool completed) async {
+  Task newTask = Task(
+    taskDescription: description,
+    completed: completed,
+  );
+
+  TaskGroup taskGroup = objectbox.getTaskGroup(group);
+  TaskDate taskDate = objectbox.getTaskDate(date);
+
+  ///Data relations
+  newTask.taskDate.target = taskDate;
+  newTask.taskGroup.target = taskGroup;
+  taskDate.taskGroups.add(taskGroup);
+
+  taskDate.taskGroups.applyToDb();
+
+  await objectbox.addTask(newTask);
+}
+
 class AddTaskAndGroup extends StatefulWidget {
   final DateTime date;
 
@@ -27,8 +47,9 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
     'Saturday',
     'Sunday'
   ];
+
   String? newTaskGroupName;
-  String newDescription = '';
+  String description = '';
   String group = "General";
   bool completed = false;
 
@@ -135,7 +156,7 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
                               value!.isEmpty ? 'Enter a task here' : null,
                           onChanged: (value) {
                             setState(() {
-                              newDescription = value;
+                              description = value;
                             });
                           },
                         ),
@@ -148,9 +169,7 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
                                 .getTaskGroupList()
                                 .elementAt(1)
                                 .taskGroup,
-                            items: objectbox
-                                .getTaskGroupList()
-                                .map((value) {
+                            items: objectbox.getTaskGroupList().map((value) {
                               return DropdownMenuItem<String>(
                                   value: value.taskGroup,
                                   child: Text(value.taskGroup));
@@ -197,23 +216,7 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
               ),
               TextButton(
                 onPressed: () async {
-                  Task newTask = Task(
-                    taskDescription: newDescription,
-                    completed: completed,
-                  );
-
-                  TaskGroup taskGroup = objectbox.getTaskGroup(group);
-                  TaskDate taskDate = objectbox.getTaskDate(date);
-
-                  ///Data relations
-                  newTask.taskDate.target = taskDate;
-                  newTask.taskGroup.target = taskGroup;
-                  taskDate.taskGroups.add(taskGroup);
-
-                  taskDate.taskGroups.applyToDb();
-
-                  await objectbox
-                      .addTask(newTask)
+                  await _addTask(description, group, date, completed)
                       .then((value) => Navigator.of(context).pop());
                 },
                 child: const Text('Okay'),
@@ -246,16 +249,17 @@ class _EditTaskState extends State<EditTask> {
   ];
 
   final _formKey = GlobalKey<FormState>();
-  late String newDescription;
-  late String newGroup;
-  late DateTime newDate;
+  late String description;
+  late String group;
+  late DateTime date;
+  final completed = false;
 
   @override
   void initState() {
     super.initState();
-    newDescription = widget.task.taskDescription;
-    newGroup = widget.task.taskGroup.target!.taskGroup;
-    newDate = widget.date;
+    description = widget.task.taskDescription;
+    group = widget.task.taskGroup.target!.taskGroup;
+    date = widget.date;
   }
 
   bool groupChanged = false;
@@ -272,7 +276,7 @@ class _EditTaskState extends State<EditTask> {
                 children: [
                   ///Task description input text box form field
                   TextFormField(
-                    initialValue: newDescription,
+                    initialValue: description,
                     decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
@@ -291,7 +295,7 @@ class _EditTaskState extends State<EditTask> {
                         value!.isEmpty ? 'Enter a task here' : null,
                     onChanged: (value) {
                       setState(() {
-                        newDescription = value;
+                        description = value;
                       });
                     },
                   ),
@@ -300,32 +304,32 @@ class _EditTaskState extends State<EditTask> {
                   ///Task group drop down form
                   DropdownButtonFormField<String>(
                       menuMaxHeight: 300,
-                      value: newGroup,
+                      value: group,
                       items: objectbox
                           .getTaskGroupListWithoutAddOption()
-                          .map((taskGroupValue) {
+                          .map((value) {
                         return DropdownMenuItem<String>(
-                            value: taskGroupValue.taskGroup,
-                            child: Text(taskGroupValue.taskGroup));
+                            value: value.taskGroup,
+                            child: Text(value.taskGroup));
                       }).toList(),
                       onChanged: (value) {
-                        newGroup = value.toString();
+                        group = value.toString();
                       }),
                   const SizedBox(height: 20),
 
                   ///The date picker section
-                  Text('${newDate.month} / ${newDate.day}/ ${newDate.year}'),
+                  Text('${date.month} / ${date.day}/ ${date.year}'),
                   TextButton(
                       onPressed: () async {
                         DateTime? temp = await showDatePicker(
                             context: context,
-                            initialDate: newDate,
+                            initialDate: date,
                             confirmText: 'Okay',
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2100));
                         if (temp != null) {
                           setState(() {
-                            newDate = temp;
+                            date = temp;
                           });
                         }
                       },
@@ -342,17 +346,7 @@ class _EditTaskState extends State<EditTask> {
         TextButton(
           onPressed: () async {
             await objectbox.deleteTask(widget.task);
-
-            Task newTask =
-                Task(taskDescription: newDescription, completed: false);
-            TaskGroup newTaskGroup = objectbox.getTaskGroup(newGroup);
-            newTask.taskGroup.target = newTaskGroup;
-            newTask.taskDate.target = objectbox.getTaskDate(newDate);
-            newTask.taskDate.target!.taskGroups.add(newTaskGroup);
-            newTask.taskDate.target!.taskGroups.applyToDb();
-
-            await objectbox
-                .addTask(newTask)
+            await _addTask(description, group, date, completed)
                 .then((value) => Navigator.of(context).pop());
           },
           child: const Text('Finish'),
