@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spotter/screens/settings/settings_sign_in.dart';
-import 'package:spotter/services/auth_service.dart';
+import 'package:spotter/services/auth.dart';
 import 'package:spotter/main.dart';
 
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-
 import '../loading/loading.dart';
 
 class SettingsDrawer extends StatefulWidget {

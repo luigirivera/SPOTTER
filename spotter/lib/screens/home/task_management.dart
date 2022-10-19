@@ -10,7 +10,11 @@ Future _addTask(
   );
 
   TaskGroup taskGroup = objectbox.getTaskGroup(group);
-  TaskDate taskDate = objectbox.getTaskDate(date);
+
+  if(!objectbox.ifTaskDateExists(date)){
+    objectbox.addTaskDate(date);
+  }
+  TaskDate? taskDate = objectbox.getTaskDate(date);
 
   ///Data relations
   newTask.taskDate.target = taskDate;

@@ -51,6 +51,7 @@ dependencies:
   flutter_signin_button: ^2.0.0
   rive: ^0.9.1
   fl_chart: ^0.55.2
+  connectivity_plus: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -88,7 +89,7 @@ flutter:
     - assets/themes/thumbnails/
     - assets/themes/1_trees/
     - assets/themes/2_penguins/
-    - assets/themes/3_ducks/
+#    - assets/themes/3_ducks/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

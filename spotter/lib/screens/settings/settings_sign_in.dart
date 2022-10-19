@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spotter/models/user_model.dart';
-import '../../services/auth_service.dart';
+import '../../services/auth.dart';
 import '../loading/loading.dart';
 import '../authenticate/sign_up.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';

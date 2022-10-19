@@ -15,6 +15,7 @@ import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'models/session_model.dart';
+import 'models/sync_model.dart';
 import 'models/task_model.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
@@ -148,6 +149,45 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(7, 1122309656234107963),
+      name: 'UploadData',
+      lastPropertyId: const IdUid(6, 4021613382800126923),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 2332013002352367957),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 7167278758745115140),
+            name: 'taskID',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 2071013046512458381),
+            name: 'taskGroupID',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 6501321710646494062),
+            name: 'taskDateID',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 4936541493375219022),
+            name: 'addOrDelete',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 4021613382800126923),
+            name: 'operand',
+            type: 6,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -171,7 +211,7 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(6, 5945979529088856067),
+      lastEntityId: const IdUid(7, 1122309656234107963),
       lastIndexId: const IdUid(3, 6369646154956444029),
       lastRelationId: const IdUid(1, 5473346048667747771),
       lastSequenceId: const IdUid(0, 0),
@@ -347,6 +387,44 @@ ModelDefinition getObjectBoxModel() {
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
+        }),
+    UploadData: EntityDefinition<UploadData>(
+        model: _entities[4],
+        toOneRelations: (UploadData object) => [],
+        toManyRelations: (UploadData object) => {},
+        getId: (UploadData object) => object.id,
+        setId: (UploadData object, int id) {
+          object.id = id;
+        },
+        objectToFB: (UploadData object, fb.Builder fbb) {
+          fbb.startTable(7);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.taskID);
+          fbb.addInt64(2, object.taskGroupID);
+          fbb.addInt64(3, object.taskDateID);
+          fbb.addInt64(4, object.addOrDelete);
+          fbb.addInt64(5, object.operand);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = UploadData(
+              addOrDelete:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0),
+              operand:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0))
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+            ..taskID =
+                const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 6)
+            ..taskGroupID =
+                const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 8)
+            ..taskDateID = const fb.Int64Reader()
+                .vTableGetNullable(buffer, rootOffset, 10);
+
+          return object;
         })
   };
 
@@ -427,4 +505,31 @@ class StudyTheme_ {
   /// see [StudyTheme.name]
   static final name =
       QueryStringProperty<StudyTheme>(_entities[3].properties[3]);
+}
+
+/// [UploadData] entity fields to define ObjectBox queries.
+class UploadData_ {
+  /// see [UploadData.id]
+  static final id =
+      QueryIntegerProperty<UploadData>(_entities[4].properties[0]);
+
+  /// see [UploadData.taskID]
+  static final taskID =
+      QueryIntegerProperty<UploadData>(_entities[4].properties[1]);
+
+  /// see [UploadData.taskGroupID]
+  static final taskGroupID =
+      QueryIntegerProperty<UploadData>(_entities[4].properties[2]);
+
+  /// see [UploadData.taskDateID]
+  static final taskDateID =
+      QueryIntegerProperty<UploadData>(_entities[4].properties[3]);
+
+  /// see [UploadData.addOrDelete]
+  static final addOrDelete =
+      QueryIntegerProperty<UploadData>(_entities[4].properties[4]);
+
+  /// see [UploadData.operand]
+  static final operand =
+      QueryIntegerProperty<UploadData>(_entities[4].properties[5]);
 }

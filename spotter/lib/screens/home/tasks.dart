@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:spotter/screens/home/task_management.dart';
+import 'package:spotter/services/connectivity.dart';
 import '../../main.dart';
 import '../../models/task_model.dart';
 
@@ -36,7 +37,12 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
-    List<Task> taskList = objectbox.getTaskListByDate(widget.date);
+
+    List<Task> taskList = List.empty(growable: true);
+    if (objectbox.ifTaskDateExists(widget.date)) {
+      taskList = objectbox.getTaskListByDate(widget.date);
+    }
+
     return Column(children: [
       SizedBox(
         height: 30,
@@ -91,69 +97,76 @@ class _TaskListState extends State<TaskList> {
       ),
 
       ///The actual task list itself
-      taskList.isEmpty ? Expanded(child: Container(decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/nothing2.png'))),)) :
-      Expanded(
-          child: ListView.builder(
-              padding: const EdgeInsets.all(10),
-              itemCount: taskList.length * 2,
-              itemBuilder: (BuildContext context, int index) {
-                if (index.isOdd) return const Divider();
-                final i = index ~/ 2;
-                final check = taskList[i].completed;
+      taskList.isEmpty
+          ? Expanded(
+              child: Container(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/nothing2.png'))),
+            ))
+          : Expanded(
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(10),
+                  itemCount: taskList.length * 2,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index.isOdd) return const Divider();
+                    final i = index ~/ 2;
+                    final check = taskList[i].completed;
 
-                return ListTile(
-                  title: Text(
-                    taskList[i].taskDescription,
-                    style: check
-                        ? const TextStyle(
-                            fontSize: 15,
-                            decoration: TextDecoration.lineThrough)
-                        : const TextStyle(fontSize: 15),
-                  ),
-                  leading:
-                      const Icon(Icons.arrow_forward_ios, color: Colors.orange),
-                  trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-                    IconButton(
-                      icon: Icon(
-                        check
-                            ? Icons.check_box_outlined
-                            : Icons.check_box_outline_blank_rounded,
-                        color: check ? Colors.orange.shade900 : Colors.black,
-                        semanticLabel: check ? 'Completed' : 'Incomplete',
-                        size: 30,
+                    return ListTile(
+                      title: Text(
+                        taskList[i].taskDescription,
+                        style: check
+                            ? const TextStyle(
+                                fontSize: 15,
+                                decoration: TextDecoration.lineThrough)
+                            : const TextStyle(fontSize: 15),
                       ),
+                      leading: const Icon(Icons.arrow_forward_ios,
+                          color: Colors.orange),
+                      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                        IconButton(
+                          icon: Icon(
+                            check
+                                ? Icons.check_box_outlined
+                                : Icons.check_box_outline_blank_rounded,
+                            color:
+                                check ? Colors.orange.shade900 : Colors.black,
+                            semanticLabel: check ? 'Completed' : 'Incomplete',
+                            size: 30,
+                          ),
 
-                      ///Update the completion status of the task
-                      ///Put setState after onPressed; setState can't be async
-                      onPressed: () async {
-                        if (check) {
-                          taskList[i].completed = false;
+                          ///Update the completion status of the task
+                          ///Put setState after onPressed; setState can't be async
+                          onPressed: () async {
+                            if (check) {
+                              taskList[i].completed = false;
 
-                          ///Overwrite
-                          await objectbox.addTask(taskList[i]);
-                        } else {
-                          taskList[i].completed = true;
-                          await objectbox.addTask(taskList[i]);
-                        }
-                        setState(() {});
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return EditTask(
-                                  task: taskList[i], date: widget.date);
-                            }).then((value) {
-                          setState(() {});
-                        });
-                      },
-                    )
-                  ]),
-                );
-              })),
+                              ///Overwrite
+                              await objectbox.addTask(taskList[i]);
+                            } else {
+                              taskList[i].completed = true;
+                              await objectbox.addTask(taskList[i]);
+                            }
+                            setState(() {});
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return EditTask(
+                                      task: taskList[i], date: widget.date);
+                                }).then((value) {
+                              setState(() {});
+                            });
+                          },
+                        )
+                      ]),
+                    );
+                  })),
     ]);
   }
 }

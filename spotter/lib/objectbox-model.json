@@ -130,9 +130,48 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "7:1122309656234107963",
+      "lastPropertyId": "6:4021613382800126923",
+      "name": "UploadData",
+      "properties": [
+        {
+          "id": "1:2332013002352367957",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7167278758745115140",
+          "name": "taskID",
+          "type": 6
+        },
+        {
+          "id": "3:2071013046512458381",
+          "name": "taskGroupID",
+          "type": 6
+        },
+        {
+          "id": "4:6501321710646494062",
+          "name": "taskDateID",
+          "type": 6
+        },
+        {
+          "id": "5:4936541493375219022",
+          "name": "addOrDelete",
+          "type": 6
+        },
+        {
+          "id": "6:4021613382800126923",
+          "name": "operand",
+          "type": 6
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "6:5945979529088856067",
+  "lastEntityId": "7:1122309656234107963",
   "lastIndexId": "3:6369646154956444029",
   "lastRelationId": "1:5473346048667747771",
   "lastSequenceId": "0:0",
