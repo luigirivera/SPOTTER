@@ -6,6 +6,7 @@ import 'models/sync_model.dart';
 import 'models/task_model.dart';
 import 'models/session_model.dart';
 import 'objectbox.g.dart';
+import 'services/connectivity.dart';
 
 class ObjectBox {
   ObjectBox();
@@ -20,6 +21,8 @@ class ObjectBox {
   final CollectionReference taskCollection =
       FirebaseFirestore.instance.collection('Tasks');
   final AuthService _auth = AuthService();
+  final ConnectivityService _connection = ConnectivityService();
+
 
   /// Code section to open objectbox store / Init setters------------///
   ObjectBox._open(this.store) {

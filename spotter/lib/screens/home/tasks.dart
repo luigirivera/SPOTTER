@@ -1,7 +1,5 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:spotter/screens/home/task_management.dart';
-import 'package:spotter/services/connectivity.dart';
 import '../../main.dart';
 import '../../models/task_model.dart';
 
