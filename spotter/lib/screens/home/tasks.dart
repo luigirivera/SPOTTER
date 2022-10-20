@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spotter/screens/home/task_management.dart';
 import '../../main.dart';
 import '../../models/task_model.dart';
+import '../../services/connectivity.dart';
 
 class TaskBoard extends StatelessWidget {
   const TaskBoard({Key? key}) : super(key: key);
@@ -9,13 +10,12 @@ class TaskBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 270,
+      height: 400,
       padding: const EdgeInsets.only(right: 20, left: 20),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.4),
-          border: Border.all(color: Colors.blue, width: 5),
-          borderRadius: const BorderRadius.all(Radius.circular(40)),
+          color: Colors.white.withOpacity(0.6),
+          border: Border.all(color: Colors.blue[100]!, width: 3),
         ),
         child: TaskList(date: DateTime.now()),
       ),
@@ -53,7 +53,8 @@ class _TaskListState extends State<TaskList> {
                 Icons.add_circle,
                 color: Colors.orange,
               ),
-              onPressed: () {
+              onPressed: () async {
+                debugPrint(await ConnectivityService().status);
                 showDialog(
                     context: context,
                     barrierDismissible: true,

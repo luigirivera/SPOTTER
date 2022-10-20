@@ -2,7 +2,7 @@ import 'package:objectbox/objectbox.dart';
 import 'package:spotter/models/task_model.dart';
 
 @Entity()
-class UploadData{
+class DataToUpload{
   @Id()
   int id = 0;
 
@@ -10,8 +10,11 @@ class UploadData{
   int? taskGroupID;
   int? taskDateID;
 
-  int addOrDelete;
-  int operand;
+  bool initiateFBTaskCollection = false;
+  ///-1: neither, 0: add, 1: delete
+  int addOrDeleteOrNeither;
+  ///0: task, 1: taskGroup, 2: taskDate
+  int? operandType;
 
-  UploadData({required this.addOrDelete, required this.operand});
+  DataToUpload({required this.addOrDeleteOrNeither, this.operandType, this.taskID, this.taskGroupID, this.taskDateID, this.initiateFBTaskCollection = false});
 }

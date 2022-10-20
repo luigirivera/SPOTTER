@@ -388,22 +388,22 @@ ModelDefinition getObjectBoxModel() {
 
           return object;
         }),
-    UploadData: EntityDefinition<UploadData>(
+    DataToUpload: EntityDefinition<DataToUpload>(
         model: _entities[4],
-        toOneRelations: (UploadData object) => [],
-        toManyRelations: (UploadData object) => {},
-        getId: (UploadData object) => object.id,
-        setId: (UploadData object, int id) {
+        toOneRelations: (DataToUpload object) => [],
+        toManyRelations: (DataToUpload object) => {},
+        getId: (DataToUpload object) => object.id,
+        setId: (DataToUpload object, int id) {
           object.id = id;
         },
-        objectToFB: (UploadData object, fb.Builder fbb) {
+        objectToFB: (DataToUpload object, fb.Builder fbb) {
           fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.taskID);
           fbb.addInt64(2, object.taskGroupID);
           fbb.addInt64(3, object.taskDateID);
-          fbb.addInt64(4, object.addOrDelete);
-          fbb.addInt64(5, object.operand);
+          fbb.addInt64(4, object.addOrDeleteOrNeither);
+          fbb.addInt64(5, object.operandType);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -411,10 +411,10 @@ ModelDefinition getObjectBoxModel() {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
 
-          final object = UploadData(
-              addOrDelete:
+          final object = DataToUpload(
+              addOrDeleteOrNeither:
                   const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0),
-              operand:
+              operandType:
                   const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0))
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
             ..taskID =
@@ -507,29 +507,29 @@ class StudyTheme_ {
       QueryStringProperty<StudyTheme>(_entities[3].properties[3]);
 }
 
-/// [UploadData] entity fields to define ObjectBox queries.
+/// [DataToUpload] entity fields to define ObjectBox queries.
 class UploadData_ {
-  /// see [UploadData.id]
+  /// see [DataToUpload.id]
   static final id =
-      QueryIntegerProperty<UploadData>(_entities[4].properties[0]);
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[0]);
 
-  /// see [UploadData.taskID]
+  /// see [DataToUpload.taskID]
   static final taskID =
-      QueryIntegerProperty<UploadData>(_entities[4].properties[1]);
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[1]);
 
-  /// see [UploadData.taskGroupID]
+  /// see [DataToUpload.taskGroupID]
   static final taskGroupID =
-      QueryIntegerProperty<UploadData>(_entities[4].properties[2]);
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[2]);
 
-  /// see [UploadData.taskDateID]
+  /// see [DataToUpload.taskDateID]
   static final taskDateID =
-      QueryIntegerProperty<UploadData>(_entities[4].properties[3]);
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[3]);
 
-  /// see [UploadData.addOrDelete]
+  /// see [DataToUpload.addOrDeleteOrNeither]
   static final addOrDelete =
-      QueryIntegerProperty<UploadData>(_entities[4].properties[4]);
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[4]);
 
-  /// see [UploadData.operand]
+  /// see [DataToUpload.operandType]
   static final operand =
-      QueryIntegerProperty<UploadData>(_entities[4].properties[5]);
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[5]);
 }

@@ -7,6 +7,7 @@ import 'models/task_model.dart';
 import 'models/session_model.dart';
 import 'objectbox.g.dart';
 import 'services/connectivity.dart';
+import 'services/firebase.dart';
 
 class ObjectBox {
   ObjectBox();
@@ -16,13 +17,12 @@ class ObjectBox {
   late final Box<Task> taskList;
   late final Box<TaskDate> taskDate;
   late final Box<StudyTheme> theme;
-  late final Box<UploadData> uploadData;
+  late final Box<DataToUpload> dataListToUpload;
 
   final CollectionReference taskCollection =
       FirebaseFirestore.instance.collection('Tasks');
   final AuthService _auth = AuthService();
   final ConnectivityService _connection = ConnectivityService();
-
 
   /// Code section to open objectbox store / Init setters------------///
   ObjectBox._open(this.store) {
@@ -30,7 +30,7 @@ class ObjectBox {
     taskList = Box<Task>(store);
     taskDate = Box<TaskDate>(store);
     theme = Box<StudyTheme>(store);
-    uploadData = Box<UploadData>(store);
+    dataListToUpload = Box<DataToUpload>(store);
   }
 
   static Future<ObjectBox> open() async {
@@ -44,22 +44,16 @@ class ObjectBox {
   Future initTaskCollection() async {
     taskGroups.put(TaskGroup(taskGroup: '+ Add a New Group'));
     taskGroups.put(TaskGroup(taskGroup: 'General'));
-    return await taskCollection
-        .doc(_auth.currentUser!.uid)
-        .set({
-      'groups': ['General'],
-    });
-  }
 
-  ///==////////////////////////////////////////////////////////////////
-
-  /// Getters ------------------------------------------------------///
-
-  ///Getting the list of task group without the adding option on top
-  List<TaskGroup> getTaskGroupListWithoutAddOption() {
-    List<TaskGroup> tempTaskGroup = getTaskGroupList();
-    tempTaskGroup.removeAt(0);
-    return tempTaskGroup;
+    if (await _connection.status != 'none') {
+      await taskCollection.doc(_auth.currentUser!.uid).set({
+        'groups': ['General'],
+      });
+    } else {
+      DataToUpload uData =
+          DataToUpload(addOrDeleteOrNeither: -1, initiateFBTaskCollection: true);
+      dataListToUpload.put(uData);
+    }
   }
 
   StudyTheme getTheme() => theme.getAll().isEmpty
@@ -88,9 +82,12 @@ class ObjectBox {
   List<Task> getTaskListByGroupAndDate(TaskDate date, TaskGroup group) =>
       _findTaskListByGroupAndDate(date, group);
 
-  ///==////////////////////////////////////////////////////////////////
-
-  ///Objectbox Management ------------------------------------------///
+  ///Getting the list of task group without the adding option on top
+  List<TaskGroup> getTaskGroupListWithoutAddOption() {
+    List<TaskGroup> tempTaskGroup = getTaskGroupList();
+    tempTaskGroup.removeAt(0);
+    return tempTaskGroup;
+  }
 
   Future setTheme(StudyTheme theme) async {
     this.theme.removeAll();
@@ -99,37 +96,63 @@ class ObjectBox {
 
   ///Add a task to both the ObjectBox and Firebase
   Future addTask(Task task) async {
-    String taskGroup = task.taskGroup.target!.taskGroup;
-    TaskDate date = task.taskDate.target!;
-
-    await taskCollection
-        .doc(_auth.currentUser!.uid)
-        .collection(taskGroup)
-        .doc('${date.year}-${date.month}-${date.day}')
-        .collection('tasks')
-        .doc(task.taskDescription)
-        .set({
-      'description': task.taskDescription,
-      'group': taskGroup,
-      'completed': task.completed,
-    });
     taskList.put(task);
+
+    if(await _connection.status != 'none') {
+      await addFBTask(task);
+    }else{
+      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 0, operandType: 0, taskID: task.id);
+      dataListToUpload.put(data);
+    }
+  }
+
+  ///Add a task group to both the ObjectBox and Firebase.
+  Future addTaskGroup(String taskGroup) async {
+    TaskGroup newTaskGroup = TaskGroup(taskGroup: taskGroup);
+    taskGroups.put(newTaskGroup);
+
+    await addFBTaskGroup(taskGroup);
+    if(await _connection.status != 'none') {
+      await addFBTaskGroup(taskGroup);
+    }else{
+      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 0, operandType: 1, taskID: newTaskGroup.id);
+      dataListToUpload.put(data);
+    }
+  }
+
+  TaskDate addTaskDate(DateTime date) {
+    TaskDate newTaskDate = TaskDate(
+        year: date.year,
+        month: date.month,
+        day: date.day,
+        weekday: date.weekday);
+    taskDate.put(newTaskDate);
+    return newTaskDate;
+  }
+
+  ///Bulk delete a list of tasks.
+  ///Accomplished by accepting a task list then iteratively checks for the ones marked completed.
+  Future deleteSelectedTasks(List<Task> taskListToDelete, DateTime date) async {
+    bool deletionMade = false;
+    for (var task in taskListToDelete) {
+      if (task.completed == true) {
+        await deleteTask(task);
+        deletionMade = true;
+      }
+    }
+
+    return deletionMade;
   }
 
   ///Delete a task from both the ObjectBox and Firebase.
   ///If the task group associated with the task is empty,
   ///then the link between the task group and the associated task date is removed.
+  ///It's long winded because of the inability for the object to be found in the List().
   Future deleteTask(Task task) async {
     TaskDate date = task.taskDate.target!;
     TaskGroup group = task.taskGroup.target!;
 
-    await taskCollection
-        .doc(_auth.currentUser!.uid)
-        .collection(task.taskGroup.target!.taskGroup)
-        .doc('${date.year}/${date.month}/${date.day}')
-        .collection('tasks')
-        .doc(task.taskDescription)
-        .delete();
+    await deleteFBTask(task);
 
     taskList.remove(task.id);
 
@@ -153,61 +176,16 @@ class ObjectBox {
     }
   }
 
-  ///Bulk delete a list of tasks.
-  ///Accomplished by accepting a task list then iteratively checks for the ones marked completed.
-  Future deleteSelectedTasks(List<Task> taskListToDelete, DateTime date) async {
-    bool deletionMade = false;
-    for (var task in taskListToDelete) {
-      if (task.completed == true) {
-        await deleteTask(task);
-        deletionMade = true;
-      }
-    }
-
-    return deletionMade;
-  }
-
-  TaskDate addTaskDate(DateTime date) {
-    TaskDate newTaskDate = TaskDate(
-        year: date.year,
-        month: date.month,
-        day: date.day,
-        weekday: date.weekday);
-    taskDate.put(newTaskDate);
-    return newTaskDate;
-  }
-
-  void deleteTaskDate(TaskDate date) {
-    taskDate.remove(date.id);
-  }
-
-  ///Add a task group to both the ObjectBox and Firebase.
-  Future addTaskGroup(String taskGroup) async {
-    List<String> taskGroupList = await _getFirebaseTaskGroups();
-    taskGroupList.add(taskGroup);
-    await taskCollection
-        .doc(_auth.currentUser!.uid)
-        .set({'groups': taskGroupList});
-
-    taskGroups.put(TaskGroup(taskGroup: taskGroup));
-  }
-
   ///Delete a task group from both the ObjectBox and Firebase.
   Future deleteTaskGroup(String taskGroup) async {
-    List<String> taskGroupList = await _getFirebaseTaskGroups();
-    int index = taskGroupList.indexOf(taskGroup);
-    taskGroupList.removeAt(index);
-    await taskCollection
-        .doc(_auth.currentUser!.uid)
-        .set({'groups': taskGroupList});
+    await deleteFBTaskGroup(taskGroup);
 
     TaskGroup group = _findTaskGroup(taskGroup)!;
     taskGroups.remove(group.id);
   }
 
-  bool ifTaskGroupExistsInObjectBox(String taskGroup) {
-    if (_findTaskGroup(taskGroup) != null) return true;
-    return false;
+  void deleteTaskDate(TaskDate date) {
+    taskDate.remove(date.id);
   }
 
   TaskGroup? _findTaskGroup(String taskGroup) {
@@ -244,41 +222,16 @@ class ObjectBox {
     return null;
   }
 
-  bool ifTaskDateExists(DateTime date){
-    if(_findTaskDate(date) == null){
+  bool ifTaskDateExists(DateTime date) {
+    if (_findTaskDate(date) == null) {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
 
-  ///==////////////////////////////////////////////////////////////////
-
-  ///Firebase Management ------------------------------------------///
-  Future ifCollectionExistsOnFirebase(String taskGroup) async {
-    var snapshot = await taskCollection
-        .doc(_auth.currentUser!.uid)
-        .collection(taskGroup)
-        .limit(1)
-        .get();
-    return snapshot.docs.isNotEmpty;
+  bool ifTaskGroupExistsInObjectBox(String taskGroup) {
+    if (_findTaskGroup(taskGroup) != null) return true;
+    return false;
   }
-
-  Future _getFirebaseTaskGroups() async {
-    List dynamicList = List.empty(growable: true);
-    List<String> taskGroups = List.empty(growable: true);
-    await taskCollection
-        .doc(_auth.currentUser!.uid)
-        .get()
-        .then((value) {
-      dynamicList = value['groups'];
-    });
-    taskGroups = dynamicList.cast<String>();
-
-    return taskGroups;
-  }
-
-  Future recursivelyDeleteAllDocContent(DocumentReference doc) async {}
-
-  ///==////////////////////////////////////////////////////////////////
 }

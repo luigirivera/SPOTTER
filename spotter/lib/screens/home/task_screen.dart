@@ -16,19 +16,12 @@ class _TaskScreenState extends State<TaskScreen> {
         decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('assets/beach.png'), fit: BoxFit.cover)),
-        child: Column(children: [
+        child: Column(children: const [
           //
           //
           //The first section; Task board.
-          const TaskBoard(),
-          //
-          //
-          //The second section; Text box.
-          Container(
-            height: 50,
-          ),
-          //
-          //
+          TaskBoard(),
+
           //The third section; Mascot
           // const Expanded(
           //
