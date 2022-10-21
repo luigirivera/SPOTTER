@@ -208,7 +208,11 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<TaskGroup> taskGroup = objectbox.getTaskGroupsByDate(widget.date);
+    List<TaskGroup> taskGroup = List.empty(growable: true);
+    if (objectbox.ifTaskDateExists(widget.date)) {
+      taskGroup = objectbox.getTaskGroupsByDate(widget.date);
+    }
+
     return Scaffold(
         appBar: AppBar(
           elevation: 0,

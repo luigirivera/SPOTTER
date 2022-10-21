@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -42,7 +43,6 @@ class ObjectBox {
 
   ///Default task groups users see upon registering
   Future initTaskCollection() async {
-    taskGroups.put(TaskGroup(taskGroup: '+ Add a New Group'));
     taskGroups.put(TaskGroup(taskGroup: 'General'));
 
     if (await _connection.status != 'none') {
@@ -81,13 +81,6 @@ class ObjectBox {
 
   List<Task> getTaskListByGroupAndDate(TaskDate date, TaskGroup group) =>
       _findTaskListByGroupAndDate(date, group);
-
-  ///Getting the list of task group without the adding option on top
-  List<TaskGroup> getTaskGroupListWithoutAddOption() {
-    List<TaskGroup> tempTaskGroup = getTaskGroupList();
-    tempTaskGroup.removeAt(0);
-    return tempTaskGroup;
-  }
 
   Future setTheme(StudyTheme theme) async {
     this.theme.removeAll();
@@ -134,6 +127,7 @@ class ObjectBox {
   ///Accomplished by accepting a task list then iteratively checks for the ones marked completed.
   Future deleteSelectedTasks(List<Task> taskListToDelete, DateTime date) async {
     bool deletionMade = false;
+
     for (var task in taskListToDelete) {
       if (task.completed == true) {
         await deleteTask(task);
@@ -152,36 +146,48 @@ class ObjectBox {
     TaskDate date = task.taskDate.target!;
     TaskGroup group = task.taskGroup.target!;
 
+
     await deleteFBTask(task);
 
     taskList.remove(task.id);
 
-    if (_findTaskListByGroupAndDate(date, group).isEmpty) {
-      List<TaskGroup> taskGroupList = date.taskGroups.toList();
-      List<TaskGroup> resultTaskGroupList = List.empty(growable: true);
-      date.taskGroups.clear();
-      date.taskGroups.applyToDb();
+    // if (_findTaskListByGroupAndDate(date, group).isEmpty) {
+    //   List<TaskGroup> taskGroupList = date.taskGroups.toList();
+    //   List<TaskGroup> resultTaskGroupList = List.empty(growable: true);
+    //   date.taskGroups.clear();
+    //   date.taskGroups.applyToDb();
+    //
+    //   for (var value in taskGroupList) {
+    //     if (value.taskGroup != group.taskGroup) {
+    //       resultTaskGroupList.add(value);
+    //     }
+    //   }
+    //   date.taskGroups.addAll(resultTaskGroupList);
+    //   date.taskGroups.applyToDb();
+    // }
 
-      for (var value in taskGroupList) {
-        if (value.taskGroup != group.taskGroup) {
-          resultTaskGroupList.add(value);
-        }
-      }
-      date.taskGroups.addAll(resultTaskGroupList);
-      date.taskGroups.applyToDb();
-    }
+    debugPrint(taskGroups.contains(group.id).toString());
+    date.taskGroups.remove(taskGroups.get(group.id));
 
     if (date.tasks.isEmpty) {
       deleteTaskDate(date);
     }
   }
 
-  ///Delete a task group from both the ObjectBox and Firebase.
-  Future deleteTaskGroup(String taskGroup) async {
-    await deleteFBTaskGroup(taskGroup);
+  Future deleteSelectedTaskGroups(List<TaskGroup> taskGroupList, List<bool> selectedGroups) async {
+    int max = taskGroupList.length;
+    for(int i = 0; i < max; i++){
+      if(selectedGroups[i]){
+        await deleteTaskGroup(taskGroupList[i]);
+      }
+    }
+  }
 
-    TaskGroup group = _findTaskGroup(taskGroup)!;
-    taskGroups.remove(group.id);
+  ///Delete a task group from both the ObjectBox and Firebase.
+  Future deleteTaskGroup(TaskGroup taskGroup) async {
+    await deleteFBTaskGroup(taskGroup.taskGroup );
+
+    taskGroups.remove(taskGroup.id);
   }
 
   void deleteTaskDate(TaskDate date) {

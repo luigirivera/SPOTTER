@@ -37,7 +37,6 @@ class AddTaskAndGroup extends StatefulWidget {
 
 class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
   final _formKey = GlobalKey<FormState>();
-  bool isAddingGroup = false;
 
   ///This date is subjected to change if user picked another
   ///The change will be reflected on the screen
@@ -68,14 +67,16 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
     ///Using a StatefulBuilder to wrap the AlertDialogs to ensure they rebuild as desired
     ///showDialog doesn't work here due to different return types
 
-    return isAddingGroup
-        ? AlertDialog(
-            content: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.1,
-              width: MediaQuery.of(context).size.width * 0.2,
-              child: Form(
-                  key: _formKey,
-                  child: TextFormField(
+    return AlertDialog(
+      content: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.3,
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  ///Task description input text box form field
+                  TextFormField(
                     decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
@@ -85,148 +86,74 @@ class _AddTaskAndGroupState extends State<AddTaskAndGroup> {
                           borderSide: BorderSide(color: Colors.blue.shade800),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        hintText: "What is your new group?",
+                        hintText: "What is your new task?",
                         filled: true,
                         fillColor: Colors.grey.shade200),
+
                     /** Help in validating formats */
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Enter a group here';
-                      } else if (objectbox
-                          .ifTaskGroupExistsInObjectBox(value)) {
-                        return 'Group name already exists!';
-                      }
-                      return '';
-                    },
+                    validator: (value) =>
+                        value!.isEmpty ? 'Enter a task here' : null,
                     onChanged: (value) {
-                      newTaskGroupName = value;
+                      setState(() {
+                        description = value;
+                      });
                     },
-                  )),
-            ),
-            actions: <Widget>[
-              ///Default skipping button
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    isAddingGroup = false;
-                  });
-                },
-                child: const Text('Cancel'),
-              ),
+                  ),
+                  const SizedBox(height: 10),
 
-              ///Add new task group to the database
-              ///Skip if no inputs are present
-              TextButton(
-                onPressed: () async {
-                  if (newTaskGroupName != null) {
-                    await objectbox.addTaskGroup(newTaskGroupName!);
-                    isAddingGroup = false;
-                  }
-                  setState(() {});
-                },
-                child: const Text('Okay'),
-              ),
-            ],
-          )
+                  ///Task group drop down form
+                  DropdownButtonFormField<String>(
+                      menuMaxHeight: 300,
+                      value:
+                          objectbox.getTaskGroupList().elementAt(0).taskGroup,
+                      items: objectbox.getTaskGroupList().map((value) {
+                        return DropdownMenuItem<String>(
+                            value: value.taskGroup,
+                            child: Text(value.taskGroup));
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          group = value.toString();
+                        });
+                      }),
+                  const SizedBox(height: 20),
 
-        ///Alert dialogue for adding new tasks
-        : AlertDialog(
-            content: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.3,
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        ///Task description input text box form field
-                        TextFormField(
-                          decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.blue.shade800),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              hintText: "What is your new task?",
-                              filled: true,
-                              fillColor: Colors.grey.shade200),
-
-                          /** Help in validating formats */
-                          validator: (value) =>
-                              value!.isEmpty ? 'Enter a task here' : null,
-                          onChanged: (value) {
-                            setState(() {
-                              description = value;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 10),
-
-                        ///Task group drop down form
-                        DropdownButtonFormField<String>(
-                            menuMaxHeight: 300,
-                            value: objectbox
-                                .getTaskGroupList()
-                                .elementAt(1)
-                                .taskGroup,
-                            items: objectbox.getTaskGroupList().map((value) {
-                              return DropdownMenuItem<String>(
-                                  value: value.taskGroup,
-                                  child: Text(value.taskGroup));
-                            }).toList(),
-                            onChanged: (value) {
-                              if (value.toString() == '+ Add a New Group') {
-                                setState(() {
-                                  isAddingGroup = true;
-                                });
-                              } else {
-                                setState(() {
-                                  group = value.toString();
-                                });
-                              }
-                            }),
-                        const SizedBox(height: 20),
-
-                        ///The date picker section
-                        Text('${date.month} / ${date.day} / ${date.year}'),
-                        Text(weekdays[date.weekday - 1]),
-                        TextButton(
-                            onPressed: () async {
-                              DateTime? temp = await showDatePicker(
-                                  context: context,
-                                  initialDate: date,
-                                  confirmText: 'Okay',
-                                  firstDate: DateTime(2000),
-                                  lastDate: DateTime(2100));
-                              if (temp != null) {
-                                setState(() {
-                                  date = temp;
-                                });
-                              }
-                            },
-                            child: const Text('Pick a Date'))
-                      ],
-                    ))),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  await _addTask(description, group, date, completed)
-                      .then((value) => Navigator.of(context).pop());
-                },
-                child: const Text('Okay'),
-              )
-            ],
-          );
+                  ///The date picker section
+                  Text('${date.month} / ${date.day} / ${date.year}'),
+                  Text(weekdays[date.weekday - 1]),
+                  TextButton(
+                      onPressed: () async {
+                        DateTime? temp = await showDatePicker(
+                            context: context,
+                            initialDate: date,
+                            confirmText: 'Okay',
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2100));
+                        if (temp != null) {
+                          setState(() {
+                            date = temp;
+                          });
+                        }
+                      },
+                      child: const Text('Pick a Date'))
+                ],
+              ))),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () async {
+            await _addTask(description, group, date, completed)
+                .then((value) => Navigator.of(context).pop());
+          },
+          child: const Text('Okay'),
+        )
+      ],
+    );
   }
 }
 
@@ -309,9 +236,7 @@ class _EditTaskState extends State<EditTask> {
                   DropdownButtonFormField<String>(
                       menuMaxHeight: 300,
                       value: group,
-                      items: objectbox
-                          .getTaskGroupListWithoutAddOption()
-                          .map((value) {
+                      items: objectbox.getTaskGroupList().map((value) {
                         return DropdownMenuItem<String>(
                             value: value.taskGroup,
                             child: Text(value.taskGroup));
@@ -374,8 +299,7 @@ class _EditTaskGroupState extends State<EditTaskGroup> {
 
   @override
   Widget build(BuildContext context) {
-    List<TaskGroup> taskGroupList =
-        objectbox.getTaskGroupListWithoutAddOption();
+    List<TaskGroup> taskGroupList = objectbox.getTaskGroupList();
 
     int total = taskGroupList.length;
 
@@ -389,7 +313,7 @@ class _EditTaskGroupState extends State<EditTaskGroup> {
       content: SizedBox(
           height: 400,
           width: 400,
-              child: Column(children: [
+          child: Column(children: [
             ///Field to add a task
             SizedBox(
                 height: 50,
@@ -429,7 +353,14 @@ class _EditTaskGroupState extends State<EditTaskGroup> {
                   ///Button for deleting tasks
                   IconButton(
                     onPressed: () async {
-                      setState(() {});
+                      await objectbox
+                          .deleteSelectedTaskGroups(
+                              taskGroupList, selectedGroups)
+                          .whenComplete(() {
+                        setState(() {
+                          selectedGroups = List.empty(growable: true);
+                        });
+                      });
                     },
                     icon: const Icon(Icons.delete_outline, color: Colors.grey),
                     tooltip: 'Delete selected',
@@ -444,8 +375,6 @@ class _EditTaskGroupState extends State<EditTaskGroup> {
                 : const SizedBox(height: 20, child: Text('')),
 
             Expanded(
-                // height: 400,
-                // width: 400,
                 child: ListView.builder(
                     physics: const ScrollPhysics(),
                     itemCount: total * 2,
@@ -454,25 +383,27 @@ class _EditTaskGroupState extends State<EditTaskGroup> {
                         return const Divider();
                       }
                       int i = index ~/ 2;
-                      return Row(mainAxisSize: MainAxisSize.min,children: [
-                        selectedGroups[i]
-                            ? IconButton(
-                                icon: const Icon(Icons.check_box_outlined,
-                                    color: Colors.green),
-                                onPressed: () {
-                                  setState(() {
-                                    selectedGroups[i] = false;
-                                  });
-                                },
-                              )
-                            : IconButton(
-                                icon: const Icon(Icons.crop_square_outlined,
-                                    color: Colors.blue),
-                                onPressed: () {
-                                  setState(() {
-                                    selectedGroups[i] = true;
-                                  });
-                                }),
+                      return Row(mainAxisSize: MainAxisSize.min, children: [
+                        taskGroupList[i].taskGroup != 'General'
+                            ? selectedGroups[i]
+                                ? IconButton(
+                                    icon: const Icon(Icons.check_box_outlined,
+                                        color: Colors.green),
+                                    onPressed: () {
+                                      setState(() {
+                                        selectedGroups[i] = false;
+                                      });
+                                    },
+                                  )
+                                : IconButton(
+                                    icon: const Icon(Icons.crop_square_outlined,
+                                        color: Colors.blue),
+                                    onPressed: () {
+                                      setState(() {
+                                        selectedGroups[i] = true;
+                                      });
+                                    })
+                            : const SizedBox(width: 48),
                         Container(
                             padding: const EdgeInsets.only(left: 20, right: 20),
                             height: 50,
