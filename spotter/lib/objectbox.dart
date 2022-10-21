@@ -66,7 +66,7 @@ class ObjectBox {
 
   List<TaskDate> getTaskDateList() => taskDate.getAll().toList();
 
-  TaskGroup getTaskGroup(String taskGroup) => _findTaskGroup(taskGroup)!;
+  TaskGroup? getTaskGroup(String taskGroup) => _findTaskGroup(taskGroup);
 
   TaskDate getTaskDate(DateTime date) => _findTaskDate(date)!;
 

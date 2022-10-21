@@ -35,7 +35,6 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
-
     List<Task> taskList = List.empty(growable: true);
     if (objectbox.ifTaskDateExists(widget.date)) {
       taskList = objectbox.getTaskListByDate(widget.date);
@@ -43,7 +42,7 @@ class _TaskListState extends State<TaskList> {
 
     return Column(children: [
       SizedBox(
-        height: 30,
+        height: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -67,8 +66,46 @@ class _TaskListState extends State<TaskList> {
               tooltip: 'Add new tasks',
             ),
 
-            ///Button for pop out view of the task board
+            ///Button for deleting tasks
             IconButton(
+              onPressed: () async {
+                await objectbox.deleteSelectedTasks(taskList, widget.date);
+                setState(() {});
+              },
+              icon: const Icon(Icons.delete_outline, color: Colors.grey),
+              tooltip: 'Delete selected',
+            ),
+
+            ///Editing groups
+            TextButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.orange)),
+              child: const Text('Groups',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold)),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (context) {
+                      return const EditTaskGroup();
+                    }).then((value) {
+                  setState(() {});
+                });
+              },
+            ),
+
+            const SizedBox(width: 10),
+
+            ///Button for pop out view of the task board
+            TextButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.redAccent)),
+              child: const Text(
+                'View more',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
               onPressed: () {
                 Navigator.push(
                     context,
@@ -78,18 +115,6 @@ class _TaskListState extends State<TaskList> {
                   setState(() {});
                 });
               },
-              icon: const Icon(Icons.output),
-              tooltip: 'View in a pop out',
-            ),
-
-            ///Button for deleting tasks
-            IconButton(
-              onPressed: () async {
-                await objectbox.deleteSelectedTasks(taskList, widget.date);
-                setState(() {});
-              },
-              icon: const Icon(Icons.delete),
-              tooltip: 'Delete selected',
             ),
           ],
         ),
@@ -121,8 +146,7 @@ class _TaskListState extends State<TaskList> {
                                 decoration: TextDecoration.lineThrough)
                             : const TextStyle(fontSize: 15),
                       ),
-                      leading: const Icon(Icons.arrow_forward_ios,
-                          color: Colors.orange),
+                      leading: const Icon(Icons.square, color: Colors.orange),
                       trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                         IconButton(
                           icon: Icon(
@@ -218,14 +242,15 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
             height: 50,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <IconButton>[
+              children: [
                 ///A button to add a new task
                 IconButton(
                   icon: const Icon(
                     Icons.add_circle,
                     color: Colors.orange,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    debugPrint(await ConnectivityService().status);
                     showDialog(
                         context: context,
                         barrierDismissible: true,
@@ -241,12 +266,56 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
                 ///Button for deleting tasks
                 IconButton(
                   onPressed: () async {
-                    deletionMade = await objectbox.deleteSelectedTasks(
+                    await objectbox.deleteSelectedTasks(
                         objectbox.getTaskListByDate(widget.date), widget.date);
                     setState(() {});
                   },
-                  icon: const Icon(Icons.delete),
+                  icon: const Icon(Icons.delete_outline, color: Colors.grey),
                   tooltip: 'Delete selected',
+                ),
+
+                ///Editing groups
+                TextButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.orange)),
+                  child: const Text('Groups',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (context) {
+                          return const EditTaskGroup();
+                        }).then((value) {
+                      setState(() {});
+                    });
+                  },
+                ),
+
+                const SizedBox(width: 10),
+
+                ///Button for pop out view of the task board
+                TextButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.redAccent)),
+                  child: const Text(
+                    'View more',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              TaskPopOutPage(date: widget.date),
+                        )).then((value) {
+                      setState(() {});
+                    });
+                  },
                 ),
               ],
             ),

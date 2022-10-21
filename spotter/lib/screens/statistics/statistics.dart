@@ -23,7 +23,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('assets/bg2.png'), fit: BoxFit.cover)),
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: Column(
           children: [
             const SizedBox(height: 10),
@@ -253,7 +253,7 @@ class _TaskCompletionGraphState extends State<TaskCompletionGraph> {
   Widget build(BuildContext context) {
     return Expanded(
         child: Container(
-            padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+            padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
             decoration: BoxDecoration(
               color: Colors.green[700],
               borderRadius: BorderRadius.circular(30),
@@ -462,7 +462,7 @@ class _StudySessionTimeGraphState extends State<StudySessionTimeGraph> {
   Widget build(BuildContext context) {
     return Expanded(
         child: Container(
-            padding: const EdgeInsets.fromLTRB(0, 0, 15, 15),
+            padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
             decoration: BoxDecoration(
               color: Colors.orange[700],
               borderRadius: BorderRadius.circular(30),
