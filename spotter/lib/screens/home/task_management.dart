@@ -8,19 +8,19 @@ Future _addTask(
     taskDescription: description,
     completed: completed,
   );
-
   TaskGroup taskGroup = objectbox.getTaskGroup(group)!;
 
   if (!objectbox.ifTaskDateExists(date)) {
     objectbox.addTaskDate(date);
   }
-  TaskDate? taskDate = objectbox.getTaskDate(date);
 
-  ///Data relations
+  TaskDate taskDate = objectbox.getTaskDate(date);
+
+  //Data relations
   newTask.taskDate.target = taskDate;
   newTask.taskGroup.target = taskGroup;
-  taskDate.taskGroups.add(taskGroup);
 
+  taskDate.taskGroups.add(taskGroup);
   taskDate.taskGroups.applyToDb();
 
   await objectbox.addTask(newTask);

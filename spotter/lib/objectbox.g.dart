@@ -151,40 +151,40 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(7, 1122309656234107963),
-      name: 'UploadData',
-      lastPropertyId: const IdUid(6, 4021613382800126923),
+      id: const IdUid(8, 8907197670501213787),
+      name: 'DataToUpload',
+      lastPropertyId: const IdUid(9, 1359277506266641171),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 2332013002352367957),
+            id: const IdUid(1, 4416940880320670025),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 7167278758745115140),
-            name: 'taskID',
+            id: const IdUid(5, 4768763936726069584),
+            name: 'initiateFBTaskCollection',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 2999212745484615391),
+            name: 'addOrDeleteOrNeither',
             type: 6,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 2071013046512458381),
-            name: 'taskGroupID',
+            id: const IdUid(7, 7037980094063814279),
+            name: 'operandType',
             type: 6,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 6501321710646494062),
-            name: 'taskDateID',
+            id: const IdUid(8, 3401413730924788528),
+            name: 'dataID',
             type: 6,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 4936541493375219022),
-            name: 'addOrDelete',
-            type: 6,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 4021613382800126923),
-            name: 'operand',
-            type: 6,
+            id: const IdUid(9, 1359277506266641171),
+            name: 'deleteUser',
+            type: 1,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -211,11 +211,15 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(7, 1122309656234107963),
+      lastEntityId: const IdUid(8, 8907197670501213787),
       lastIndexId: const IdUid(3, 6369646154956444029),
       lastRelationId: const IdUid(1, 5473346048667747771),
       lastSequenceId: const IdUid(0, 0),
-      retiredEntityUids: const [8108166947537495174, 8960039917790828058],
+      retiredEntityUids: const [
+        8108166947537495174,
+        8960039917790828058,
+        1122309656234107963
+      ],
       retiredIndexUids: const [7485740281930158389],
       retiredPropertyUids: const [
         8985378110078263766,
@@ -229,7 +233,16 @@ ModelDefinition getObjectBoxModel() {
         670442149101728455,
         7755749066108277002,
         8363835032810571706,
-        4997147112644763886
+        4997147112644763886,
+        2332013002352367957,
+        7167278758745115140,
+        2071013046512458381,
+        6501321710646494062,
+        4936541493375219022,
+        4021613382800126923,
+        2928674987731761317,
+        7033964361855051741,
+        1291466172437674877
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -397,13 +410,13 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (DataToUpload object, fb.Builder fbb) {
-          fbb.startTable(7);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.taskID);
-          fbb.addInt64(2, object.taskGroupID);
-          fbb.addInt64(3, object.taskDateID);
-          fbb.addInt64(4, object.addOrDeleteOrNeither);
-          fbb.addInt64(5, object.operandType);
+          fbb.addBool(4, object.initiateFBTaskCollection);
+          fbb.addInt64(5, object.addOrDeleteOrNeither);
+          fbb.addInt64(6, object.operandType);
+          fbb.addInt64(7, object.dataID);
+          fbb.addBool(8, object.deleteUser);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -413,16 +426,16 @@ ModelDefinition getObjectBoxModel() {
 
           final object = DataToUpload(
               addOrDeleteOrNeither:
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0),
-              operandType:
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0))
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-            ..taskID =
-                const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 6)
-            ..taskGroupID =
-                const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 8)
-            ..taskDateID = const fb.Int64Reader()
-                .vTableGetNullable(buffer, rootOffset, 10);
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0),
+              operandType: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 16),
+              dataID: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 18),
+              initiateFBTaskCollection: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 12, false),
+              deleteUser: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 20, false))
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
         })
@@ -508,28 +521,28 @@ class StudyTheme_ {
 }
 
 /// [DataToUpload] entity fields to define ObjectBox queries.
-class UploadData_ {
+class DataToUpload_ {
   /// see [DataToUpload.id]
   static final id =
       QueryIntegerProperty<DataToUpload>(_entities[4].properties[0]);
 
-  /// see [DataToUpload.taskID]
-  static final taskID =
-      QueryIntegerProperty<DataToUpload>(_entities[4].properties[1]);
-
-  /// see [DataToUpload.taskGroupID]
-  static final taskGroupID =
-      QueryIntegerProperty<DataToUpload>(_entities[4].properties[2]);
-
-  /// see [DataToUpload.taskDateID]
-  static final taskDateID =
-      QueryIntegerProperty<DataToUpload>(_entities[4].properties[3]);
+  /// see [DataToUpload.initiateFBTaskCollection]
+  static final initiateFBTaskCollection =
+      QueryBooleanProperty<DataToUpload>(_entities[4].properties[1]);
 
   /// see [DataToUpload.addOrDeleteOrNeither]
-  static final addOrDelete =
-      QueryIntegerProperty<DataToUpload>(_entities[4].properties[4]);
+  static final addOrDeleteOrNeither =
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[2]);
 
   /// see [DataToUpload.operandType]
-  static final operand =
-      QueryIntegerProperty<DataToUpload>(_entities[4].properties[5]);
+  static final operandType =
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[3]);
+
+  /// see [DataToUpload.dataID]
+  static final dataID =
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[4]);
+
+  /// see [DataToUpload.deleteUser]
+  static final deleteUser =
+      QueryBooleanProperty<DataToUpload>(_entities[4].properties[5]);
 }

@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -46,7 +45,7 @@ class ObjectBox {
   Future initTaskCollection() async {
     taskGroups.put(TaskGroup(taskGroup: 'General'));
 
-    if (await _connection.status != 'none') {
+    if (await _connection.ifConnectedToInternet()) {
       await taskCollection.doc(_auth.currentUser!.uid).set({
         'groups': ['General'],
       });
@@ -90,13 +89,18 @@ class ObjectBox {
     theme.removeAll();
     dataListToUpload.removeAll();
 
-    await taskCollection
-        .doc(FirebaseAuth
-        .instance.currentUser!.uid)
-        .delete()
-        .whenComplete(() async {
-      await _auth.deleteUser();
-    });
+    if(await _connection.ifConnectedToInternet()) {
+      await taskCollection
+          .doc(FirebaseAuth
+          .instance.currentUser!.uid)
+          .delete()
+          .whenComplete(() async {
+        await _auth.deleteUser();
+      });
+    }else{
+      DataToUpload data = DataToUpload(addOrDeleteOrNeither: -1, deleteUser: true);
+      dataListToUpload.put(data);
+    }
   }
 
   Future setTheme(StudyTheme theme) async {
@@ -108,10 +112,10 @@ class ObjectBox {
   Future addTask(Task task) async {
     taskList.put(task);
 
-    if(await _connection.status != 'none') {
+    if(await _connection.ifConnectedToInternet()) {
       await addFBTask(task);
     }else{
-      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 0, operandType: 0, taskID: task.id);
+      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 0, operandType: 0, dataID: task.id);
       dataListToUpload.put(data);
     }
   }
@@ -121,11 +125,10 @@ class ObjectBox {
     TaskGroup newTaskGroup = TaskGroup(taskGroup: taskGroup);
     taskGroups.put(newTaskGroup);
 
-    await addFBTaskGroup(taskGroup);
-    if(await _connection.status != 'none') {
+    if(await _connection.ifConnectedToInternet()) {
       await addFBTaskGroup(taskGroup);
     }else{
-      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 0, operandType: 1, taskID: newTaskGroup.id);
+      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 0, operandType: 1, dataID: newTaskGroup.id);
       dataListToUpload.put(data);
     }
   }
@@ -163,28 +166,28 @@ class ObjectBox {
     TaskDate date = task.taskDate.target!;
     TaskGroup group = task.taskGroup.target!;
 
-
-    await deleteFBTask(task);
+    if(await _connection.ifConnectedToInternet()) {
+      await deleteFBTask(task);
+    }else{
+      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 1, operandType: 0, dataID: task.id);
+      dataListToUpload.put(data);
+    }
 
     taskList.remove(task.id);
 
-    // if (_findTaskListByGroupAndDate(date, group).isEmpty) {
-    //   List<TaskGroup> taskGroupList = date.taskGroups.toList();
-    //   List<TaskGroup> resultTaskGroupList = List.empty(growable: true);
-    //   date.taskGroups.clear();
-    //   date.taskGroups.applyToDb();
-    //
-    //   for (var value in taskGroupList) {
-    //     if (value.taskGroup != group.taskGroup) {
-    //       resultTaskGroupList.add(value);
-    //     }
-    //   }
-    //   date.taskGroups.addAll(resultTaskGroupList);
-    //   date.taskGroups.applyToDb();
-    // }
+    //Have to do it this way because of the ObjectBox implementation issue.
+    //Found OB dev to back me up on that here:
+    //https://stackoverflow.com/questions/47247670/objectbox-source-entity-has-no-id-should-have-been-put-before
 
-    debugPrint(taskGroups.contains(group.id).toString());
-    date.taskGroups.remove(taskGroups.get(group.id));
+    if (_findTaskListByGroupAndDate(date, group).isEmpty) {
+      List<TaskGroup> taskGroupList = date.taskGroups.toList();
+      for(int i = 0; i < taskGroupList.length; i++){
+        if(taskGroupList[i].taskGroup == group.taskGroup){
+          date.taskGroups.removeAt(i);
+        }
+      }
+      date.taskGroups.applyToDb();
+    }
 
     if (date.tasks.isEmpty) {
       deleteTaskDate(date);
@@ -202,7 +205,12 @@ class ObjectBox {
 
   ///Delete a task group from both the ObjectBox and Firebase.
   Future deleteTaskGroup(TaskGroup taskGroup) async {
-    await deleteFBTaskGroup(taskGroup.taskGroup );
+    if(await _connection.ifConnectedToInternet()) {
+      await deleteFBTaskGroup(taskGroup.taskGroup);
+    }else{
+      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 1, operandType: 1, dataID: taskGroup.id);
+      dataListToUpload.put(data);
+    }
 
     taskGroups.remove(taskGroup.id);
   }

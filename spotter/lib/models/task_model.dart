@@ -30,6 +30,10 @@ class TaskGroup {
 
   TaskGroup({required this.taskGroup});
 
+  bool equals(TaskGroup otherTaskGroup){
+    return id == otherTaskGroup.id && taskGroup == otherTaskGroup.taskGroup;
+  }
+
   @override
   String toString() => 'Task Group: $taskGroup';
 }
