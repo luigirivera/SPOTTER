@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -90,11 +89,9 @@ class ObjectBox {
     dataListToUpload.removeAll();
 
     if(await _connection.ifConnectedToInternet()) {
-      await taskCollection
-          .doc(FirebaseAuth
-          .instance.currentUser!.uid)
-          .delete()
-          .whenComplete(() async {
+      await FirebaseFirestore.instance.runTransaction((Transaction transaction) async {
+        transaction.delete(taskCollection.doc(_auth.currentUser!.uid));
+      }).whenComplete(() async {
         await _auth.deleteUser();
       });
     }else{

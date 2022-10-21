@@ -73,4 +73,10 @@ Future ifCollectionExistsOnFirebase(String taskGroup) async {
   return snapshot.docs.isNotEmpty;
 }
 
-Future recursivelyDeleteAllDocContent(DocumentReference doc) async {}
+Future recursivelyDeleteAllDocContent(DocumentReference doc) async {
+  await _rDeleteAllDoc(doc);
+}
+
+Future _rDeleteAllDoc(DocumentReference doc) async {
+  
+}

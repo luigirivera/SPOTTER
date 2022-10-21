@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 late final ObjectBox objectbox;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   ConnectivityService();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
