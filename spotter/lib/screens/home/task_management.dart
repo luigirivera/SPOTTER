@@ -389,50 +389,52 @@ class _EditTaskGroupState extends State<EditTaskGroup> {
       content: SizedBox(
           height: 400,
           width: 400,
-          child: SingleChildScrollView(
               child: Column(children: [
             ///Field to add a task
-            Row(mainAxisSize: MainAxisSize.min, children: [
-              Expanded(
-                  child: TextFormField(
-                decoration: InputDecoration(
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 2.5),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.blue.shade500, width: 3),
-                    ),
-                    hintText: "New group here:",
-                    filled: true,
-                    fillColor: Colors.grey.shade100),
-                onChanged: (value) {
-                  newGroup = value;
-                },
-              )),
-              IconButton(
-                icon: const Icon(Icons.add_circle, color: Colors.orange),
-                onPressed: () async {
-                  if (objectbox.getTaskGroup(newGroup!) == null) {
-                    await objectbox.addTaskGroup(newGroup!).then((value) {
-                      setState(() {});
-                    });
-                    groupExists = false;
-                  } else {
-                    groupExists = true;
-                  }
-                },
-              ),
+            SizedBox(
+                height: 50,
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  Expanded(
+                      child: TextFormField(
+                    decoration: InputDecoration(
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 2.5),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue.shade500, width: 3),
+                        ),
+                        hintText: "New group here:",
+                        filled: true,
+                        fillColor: Colors.grey.shade100),
+                    onChanged: (value) {
+                      newGroup = value;
+                    },
+                  )),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle, color: Colors.orange),
+                    onPressed: () async {
+                      if (objectbox.getTaskGroup(newGroup!) == null) {
+                        await objectbox.addTaskGroup(newGroup!).then((value) {
+                          setState(() {});
+                        });
+                        groupExists = false;
+                      } else {
+                        groupExists = true;
+                      }
+                    },
+                  ),
 
-              ///Button for deleting tasks
-              IconButton(
-                onPressed: () async {
-                  setState(() {});
-                },
-                icon: const Icon(Icons.delete_outline, color: Colors.grey),
-                tooltip: 'Delete selected',
-              ),
-            ]),
+                  ///Button for deleting tasks
+                  IconButton(
+                    onPressed: () async {
+                      setState(() {});
+                    },
+                    icon: const Icon(Icons.delete_outline, color: Colors.grey),
+                    tooltip: 'Delete selected',
+                  ),
+                ])),
 
             groupExists
                 ? const SizedBox(
@@ -441,9 +443,9 @@ class _EditTaskGroupState extends State<EditTaskGroup> {
                         style: TextStyle(color: Colors.red)))
                 : const SizedBox(height: 20, child: Text('')),
 
-            SizedBox(
-                height: 400,
-                width: 400,
+            Expanded(
+                // height: 400,
+                // width: 400,
                 child: ListView.builder(
                     physics: const ScrollPhysics(),
                     itemCount: total * 2,
@@ -452,7 +454,7 @@ class _EditTaskGroupState extends State<EditTaskGroup> {
                         return const Divider();
                       }
                       int i = index ~/ 2;
-                      return Row(children: [
+                      return Row(mainAxisSize: MainAxisSize.min,children: [
                         selectedGroups[i]
                             ? IconButton(
                                 icon: const Icon(Icons.check_box_outlined,
@@ -485,7 +487,7 @@ class _EditTaskGroupState extends State<EditTaskGroup> {
                                         fontWeight: FontWeight.bold))))
                       ]);
                     }))
-          ]))),
+          ])),
     );
   }
 }
