@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -81,6 +82,22 @@ class ObjectBox {
 
   List<Task> getTaskListByGroupAndDate(TaskDate date, TaskGroup group) =>
       _findTaskListByGroupAndDate(date, group);
+
+  Future<void> deleteEverything() async {
+    taskGroups.removeAll();
+    taskDate.removeAll();
+    taskList.removeAll();
+    theme.removeAll();
+    dataListToUpload.removeAll();
+
+    await taskCollection
+        .doc(FirebaseAuth
+        .instance.currentUser!.uid)
+        .delete()
+        .whenComplete(() async {
+      await _auth.deleteUser();
+    });
+  }
 
   Future setTheme(StudyTheme theme) async {
     this.theme.removeAll();

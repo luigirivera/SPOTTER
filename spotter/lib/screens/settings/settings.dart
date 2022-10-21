@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spotter/screens/settings/settings_sign_in.dart';
 import 'package:spotter/services/auth.dart';
@@ -60,10 +59,6 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                 const SizedBox(
                   height: 30,
                 ),
-                // const DrawerHeader(
-                //   child: Text('Settings'),
-                // ),
-
                 ListTile(
                   title: const Text('About'),
                   trailing: const Icon(Icons.info),
@@ -73,12 +68,10 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                         builder: (BuildContext context) => aboutPopup);
                   },
                 ),
-
                 if (_auth.currentUser!.isAnon == true)
                   const SizedBox(
                     height: 30,
                   ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -136,18 +129,9 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                     actions: <Widget>[
                                       TextButton(
                                           onPressed: () async {
-                                            objectbox.taskGroups.removeAll();
-                                            objectbox.taskDate.removeAll();
-                                            objectbox.taskList.removeAll();
-                                            objectbox.theme.removeAll();
-
-                                            await objectbox.taskCollection
-                                                .doc(FirebaseAuth
-                                                    .instance.currentUser!.uid)
-                                                .delete()
-                                                .whenComplete(() async {
-                                              await _auth.deleteUser();
-                                            }).then((value) =>
+                                            await objectbox
+                                                .deleteEverything()
+                                                .whenComplete(() =>
                                                     Navigator.popUntil(
                                                         context,
                                                         ModalRoute.withName(
