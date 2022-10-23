@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,6 +22,9 @@ class ObjectBox {
 
   final CollectionReference taskCollection =
       FirebaseFirestore.instance.collection('Tasks');
+  final DocumentReference userDoc = FirebaseFirestore.instance
+      .collection('Tasks')
+      .doc(FirebaseAuth.instance.currentUser!.uid);
   final AuthService _auth = AuthService();
   final ConnectivityService _connection = ConnectivityService();
 
@@ -45,12 +49,10 @@ class ObjectBox {
     taskGroups.put(TaskGroup(taskGroup: 'General'));
 
     if (await _connection.ifConnectedToInternet()) {
-      await taskCollection.doc(_auth.currentUser!.uid).set({
-        'groups': ['General'],
-      });
+      await initFBTaskCollection();
     } else {
-      DataToUpload uData =
-          DataToUpload(addOrDeleteOrNeither: -1, initiateFBTaskCollection: true);
+      DataToUpload uData = DataToUpload(
+          addOrDeleteOrNeither: -1, initiateFBTaskCollection: true);
       dataListToUpload.put(uData);
     }
   }
@@ -88,14 +90,16 @@ class ObjectBox {
     theme.removeAll();
     dataListToUpload.removeAll();
 
-    if(await _connection.ifConnectedToInternet()) {
-      await FirebaseFirestore.instance.runTransaction((Transaction transaction) async {
-        transaction.delete(taskCollection.doc(_auth.currentUser!.uid));
+    if (await _connection.ifConnectedToInternet()) {
+      await FirebaseFirestore.instance
+          .runTransaction((Transaction transaction) async {
+        transaction.delete(userDoc);
       }).whenComplete(() async {
         await _auth.deleteUser();
       });
-    }else{
-      DataToUpload data = DataToUpload(addOrDeleteOrNeither: -1, deleteUser: true);
+    } else {
+      DataToUpload data =
+          DataToUpload(addOrDeleteOrNeither: -1, deleteUser: true);
       dataListToUpload.put(data);
     }
   }
@@ -109,10 +113,11 @@ class ObjectBox {
   Future addTask(Task task) async {
     taskList.put(task);
 
-    if(await _connection.ifConnectedToInternet()) {
+    if (await _connection.ifConnectedToInternet()) {
       await addFBTask(task);
-    }else{
-      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 0, operandType: 0, dataID: task.id);
+    } else {
+      DataToUpload data = DataToUpload(
+          addOrDeleteOrNeither: 0, operandType: 0, dataID: task.id);
       dataListToUpload.put(data);
     }
   }
@@ -122,21 +127,23 @@ class ObjectBox {
     TaskGroup newTaskGroup = TaskGroup(taskGroup: taskGroup);
     taskGroups.put(newTaskGroup);
 
-    if(await _connection.ifConnectedToInternet()) {
+    if (await _connection.ifConnectedToInternet()) {
       await addFBTaskGroup(taskGroup);
-    }else{
-      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 0, operandType: 1, dataID: newTaskGroup.id);
+    } else {
+      DataToUpload data = DataToUpload(
+          addOrDeleteOrNeither: 0, operandType: 1, dataID: newTaskGroup.id);
       dataListToUpload.put(data);
     }
   }
 
-  TaskDate addTaskDate(DateTime date) {
+  Future<TaskDate> addTaskDate(DateTime date, String taskGroup) async {
     TaskDate newTaskDate = TaskDate(
         year: date.year,
         month: date.month,
         day: date.day,
         weekday: date.weekday);
     taskDate.put(newTaskDate);
+
     return newTaskDate;
   }
 
@@ -163,10 +170,11 @@ class ObjectBox {
     TaskDate date = task.taskDate.target!;
     TaskGroup group = task.taskGroup.target!;
 
-    if(await _connection.ifConnectedToInternet()) {
+    if (await _connection.ifConnectedToInternet()) {
       await deleteFBTask(task);
-    }else{
-      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 1, operandType: 0, dataID: task.id);
+    } else {
+      DataToUpload data = DataToUpload(
+          addOrDeleteOrNeither: 1, operandType: 0, dataID: task.id);
       dataListToUpload.put(data);
     }
 
@@ -178,8 +186,8 @@ class ObjectBox {
 
     if (_findTaskListByGroupAndDate(date, group).isEmpty) {
       List<TaskGroup> taskGroupList = date.taskGroups.toList();
-      for(int i = 0; i < taskGroupList.length; i++){
-        if(taskGroupList[i].taskGroup == group.taskGroup){
+      for (int i = 0; i < taskGroupList.length; i++) {
+        if (taskGroupList[i].taskGroup == group.taskGroup) {
           date.taskGroups.removeAt(i);
         }
       }
@@ -191,10 +199,11 @@ class ObjectBox {
     }
   }
 
-  Future deleteSelectedTaskGroups(List<TaskGroup> taskGroupList, List<bool> selectedGroups) async {
+  Future deleteSelectedTaskGroups(
+      List<TaskGroup> taskGroupList, List<bool> selectedGroups) async {
     int max = taskGroupList.length;
-    for(int i = 0; i < max; i++){
-      if(selectedGroups[i]){
+    for (int i = 0; i < max; i++) {
+      if (selectedGroups[i]) {
         await deleteTaskGroup(taskGroupList[i]);
       }
     }
@@ -202,10 +211,11 @@ class ObjectBox {
 
   ///Delete a task group from both the ObjectBox and Firebase.
   Future deleteTaskGroup(TaskGroup taskGroup) async {
-    if(await _connection.ifConnectedToInternet()) {
+    if (await _connection.ifConnectedToInternet()) {
       await deleteFBTaskGroup(taskGroup.taskGroup);
-    }else{
-      DataToUpload data = DataToUpload(addOrDeleteOrNeither: 1, operandType: 1, dataID: taskGroup.id);
+    } else {
+      DataToUpload data = DataToUpload(
+          addOrDeleteOrNeither: 1, operandType: 1, dataID: taskGroup.id);
       dataListToUpload.put(data);
     }
 

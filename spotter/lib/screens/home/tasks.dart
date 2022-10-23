@@ -102,7 +102,7 @@ class _TaskListState extends State<TaskList> {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.redAccent)),
               child: const Text(
-                'View more',
+                'View By Groups',
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
@@ -306,7 +306,7 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
                       backgroundColor:
                           MaterialStateProperty.all(Colors.redAccent)),
                   child: const Text(
-                    'View more',
+                    'View By Groups',
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),

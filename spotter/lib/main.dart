@@ -7,7 +7,7 @@ import 'package:spotter/services/connectivity.dart';
 import 'objectbox.dart';
 import 'scrollHighlightRemove.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'services/sync.dart';
 
 late final ObjectBox objectbox;
 
@@ -16,7 +16,10 @@ void main() async {
   ConnectivityService();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  objectbox = await ObjectBox.open();
+  await ObjectBox.open().then((value) {
+    objectbox = value;
+    uploadCaller();
+  });
   runApp(MyApp());
 }
 
@@ -44,4 +47,3 @@ class MyApp extends StatelessWidget {
         ));
   }
 }
-
