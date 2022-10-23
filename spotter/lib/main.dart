@@ -8,7 +8,6 @@ import 'objectbox.dart';
 import 'scrollHighlightRemove.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-
 late final ObjectBox objectbox;
 
 void main() async {
@@ -44,4 +43,3 @@ class MyApp extends StatelessWidget {
         ));
   }
 }
-
