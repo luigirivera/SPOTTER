@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../main.dart';
 import '../../models/task_model.dart';
+import '../../services/firebase.dart';
 
 Future _addTask(
     String description, String group, DateTime date, bool completed) async {
@@ -8,13 +9,26 @@ Future _addTask(
     taskDescription: description,
     completed: completed,
   );
+
   TaskGroup taskGroup = objectbox.getTaskGroup(group)!;
 
   if (!objectbox.ifTaskDateExists(date)) {
-    objectbox.addTaskDate(date);
+    objectbox.addTaskDate(date, group);
   }
 
   TaskDate taskDate = objectbox.getTaskDate(date);
+  bool connectionExists = false;
+
+  List<TaskGroup> taskGroupList = taskDate.taskGroups.toList();
+  for (int i = 0; i < taskGroupList.length; i++) {
+    if (taskGroupList[i].taskGroup == taskGroup.taskGroup) {
+      connectionExists = true;
+    }
+  }
+
+  if(!connectionExists){
+    await addFBTaskDate(taskDate, group);
+  }
 
   //Data relations
   newTask.taskDate.target = taskDate;
