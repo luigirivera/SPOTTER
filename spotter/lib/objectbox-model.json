@@ -203,9 +203,33 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "10:8442671955771970492",
+      "lastPropertyId": "3:3243957007760897762",
+      "name": "StudyCount",
+      "properties": [
+        {
+          "id": "1:6176349437650548911",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:9163955846415475904",
+          "name": "count",
+          "type": 6
+        },
+        {
+          "id": "3:3243957007760897762",
+          "name": "date",
+          "type": 6
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "9:7562821681699500801",
+  "lastEntityId": "10:8442671955771970492",
   "lastIndexId": "3:6369646154956444029",
   "lastRelationId": "1:5473346048667747771",
   "lastSequenceId": "0:0",

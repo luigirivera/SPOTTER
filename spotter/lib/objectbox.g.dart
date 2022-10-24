@@ -223,6 +223,30 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(10, 8442671955771970492),
+      name: 'StudyCount',
+      lastPropertyId: const IdUid(3, 3243957007760897762),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 6176349437650548911),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 9163955846415475904),
+            name: 'count',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 3243957007760897762),
+            name: 'date',
+            type: 6,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -246,7 +270,7 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(9, 7562821681699500801),
+      lastEntityId: const IdUid(10, 8442671955771970492),
       lastIndexId: const IdUid(3, 6369646154956444029),
       lastRelationId: const IdUid(1, 5473346048667747771),
       lastSequenceId: const IdUid(0, 0),
@@ -512,6 +536,33 @@ ModelDefinition getObjectBoxModel() {
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
+        }),
+    StudyCount: EntityDefinition<StudyCount>(
+        model: _entities[6],
+        toOneRelations: (StudyCount object) => [],
+        toManyRelations: (StudyCount object) => {},
+        getId: (StudyCount object) => object.id,
+        setId: (StudyCount object, int id) {
+          object.id = id;
+        },
+        objectToFB: (StudyCount object, fb.Builder fbb) {
+          fbb.startTable(4);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.count);
+          fbb.addInt64(2, object.date);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = StudyCount(
+              count: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              date: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0))
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+
+          return object;
         })
   };
 
@@ -642,4 +693,19 @@ class SpotterUser_ {
   /// see [SpotterUser.deleteUser]
   static final deleteUser =
       QueryBooleanProperty<SpotterUser>(_entities[5].properties[3]);
+}
+
+/// [StudyCount] entity fields to define ObjectBox queries.
+class StudyCount_ {
+  /// see [StudyCount.id]
+  static final id =
+      QueryIntegerProperty<StudyCount>(_entities[6].properties[0]);
+
+  /// see [StudyCount.count]
+  static final count =
+      QueryIntegerProperty<StudyCount>(_entities[6].properties[1]);
+
+  /// see [StudyCount.date]
+  static final date =
+      QueryIntegerProperty<StudyCount>(_entities[6].properties[2]);
 }

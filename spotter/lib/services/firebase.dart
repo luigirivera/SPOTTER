@@ -21,9 +21,7 @@ Future<void> initFBTaskCollection() async {
 }
 
 Future<void> initFBSessionCollection() async {
-  await _userCollection
-      .doc(_auth.currentUser!.uid)
-      .set({'dates': []});
+  await _taskCollection.doc(_auth.currentUser!.uid).set({'dates': []});
 }
 
 Future<void> addFBTask(Task task) async {
@@ -145,7 +143,9 @@ Future<void> recursivelyDeleteAllDocContent(DocumentReference doc) async {
     taskDatesTotal = taskDates.length;
 
     for (int j = 0; j < taskDatesTotal; j++) {
-      dateDocRef.collection(taskDates[j]).get().then((doc) {doc.docs.clear();});
+      dateDocRef.collection(taskDates[j]).get().then((doc) {
+        doc.docs.clear();
+      });
     }
   }
 }
