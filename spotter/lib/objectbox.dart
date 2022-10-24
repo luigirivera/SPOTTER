@@ -19,6 +19,7 @@ class ObjectBox {
   late final Box<Task> taskList;
   late final Box<TaskDate> taskDate;
   late final Box<StudyTheme> theme;
+  late final Box<StudyCount> count;
   late final Box<DataToUpload> dataListToUpload;
 
   final CollectionReference taskCollection =
@@ -37,6 +38,7 @@ class ObjectBox {
     taskList = Box<Task>(store);
     taskDate = Box<TaskDate>(store);
     theme = Box<StudyTheme>(store);
+    count = Box<StudyCount>(store);
     dataListToUpload = Box<DataToUpload>(store);
   }
 
@@ -95,6 +97,7 @@ class ObjectBox {
     taskDate.removeAll();
     taskList.removeAll();
     theme.removeAll();
+    count.removeAll();
     dataListToUpload.removeAll();
 
     if (await _connection.ifConnectedToInternet()) {
@@ -108,6 +111,19 @@ class ObjectBox {
       SpotterUser user = _findUser(_auth.currentUser!.uid!);
       user.deleteUser = true;
       users.put(user);
+    }
+  }
+
+  Future addToSessionCount() async {
+    StudyCount? studyCount =
+        count.getAll().isEmpty ? null : count.getAll().first;
+    if (studyCount == null) {
+      count.put(
+          StudyCount(count: 1, date: DateTime.now().millisecondsSinceEpoch));
+    } else {
+      count.removeAll();
+      studyCount.count++;
+      count.put(studyCount);
     }
   }
 

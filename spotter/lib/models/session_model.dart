@@ -12,11 +12,36 @@ class StudyTheme {
 }
 
 @Entity()
-class StudyCount{
+class StudyCount {
   @Id()
   int id = 0; //don't delete this. it's for objectbox
   int count;
-  int date;
+  SessionDate date;
 
   StudyCount({required this.count, required this.date});
+}
+
+@Entity()
+class SessionDate {
+  @Id()
+  int id = 0;
+
+  int year;
+  int month;
+  int day;
+  int weekday;
+
+  SessionDate(
+      {required this.year,
+      required this.month,
+      required this.day,
+      required this.weekday});
+
+  ///If the dates are the same then return true
+  bool compareTo(SessionDate date) {
+    return year == date.year &&
+        month == date.month &&
+        day == date.day &&
+        weekday == date.weekday;
+  }
 }
