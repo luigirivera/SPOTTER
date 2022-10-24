@@ -28,17 +28,17 @@ class AuthService {
   }
 
   ///create user object based on User
-  SpotterUser _spotterUser(User? user) {
+  SpotterUser _createSpotterUser(User? user) {
     return SpotterUser(uid: user?.uid, isAnon: user?.isAnonymous);
   }
 
-  SpotterUser? get currentUser => _spotterUser(_auth.currentUser);
+  SpotterUser? get currentUser => _createSpotterUser(_auth.currentUser);
 
   //auth change user stream
   Stream<SpotterUser> get user {
     //return _auth.authStateChanges().map((User? user) => _user(user!));
     //Same thing
-    return _auth.authStateChanges().map(_spotterUser);
+    return _auth.authStateChanges().map(_createSpotterUser);
   }
 
   //sign in anon
@@ -48,7 +48,9 @@ class AuthService {
       UserCredential userCred = await _auth.signInAnonymously();
       User? user = userCred.user;
       await objectbox.initTaskCollection();
-      return _spotterUser(user!);
+      SpotterUser spotterUser = _createSpotterUser(user);
+      objectbox.users.put(spotterUser);
+      return spotterUser;
     } catch (e) {
       debugPrint(e.toString());
       return null;
@@ -61,7 +63,9 @@ class AuthService {
       UserCredential userCred = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = userCred.user;
-      return _spotterUser(user);
+      SpotterUser spotterUser =  _createSpotterUser(user);
+      objectbox.users.put(spotterUser);
+      return spotterUser;
     } on FirebaseAuthException catch (error) {
       if (error.code == 'user-not-found') {
         return 'The email is not in use';
@@ -82,7 +86,7 @@ class AuthService {
           email: email, password: password);
       User? user = userCred.user;
       await objectbox.initTaskCollection();
-      return _spotterUser(user);
+      return _createSpotterUser(user);
     } on FirebaseAuthException catch (error) {
       //This is the specific error catching method found on documentation
       if (error.code == 'weak-password') {

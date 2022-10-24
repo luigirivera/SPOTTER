@@ -2,24 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/task_model.dart';
 import 'auth.dart';
 
-final CollectionReference taskCollection =
-    FirebaseFirestore.instance.collection('Tasks');
-final CollectionReference userCollection =
+final CollectionReference _userCollection =
     FirebaseFirestore.instance.collection('Tasks');
 final AuthService _auth = AuthService();
 
 Future<void> initFBTaskCollection() async {
-  await userCollection.doc(_auth.currentUser!.uid).set({
+  await _userCollection.doc(_auth.currentUser!.uid).set({
     'groups': ['General'],
   });
-  await userCollection.doc(_auth.currentUser!.uid).collection('General').doc('dates').set({'dates': []});
+  await _userCollection.doc(_auth.currentUser!.uid).collection('General').doc('dates').set({'dates': []});
 }
 
 Future<void> addFBTask(Task task) async {
   String taskGroup = task.taskGroup.target!.taskGroup;
   TaskDate date = task.taskDate.target!;
 
-  await userCollection
+  await _userCollection
       .doc(_auth.currentUser!.uid)
       .collection(taskGroup)
       .doc('dates')
@@ -35,10 +33,10 @@ Future<void> addFBTask(Task task) async {
 Future<void> addFBTaskGroup(String taskGroup) async {
   List<String> taskGroupList = await getFirebaseTaskGroups();
   taskGroupList.add(taskGroup);
-  await userCollection
+  await _userCollection
       .doc(_auth.currentUser!.uid)
       .set({'groups': taskGroupList});
-  await userCollection
+  await _userCollection
       .doc(_auth.currentUser!.uid)
       .collection(taskGroup)
       .doc('dates')
@@ -46,7 +44,7 @@ Future<void> addFBTaskGroup(String taskGroup) async {
 }
 
 Future<void> addFBTaskDate(TaskDate taskDate, String taskGroup) async {
-  DocumentReference dateDocRef = userCollection
+  DocumentReference dateDocRef = _userCollection
       .doc(_auth.currentUser!.uid)
       .collection(taskGroup)
       .doc('dates');
@@ -59,7 +57,7 @@ Future<void> deleteFBTask(Task task) async {
   TaskDate date = task.taskDate.target!;
   TaskGroup group = task.taskGroup.target!;
 
-  await userCollection
+  await _userCollection
       .doc(_auth.currentUser!.uid)
       .collection(group.taskGroup)
       .doc('dates')
@@ -72,13 +70,13 @@ Future<void> deleteFBTaskGroup(String taskGroup) async {
   List<String> taskGroupList = await getFirebaseTaskGroups();
   int index = taskGroupList.indexOf(taskGroup);
   taskGroupList.removeAt(index);
-  await userCollection
+  await _userCollection
       .doc(_auth.currentUser!.uid)
       .set({'groups': taskGroupList});
 }
 
 Future<void> deleteFBTaskDate(TaskDate taskDate, String taskGroup) async {
-  DocumentReference dateDocRef = userCollection
+  DocumentReference dateDocRef = _userCollection
       .doc(_auth.currentUser!.uid)
       .collection(taskGroup)
       .doc('dates');
@@ -92,7 +90,7 @@ Future<void> deleteFBTaskDate(TaskDate taskDate, String taskGroup) async {
 Future<List<String>> getFirebaseTaskGroups() async {
   List dynamicList = List.empty(growable: true);
   List<String> taskGroups = List.empty(growable: true);
-  await userCollection.doc(_auth.currentUser!.uid).get().then((value) {
+  await _userCollection.doc(_auth.currentUser!.uid).get().then((value) {
     dynamicList = value['groups'];
   });
   taskGroups = dynamicList.cast<String>();
@@ -112,7 +110,7 @@ Future<List<String>> getFirebaseTaskDates(DocumentReference dateDocRef) async {
 }
 
 Future<bool> ifCollectionExistsOnFirebase(String taskGroup) async {
-  var snapshot = await userCollection
+  var snapshot = await _userCollection
       .doc(_auth.currentUser!.uid)
       .collection(taskGroup)
       .limit(1)

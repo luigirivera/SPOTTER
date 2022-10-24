@@ -5,14 +5,16 @@ class DataToUpload{
   @Id()
   int id = 0;
 
-  int? dataID;
+  int? taskID;
+  int? groupID;
+  int? dateID;
 
-  bool initiateFBTaskCollection;
+
   bool deleteUser;
   ///-1: neither, 0: add, 1: delete
   int addOrDeleteOrNeither;
   ///0: task, 1: taskGroup, 2: taskDate
   int? operandType;
 
-  DataToUpload({required this.addOrDeleteOrNeither, this.operandType, this.dataID, this.initiateFBTaskCollection = false, this.deleteUser = false});
+  DataToUpload({required this.addOrDeleteOrNeither, this.operandType, this.taskID, this.groupID, this.dateID, this.deleteUser = false});
 }
