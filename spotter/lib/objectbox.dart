@@ -118,8 +118,7 @@ class ObjectBox {
     StudyCount? studyCount =
         count.getAll().isEmpty ? null : count.getAll().first;
     if (studyCount == null) {
-      count.put(
-          StudyCount(count: 1, date: DateTime.now().millisecondsSinceEpoch));
+      count.put(StudyCount(count: 1, date: DateTime.now()));
     } else {
       count.removeAll();
       studyCount.count++;
@@ -130,6 +129,8 @@ class ObjectBox {
   Future setTheme(StudyTheme theme) async {
     this.theme.removeAll();
     this.theme.put(theme);
+
+    //update in firebase
   }
 
   ///Add a task to both the ObjectBox and Firebase
