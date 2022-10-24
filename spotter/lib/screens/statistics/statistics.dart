@@ -2,6 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:spotter/main.dart';
 
+import '../../models/task_model.dart';
+
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({Key? key}) : super(key: key);
 
@@ -36,7 +38,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         image: AssetImage('assets/banner.png'),
                         fit: BoxFit.fill)),
                 child: const Center(
-                    child: Text('Task Completed',
+                    child: Text('7-Day Task Completed',
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -73,8 +75,39 @@ class TaskCompletionGraph extends StatefulWidget {
 }
 
 class _TaskCompletionGraphState extends State<TaskCompletionGraph> {
-  List<double> sampleTaskCompletionData = [7, 3, 6, 9, 5, 2, 1];
+  List<double> sampleTaskCompletionData = [7, 3, 6, 9, 0, 0, 0];
   int touchedIndex = -1;
+
+  double completedTaskCountForDay(DateTime date) {
+    return objectbox.findTaskDate(date) == null
+        ? 0
+        : objectbox
+            .getTaskListByDate(date)
+            .where((element) => element.completed == true)
+            .length
+            .toDouble();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    sampleTaskCompletionData = [
+      completedTaskCountForDay(
+          DateTime.now().subtract(const Duration(days: 6))),
+      completedTaskCountForDay(
+          DateTime.now().subtract(const Duration(days: 5))),
+      completedTaskCountForDay(
+          DateTime.now().subtract(const Duration(days: 4))),
+      completedTaskCountForDay(
+          DateTime.now().subtract(const Duration(days: 3))),
+      completedTaskCountForDay(
+          DateTime.now().subtract(const Duration(days: 2))),
+      completedTaskCountForDay(
+          DateTime.now().subtract(const Duration(days: 1))),
+      completedTaskCountForDay(DateTime.now()),
+    ];
+  }
 
   BarChartGroupData taskCompletedDataGroup(
     int weekday,
@@ -210,37 +243,37 @@ class _TaskCompletionGraphState extends State<TaskCompletionGraph> {
     switch (value.toInt()) {
       case 0:
         text = Text(
-            'Mon\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 6)).month}/${DateTime.now().subtract(Duration(days: 6)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 1:
         text = Text(
-            'Tue\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 5)).month}/${DateTime.now().subtract(Duration(days: 5)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 2:
         text = Text(
-            'Wed\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 4)).month}/${DateTime.now().subtract(Duration(days: 4)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 3:
         text = Text(
-            'Thu\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 3)).month}/${DateTime.now().subtract(Duration(days: 3)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 4:
         text = Text(
-            'Fri\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 2)).month}/${DateTime.now().subtract(Duration(days: 2)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 5:
         text = Text(
-            'Sat\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 1)).month}/${DateTime.now().subtract(Duration(days: 1)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 6:
         text = Text(
-            'Sun\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().month}/${DateTime.now().day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       default:
@@ -419,37 +452,37 @@ class _StudySessionTimeGraphState extends State<StudySessionTimeGraph> {
     switch (value.toInt()) {
       case 0:
         text = Text(
-            'Mon\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 6)).month}/${DateTime.now().subtract(Duration(days: 6)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 1:
         text = Text(
-            'Tue\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 5)).month}/${DateTime.now().subtract(Duration(days: 5)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 2:
         text = Text(
-            'Wed\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 4)).month}/${DateTime.now().subtract(Duration(days: 4)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 3:
         text = Text(
-            'Thu\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 3)).month}/${DateTime.now().subtract(Duration(days: 3)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 4:
         text = Text(
-            'Fri\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 2)).month}/${DateTime.now().subtract(Duration(days: 2)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 5:
         text = Text(
-            'Sat\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().subtract(Duration(days: 1)).month}/${DateTime.now().subtract(Duration(days: 1)).day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       case 6:
         text = Text(
-            'Sun\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
+            '${DateTime.now().month}/${DateTime.now().day}\n ${sampleTaskCompletionData[value.toInt()].toStringAsPrecision(1)}',
             style: style);
         break;
       default:

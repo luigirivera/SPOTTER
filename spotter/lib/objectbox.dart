@@ -66,16 +66,16 @@ class ObjectBox {
 
   TaskGroup? getTaskGroup(String taskGroup) => _findTaskGroup(taskGroup);
 
-  TaskDate getTaskDate(DateTime date) => _findTaskDate(date)!;
+  TaskDate getTaskDate(DateTime date) => findTaskDate(date)!;
 
   List<Task> getTaskListByDate(DateTime date) =>
-      _findTaskDate(date)!.tasks.toList();
+      findTaskDate(date)!.tasks.toList();
 
   List<Task> getTaskListByGroup(String taskGroup) =>
       _findTaskGroup(taskGroup)!.tasks.toList();
 
   List<TaskGroup> getTaskGroupsByDate(DateTime date) =>
-      _findTaskDate(date)!.taskGroups.toList();
+      findTaskDate(date)!.taskGroups.toList();
 
   List<Task> getTaskListByGroupAndDate(TaskDate date, TaskGroup group) =>
       _findTaskListByGroupAndDate(date, group);
@@ -242,7 +242,7 @@ class ObjectBox {
     return resultTaskList;
   }
 
-  TaskDate? _findTaskDate(DateTime date) {
+  TaskDate? findTaskDate(DateTime date) {
     List<TaskDate> tempDateList = getTaskDateList();
 
     for (var tempDate in tempDateList) {
@@ -270,7 +270,7 @@ class ObjectBox {
   }
 
   bool ifTaskDateExists(DateTime date) {
-    if (_findTaskDate(date) == null) {
+    if (findTaskDate(date) == null) {
       return false;
     } else {
       return true;
