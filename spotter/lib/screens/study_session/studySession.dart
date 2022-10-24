@@ -97,6 +97,7 @@ class _StudySessionState extends State<StudySession> {
         phase = 1;
         newTree = !newTree;
         completed++;
+        //add to completed in database
       }
       if (minutes == 60) {
         minutes = 0;

@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:spotter/main.dart';
 
 import '../../models/task_model.dart';
@@ -153,25 +154,31 @@ class _TaskCompletionGraphState extends State<TaskCompletionGraph> {
                 String weekDay;
                 switch (group.x.toInt()) {
                   case 0:
-                    weekDay = 'Monday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 6)));
                     break;
                   case 1:
-                    weekDay = 'Tuesday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 5)));
                     break;
                   case 2:
-                    weekDay = 'Wednesday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 4)));
                     break;
                   case 3:
-                    weekDay = 'Thursday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 3)));
                     break;
                   case 4:
-                    weekDay = 'Friday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 2)));
                     break;
                   case 5:
-                    weekDay = 'Saturday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 1)));
                     break;
                   case 6:
-                    weekDay = 'Sunday';
+                    weekDay = DateFormat("MMMd").format(DateTime.now());
                     break;
                   default:
                     throw Error();
@@ -362,25 +369,31 @@ class _StudySessionTimeGraphState extends State<StudySessionTimeGraph> {
                 String weekDay;
                 switch (group.x.toInt()) {
                   case 0:
-                    weekDay = 'Monday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 6)));
                     break;
                   case 1:
-                    weekDay = 'Tuesday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 5)));
                     break;
                   case 2:
-                    weekDay = 'Wednesday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 4)));
                     break;
                   case 3:
-                    weekDay = 'Thursday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 3)));
                     break;
                   case 4:
-                    weekDay = 'Friday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 2)));
                     break;
                   case 5:
-                    weekDay = 'Saturday';
+                    weekDay = DateFormat("MMMd")
+                        .format(DateTime.now().subtract(Duration(days: 1)));
                     break;
                   case 6:
-                    weekDay = 'Sunday';
+                    weekDay = DateFormat("MMMd").format(DateTime.now());
                     break;
                   default:
                     throw Error();
