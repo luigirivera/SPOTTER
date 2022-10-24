@@ -48,6 +48,7 @@ class AuthService {
       UserCredential userCred = await _auth.signInAnonymously();
       User? user = userCred.user;
       await objectbox.initTaskCollection();
+      await objectbox.initSessionCollection();
       SpotterUser spotterUser = _createSpotterUser(user);
       objectbox.users.put(spotterUser);
       return spotterUser;
@@ -63,7 +64,7 @@ class AuthService {
       UserCredential userCred = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = userCred.user;
-      SpotterUser spotterUser =  _createSpotterUser(user);
+      SpotterUser spotterUser = _createSpotterUser(user);
       objectbox.users.put(spotterUser);
       return spotterUser;
     } on FirebaseAuthException catch (error) {
@@ -86,6 +87,7 @@ class AuthService {
           email: email, password: password);
       User? user = userCred.user;
       await objectbox.initTaskCollection();
+      await objectbox.initSessionCollection();
       return _createSpotterUser(user);
     } on FirebaseAuthException catch (error) {
       //This is the specific error catching method found on documentation

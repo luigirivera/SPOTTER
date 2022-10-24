@@ -4,6 +4,9 @@ import 'auth.dart';
 
 final CollectionReference _userCollection =
     FirebaseFirestore.instance.collection('Tasks');
+
+final CollectionReference _taskCollection =
+    FirebaseFirestore.instance.collection('Study Session');
 final AuthService _auth = AuthService();
 
 Future<void> initFBTaskCollection() async {
@@ -14,6 +17,12 @@ Future<void> initFBTaskCollection() async {
       .doc(_auth.currentUser!.uid)
       .collection('General')
       .doc('dates')
+      .set({'dates': []});
+}
+
+Future<void> initFBSessionCollection() async {
+  await _userCollection
+      .doc(_auth.currentUser!.uid)
       .set({'dates': []});
 }
 

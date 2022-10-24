@@ -23,6 +23,10 @@ class ObjectBox {
 
   final CollectionReference taskCollection =
       FirebaseFirestore.instance.collection('Tasks');
+
+  final CollectionReference sessionCollection =
+      FirebaseFirestore.instance.collection('Study Session');
+
   final AuthService _auth = AuthService();
   final ConnectivityService _connection = ConnectivityService();
 
@@ -49,6 +53,12 @@ class ObjectBox {
 
     if (await _connection.ifConnectedToInternet()) {
       await initFBTaskCollection();
+    }
+  }
+
+  Future initSessionCollection() async {
+    if (await _connection.ifConnectedToInternet()) {
+      await initFBSessionCollection();
     }
   }
 
