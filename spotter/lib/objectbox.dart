@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +5,7 @@ import 'package:spotter/services/auth.dart';
 import 'models/sync_model.dart';
 import 'models/task_model.dart';
 import 'models/session_model.dart';
+import 'models/user_model.dart';
 import 'objectbox.g.dart';
 import 'services/connectivity.dart';
 import 'services/firebase.dart';
@@ -14,6 +14,7 @@ class ObjectBox {
   ObjectBox();
 
   late Store store;
+  late final Box<SpotterUser> users;
   late final Box<TaskGroup> taskGroups;
   late final Box<Task> taskList;
   late final Box<TaskDate> taskDate;
@@ -22,14 +23,12 @@ class ObjectBox {
 
   final CollectionReference taskCollection =
       FirebaseFirestore.instance.collection('Tasks');
-  final DocumentReference userDoc = FirebaseFirestore.instance
-      .collection('Tasks')
-      .doc(FirebaseAuth.instance.currentUser!.uid);
   final AuthService _auth = AuthService();
   final ConnectivityService _connection = ConnectivityService();
 
   /// Code section to open objectbox store / Init setters------------///
   ObjectBox._open(this.store) {
+    users = Box<SpotterUser>(store);
     taskGroups = Box<TaskGroup>(store);
     taskList = Box<Task>(store);
     taskDate = Box<TaskDate>(store);
@@ -50,16 +49,14 @@ class ObjectBox {
 
     if (await _connection.ifConnectedToInternet()) {
       await initFBTaskCollection();
-    } else {
-      DataToUpload uData = DataToUpload(
-          addOrDeleteOrNeither: -1, initiateFBTaskCollection: true);
-      dataListToUpload.put(uData);
     }
   }
 
   StudyTheme getTheme() => theme.getAll().isEmpty
       ? StudyTheme(index: -1, folder: "1_trees", name: "trees")
       : theme.getAll().first;
+
+  SpotterUser getSpotterUser(String uid) => _findUser(uid);
 
   List<TaskGroup> getTaskGroupList() => taskGroups.getAll().toList();
 
@@ -93,14 +90,14 @@ class ObjectBox {
     if (await _connection.ifConnectedToInternet()) {
       await FirebaseFirestore.instance
           .runTransaction((Transaction transaction) async {
-        transaction.delete(userDoc);
+        transaction.delete(taskCollection.doc(_auth.currentUser!.uid));
       }).whenComplete(() async {
         await _auth.deleteUser();
       });
     } else {
-      DataToUpload data =
-          DataToUpload(addOrDeleteOrNeither: -1, deleteUser: true);
-      dataListToUpload.put(data);
+      SpotterUser user = _findUser(_auth.currentUser!.uid!);
+      user.deleteUser = true;
+      users.put(user);
     }
   }
 
@@ -117,7 +114,7 @@ class ObjectBox {
       await addFBTask(task);
     } else {
       DataToUpload data = DataToUpload(
-          addOrDeleteOrNeither: 0, operandType: 0, dataID: task.id);
+          addOrDeleteOrNeither: 0, operandType: 0, taskID: task.id);
       dataListToUpload.put(data);
     }
   }
@@ -131,7 +128,7 @@ class ObjectBox {
       await addFBTaskGroup(taskGroup);
     } else {
       DataToUpload data = DataToUpload(
-          addOrDeleteOrNeither: 0, operandType: 1, dataID: newTaskGroup.id);
+          addOrDeleteOrNeither: 0, operandType: 1, groupID: newTaskGroup.id);
       dataListToUpload.put(data);
     }
   }
@@ -174,7 +171,7 @@ class ObjectBox {
       await deleteFBTask(task);
     } else {
       DataToUpload data = DataToUpload(
-          addOrDeleteOrNeither: 1, operandType: 0, dataID: task.id);
+          addOrDeleteOrNeither: 1, operandType: 0, taskID: task.id);
       dataListToUpload.put(data);
     }
 
@@ -183,7 +180,6 @@ class ObjectBox {
     //Have to do it this way because of the ObjectBox implementation issue.
     //Found OB dev to back me up on that here:
     //https://stackoverflow.com/questions/47247670/objectbox-source-entity-has-no-id-should-have-been-put-before
-
     if (_findTaskListByGroupAndDate(date, group).isEmpty) {
       List<TaskGroup> taskGroupList = date.taskGroups.toList();
       for (int i = 0; i < taskGroupList.length; i++) {
@@ -215,7 +211,7 @@ class ObjectBox {
       await deleteFBTaskGroup(taskGroup.taskGroup);
     } else {
       DataToUpload data = DataToUpload(
-          addOrDeleteOrNeither: 1, operandType: 1, dataID: taskGroup.id);
+          addOrDeleteOrNeither: 1, operandType: 1, groupID: taskGroup.id);
       dataListToUpload.put(data);
     }
 
@@ -258,6 +254,19 @@ class ObjectBox {
     }
 
     return null;
+  }
+
+  SpotterUser _findUser(String uid){
+    List<SpotterUser> spotterUsers = users.getAll();
+    SpotterUser result = SpotterUser();
+
+    for(var user in spotterUsers){
+      if(user.uid! == uid){
+        result = user;
+      }
+    }
+
+    return result;
   }
 
   bool ifTaskDateExists(DateTime date) {

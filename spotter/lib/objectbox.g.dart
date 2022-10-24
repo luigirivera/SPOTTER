@@ -17,6 +17,7 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 import 'models/session_model.dart';
 import 'models/sync_model.dart';
 import 'models/task_model.dart';
+import 'models/user_model.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -153,7 +154,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(8, 8907197670501213787),
       name: 'DataToUpload',
-      lastPropertyId: const IdUid(9, 1359277506266641171),
+      lastPropertyId: const IdUid(12, 1975284651273606259),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -161,11 +162,6 @@ final _entities = <ModelEntity>[
             name: 'id',
             type: 6,
             flags: 1),
-        ModelProperty(
-            id: const IdUid(5, 4768763936726069584),
-            name: 'initiateFBTaskCollection',
-            type: 1,
-            flags: 0),
         ModelProperty(
             id: const IdUid(6, 2999212745484615391),
             name: 'addOrDeleteOrNeither',
@@ -177,12 +173,51 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 3401413730924788528),
-            name: 'dataID',
+            id: const IdUid(9, 1359277506266641171),
+            name: 'deleteUser',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 2118089188054687950),
+            name: 'taskID',
             type: 6,
             flags: 0),
         ModelProperty(
-            id: const IdUid(9, 1359277506266641171),
+            id: const IdUid(11, 2618741343415969800),
+            name: 'groupID',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(12, 1975284651273606259),
+            name: 'dateID',
+            type: 6,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(9, 7562821681699500801),
+      name: 'SpotterUser',
+      lastPropertyId: const IdUid(4, 7284375468628451175),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 767245565985993433),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 4452255613075982974),
+            name: 'uid',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 7599168946913273407),
+            name: 'isAnon',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 7284375468628451175),
             name: 'deleteUser',
             type: 1,
             flags: 0)
@@ -211,7 +246,7 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(8, 8907197670501213787),
+      lastEntityId: const IdUid(9, 7562821681699500801),
       lastIndexId: const IdUid(3, 6369646154956444029),
       lastRelationId: const IdUid(1, 5473346048667747771),
       lastSequenceId: const IdUid(0, 0),
@@ -242,7 +277,9 @@ ModelDefinition getObjectBoxModel() {
         4021613382800126923,
         2928674987731761317,
         7033964361855051741,
-        1291466172437674877
+        1291466172437674877,
+        3401413730924788528,
+        4768763936726069584
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -410,13 +447,14 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (DataToUpload object, fb.Builder fbb) {
-          fbb.startTable(10);
+          fbb.startTable(13);
           fbb.addInt64(0, object.id);
-          fbb.addBool(4, object.initiateFBTaskCollection);
           fbb.addInt64(5, object.addOrDeleteOrNeither);
           fbb.addInt64(6, object.operandType);
-          fbb.addInt64(7, object.dataID);
           fbb.addBool(8, object.deleteUser);
+          fbb.addInt64(9, object.taskID);
+          fbb.addInt64(10, object.groupID);
+          fbb.addInt64(11, object.dateID);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -429,12 +467,48 @@ ModelDefinition getObjectBoxModel() {
                   const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0),
               operandType: const fb.Int64Reader()
                   .vTableGetNullable(buffer, rootOffset, 16),
-              dataID: const fb.Int64Reader()
-                  .vTableGetNullable(buffer, rootOffset, 18),
-              initiateFBTaskCollection: const fb.BoolReader()
-                  .vTableGet(buffer, rootOffset, 12, false),
+              taskID: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 22),
+              groupID: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 24),
+              dateID: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 26),
               deleteUser: const fb.BoolReader()
                   .vTableGet(buffer, rootOffset, 20, false))
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+
+          return object;
+        }),
+    SpotterUser: EntityDefinition<SpotterUser>(
+        model: _entities[5],
+        toOneRelations: (SpotterUser object) => [],
+        toManyRelations: (SpotterUser object) => {},
+        getId: (SpotterUser object) => object.id,
+        setId: (SpotterUser object, int id) {
+          object.id = id;
+        },
+        objectToFB: (SpotterUser object, fb.Builder fbb) {
+          final uidOffset =
+              object.uid == null ? null : fbb.writeString(object.uid!);
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, uidOffset);
+          fbb.addBool(2, object.isAnon);
+          fbb.addBool(3, object.deleteUser);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = SpotterUser(
+              uid: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 6),
+              isAnon: const fb.BoolReader()
+                  .vTableGetNullable(buffer, rootOffset, 8),
+              deleteUser: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 10, false))
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
@@ -526,23 +600,46 @@ class DataToUpload_ {
   static final id =
       QueryIntegerProperty<DataToUpload>(_entities[4].properties[0]);
 
-  /// see [DataToUpload.initiateFBTaskCollection]
-  static final initiateFBTaskCollection =
-      QueryBooleanProperty<DataToUpload>(_entities[4].properties[1]);
-
   /// see [DataToUpload.addOrDeleteOrNeither]
   static final addOrDeleteOrNeither =
-      QueryIntegerProperty<DataToUpload>(_entities[4].properties[2]);
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[1]);
 
   /// see [DataToUpload.operandType]
   static final operandType =
-      QueryIntegerProperty<DataToUpload>(_entities[4].properties[3]);
-
-  /// see [DataToUpload.dataID]
-  static final dataID =
-      QueryIntegerProperty<DataToUpload>(_entities[4].properties[4]);
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[2]);
 
   /// see [DataToUpload.deleteUser]
   static final deleteUser =
-      QueryBooleanProperty<DataToUpload>(_entities[4].properties[5]);
+      QueryBooleanProperty<DataToUpload>(_entities[4].properties[3]);
+
+  /// see [DataToUpload.taskID]
+  static final taskID =
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[4]);
+
+  /// see [DataToUpload.groupID]
+  static final groupID =
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[5]);
+
+  /// see [DataToUpload.dateID]
+  static final dateID =
+      QueryIntegerProperty<DataToUpload>(_entities[4].properties[6]);
+}
+
+/// [SpotterUser] entity fields to define ObjectBox queries.
+class SpotterUser_ {
+  /// see [SpotterUser.id]
+  static final id =
+      QueryIntegerProperty<SpotterUser>(_entities[5].properties[0]);
+
+  /// see [SpotterUser.uid]
+  static final uid =
+      QueryStringProperty<SpotterUser>(_entities[5].properties[1]);
+
+  /// see [SpotterUser.isAnon]
+  static final isAnon =
+      QueryBooleanProperty<SpotterUser>(_entities[5].properties[2]);
+
+  /// see [SpotterUser.deleteUser]
+  static final deleteUser =
+      QueryBooleanProperty<SpotterUser>(_entities[5].properties[3]);
 }

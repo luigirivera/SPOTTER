@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../main.dart';
+import '../../models/sync_model.dart';
 import '../../models/task_model.dart';
 import '../../services/firebase.dart';
 
@@ -26,8 +27,15 @@ Future _addTask(
     }
   }
 
-  if(!connectionExists){
+  if (!connectionExists) {
     await addFBTaskDate(taskDate, group);
+  } else {
+    DataToUpload data = DataToUpload(
+        addOrDeleteOrNeither: 0,
+        operandType: 2,
+        dateID: taskDate.id,
+        groupID: taskGroup.id);
+    objectbox.dataListToUpload.put(data);
   }
 
   //Data relations
