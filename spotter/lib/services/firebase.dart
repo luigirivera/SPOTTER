@@ -10,7 +10,11 @@ Future<void> initFBTaskCollection() async {
   await _userCollection.doc(_auth.currentUser!.uid).set({
     'groups': ['General'],
   });
-  await _userCollection.doc(_auth.currentUser!.uid).collection('General').doc('dates').set({'dates': []});
+  await _userCollection
+      .doc(_auth.currentUser!.uid)
+      .collection('General')
+      .doc('dates')
+      .set({'dates': []});
 }
 
 Future<void> addFBTask(Task task) async {
@@ -119,7 +123,20 @@ Future<bool> ifCollectionExistsOnFirebase(String taskGroup) async {
 }
 
 Future<void> recursivelyDeleteAllDocContent(DocumentReference doc) async {
-  await _rDeleteAllDoc(doc);
-}
+  DocumentReference userDocRef = _userCollection.doc(_auth.currentUser!.uid);
+  DocumentReference dateDocRef;
+  List<String> taskGroups = await getFirebaseTaskGroups();
+  List<String> taskDates;
+  int taskGroupsTotal = taskGroups.length;
+  int taskDatesTotal;
 
-Future<void> _rDeleteAllDoc(DocumentReference doc) async {}
+  for (int i = 0; i < taskGroupsTotal; i++) {
+    dateDocRef = userDocRef.collection(taskGroups[i]).doc('dates');
+    taskDates = await getFirebaseTaskDates(dateDocRef);
+    taskDatesTotal = taskDates.length;
+
+    for (int j = 0; j < taskDatesTotal; j++) {
+      dateDocRef.collection(taskDates[j]).get().then((doc) {doc.docs.clear();});
+    }
+  }
+}
