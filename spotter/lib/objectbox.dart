@@ -256,12 +256,12 @@ class ObjectBox {
     return null;
   }
 
-  SpotterUser _findUser(String uid){
+  SpotterUser _findUser(String uid) {
     List<SpotterUser> spotterUsers = users.getAll();
     SpotterUser result = SpotterUser();
 
-    for(var user in spotterUsers){
-      if(user.uid! == uid){
+    for (var user in spotterUsers) {
+      if (user.uid! == uid) {
         result = user;
       }
     }
