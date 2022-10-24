@@ -37,7 +37,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 child: const Center(
                     child: Text('Task Completed',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)))),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)))),
             const SizedBox(height: 5),
             const TaskCompletionGraph(),
             const SizedBox(height: 10),
@@ -51,7 +53,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 child: const Center(
                     child: Text('Study Sessions Time',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)))),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)))),
             const SizedBox(height: 5),
             const StudySessionTimeGraph(),
             const SizedBox(height: 20),
