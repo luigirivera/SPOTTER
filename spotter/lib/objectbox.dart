@@ -156,15 +156,18 @@ class ObjectBox {
           month: DateTime.now().month,
           day: DateTime.now().day);
 
-      count.put(StudyCount(count: 1));
+      StudyCount studyCount = StudyCount(count: 1);
+      studyCount.sessionDate.target = date;
+      count.put(studyCount);
 
+      date.session.target = studyCount;
       sessionDate.put(date);
 
-      // if (await _connection.ifConnectedToInternet()) {
-      //   await addFBSS(count);
-      // } else {
-      //   //TODO:  add to upload
-      // }
+      if (await _connection.ifConnectedToInternet()) {
+        await addFBSS(count.getAll().first);
+      } else {
+        //TODO:  add to upload
+      }
     } else {
       StudyCount studyCount = count
           .getAll()

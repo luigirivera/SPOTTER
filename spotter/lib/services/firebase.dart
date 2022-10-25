@@ -31,6 +31,17 @@ Future<void> addFBTheme(StudyTheme theme) async {
   });
 }
 
+Future<void> addFBSS(StudyCount count) async {
+  await _taskCollection
+      .doc(_auth.currentUser!.uid)
+      .collection(
+          '${count.sessionDate.target!.year}-${count.sessionDate.target!.month}-${count.sessionDate.target!.day}')
+      .doc('count')
+      .set({
+    'count': count.count,
+  });
+}
+
 Future<void> addFBTask(Task task) async {
   String taskGroup = task.taskGroup.target!.taskGroup;
   TaskDate date = task.taskDate.target!;
