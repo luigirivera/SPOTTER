@@ -16,9 +16,9 @@ class StudyCount {
   @Id()
   int id = 0; //don't delete this. it's for objectbox
   int count;
-  SessionDate date;
+  SessionDate sessionDate;
 
-  StudyCount({required this.count, required this.date});
+  StudyCount({required this.count, required this.sessionDate});
 }
 
 @Entity()
@@ -29,19 +29,11 @@ class SessionDate {
   int year;
   int month;
   int day;
-  int weekday;
 
-  SessionDate(
-      {required this.year,
-      required this.month,
-      required this.day,
-      required this.weekday});
+  SessionDate({required this.year, required this.month, required this.day});
 
   ///If the dates are the same then return true
   bool compareTo(SessionDate date) {
-    return year == date.year &&
-        month == date.month &&
-        day == date.day &&
-        weekday == date.weekday;
+    return year == date.year && month == date.month && day == date.day;
   }
 }

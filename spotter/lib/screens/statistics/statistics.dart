@@ -326,6 +326,27 @@ class _StudySessionTimeGraphState extends State<StudySessionTimeGraph> {
   List<double> sampleTaskCompletionData = [7, 3, 6, 9, 5, 2, 1];
   int touchedIndex = -1;
 
+  @override
+  void initState() {
+    super.initState();
+
+    sampleTaskCompletionData = [
+      objectbox.getStudySessionCount(
+          DateTime.now().subtract(const Duration(days: 6))),
+      objectbox.getStudySessionCount(
+          DateTime.now().subtract(const Duration(days: 5))),
+      objectbox.getStudySessionCount(
+          DateTime.now().subtract(const Duration(days: 4))),
+      objectbox.getStudySessionCount(
+          DateTime.now().subtract(const Duration(days: 3))),
+      objectbox.getStudySessionCount(
+          DateTime.now().subtract(const Duration(days: 2))),
+      objectbox.getStudySessionCount(
+          DateTime.now().subtract(const Duration(days: 1))),
+      objectbox.getStudySessionCount(DateTime.now()),
+    ];
+  }
+
   BarChartGroupData taskCompletedDataGroup(
     int weekday,
     double height, {

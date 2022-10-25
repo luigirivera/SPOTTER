@@ -90,6 +90,7 @@ class _StudySessionState extends State<StudySession> {
       }
       if (seconds == 60) {
         seconds = 0;
+        objectbox.addToSessionCount();
         minutes++;
       }
 

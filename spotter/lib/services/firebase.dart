@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/session_model.dart';
 import '../models/task_model.dart';
 import 'auth.dart';
 
@@ -22,6 +23,12 @@ Future<void> initFBTaskCollection() async {
 
 Future<void> initFBSessionCollection() async {
   await _taskCollection.doc(_auth.currentUser!.uid).set({'dates': []});
+}
+
+Future<void> addFBTheme(StudyTheme theme) async {
+  await _taskCollection.doc(_auth.currentUser!.uid).set({
+    'theme': theme,
+  });
 }
 
 Future<void> addFBTask(Task task) async {

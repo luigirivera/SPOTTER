@@ -20,6 +20,7 @@ class ObjectBox {
   late final Box<TaskDate> taskDate;
   late final Box<StudyTheme> theme;
   late final Box<StudyCount> count;
+  late final Box<SessionDate> sessionDate;
   late final Box<DataToUpload> dataListToUpload;
 
   final CollectionReference taskCollection =
@@ -39,6 +40,7 @@ class ObjectBox {
     taskDate = Box<TaskDate>(store);
     theme = Box<StudyTheme>(store);
     count = Box<StudyCount>(store);
+    sessionDate = Box<SessionDate>(store);
     dataListToUpload = Box<DataToUpload>(store);
   }
 
@@ -92,6 +94,25 @@ class ObjectBox {
   List<Task> getTaskListByGroupAndDate(TaskDate date, TaskGroup group) =>
       _findTaskListByGroupAndDate(date, group);
 
+  double getStudySessionCount(DateTime date) =>
+      _findStudySessionCountByDate(date);
+
+  double _findStudySessionCountByDate(DateTime date) {
+    return sessionDate
+            .getAll()
+            .where((element) => element.compareTo(
+                SessionDate(year: date.year, month: date.month, day: date.day)))
+            .isEmpty
+        ? 0
+        : count
+            .getAll()
+            .where((element) => element.sessionDate.compareTo(
+                SessionDate(year: date.year, month: date.month, day: date.day)))
+            .first
+            .count
+            .toDouble();
+  }
+
   Future<void> deleteEverything() async {
     taskGroups.removeAll();
     taskDate.removeAll();
@@ -115,14 +136,49 @@ class ObjectBox {
   }
 
   Future addToSessionCount() async {
-    StudyCount? studyCount =
-        count.getAll().isEmpty ? null : count.getAll().first;
-    if (studyCount == null) {
-      count.put(StudyCount(count: 1, date: DateTime.now()));
+    DateTime date = DateTime.now();
+    SessionDate? sDate = sessionDate
+            .getAll()
+            .where((element) => element.compareTo(
+                SessionDate(year: date.year, month: date.month, day: date.day)))
+            .isEmpty
+        ? null
+        : sessionDate
+            .getAll()
+            .where((element) => element.compareTo(
+                SessionDate(year: date.year, month: date.month, day: date.day)))
+            .first;
+
+    print(sDate);
+    if (sDate == null) {
+      SessionDate date = SessionDate(
+          year: DateTime.now().year,
+          month: DateTime.now().month,
+          day: DateTime.now().day);
+
+      count.put(StudyCount(count: 1, sessionDate: date));
+
+      sessionDate.put(date);
+
+      // if (await _connection.ifConnectedToInternet()) {
+      //   await addFBSS(count);
+      // } else {
+      //   //TODO:  add to upload
+      // }
     } else {
+      StudyCount studyCount = count
+          .getAll()
+          .where((element) => element.sessionDate.compareTo(sDate))
+          .first;
       count.removeAll();
       studyCount.count++;
       count.put(studyCount);
+
+      // if (await _connection.ifConnectedToInternet()) {
+      //   await updateFBSS(count);
+      // } else {
+      //   //TODO:  add to upload
+      // }
     }
   }
 
@@ -131,6 +187,12 @@ class ObjectBox {
     this.theme.put(theme);
 
     //update in firebase
+
+    if (await _connection.ifConnectedToInternet()) {
+      await addFBTheme(theme);
+    } else {
+      //TODO:  add to upload
+    }
   }
 
   ///Add a task to both the ObjectBox and Firebase
