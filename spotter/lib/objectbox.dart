@@ -106,7 +106,7 @@ class ObjectBox {
         ? 0
         : count
             .getAll()
-            .where((element) => element.sessionDate.compareTo(
+            .where((element) => element.sessionDate.target!.compareTo(
                 SessionDate(year: date.year, month: date.month, day: date.day)))
             .first
             .count
@@ -156,7 +156,7 @@ class ObjectBox {
           month: DateTime.now().month,
           day: DateTime.now().day);
 
-      count.put(StudyCount(count: 1, sessionDate: date));
+      count.put(StudyCount(count: 1));
 
       sessionDate.put(date);
 
@@ -168,7 +168,7 @@ class ObjectBox {
     } else {
       StudyCount studyCount = count
           .getAll()
-          .where((element) => element.sessionDate.compareTo(sDate))
+          .where((element) => element.sessionDate.target!.compareTo(sDate))
           .first;
       count.removeAll();
       studyCount.count++;

@@ -16,9 +16,10 @@ class StudyCount {
   @Id()
   int id = 0; //don't delete this. it's for objectbox
   int count;
-  SessionDate sessionDate;
 
-  StudyCount({required this.count, required this.sessionDate});
+  final sessionDate = ToOne<SessionDate>();
+
+  StudyCount({required this.count});
 }
 
 @Entity()
@@ -29,6 +30,8 @@ class SessionDate {
   int year;
   int month;
   int day;
+
+  final session = ToOne<StudyCount>();
 
   SessionDate({required this.year, required this.month, required this.day});
 

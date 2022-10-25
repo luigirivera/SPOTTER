@@ -18,7 +18,9 @@ void main() async {
   await Firebase.initializeApp();
   await ObjectBox.open().then((value) {
     objectbox = value;
-    uploadCaller();
+    if (!objectbox.dataListToUpload.isEmpty()) {
+      uploadCaller();
+    }
   });
   runApp(MyApp());
 }

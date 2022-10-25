@@ -21,6 +21,8 @@ class AuthService {
     );
 
     await _auth.signInWithCredential(credential);
+    await objectbox.initTaskCollection();
+    await objectbox.initSessionCollection();
   }
 
   Future deleteUser() async {
