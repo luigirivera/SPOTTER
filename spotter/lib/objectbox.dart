@@ -177,11 +177,11 @@ class ObjectBox {
       studyCount.count++;
       count.put(studyCount);
 
-      // if (await _connection.ifConnectedToInternet()) {
-      //   await updateFBSS(count);
-      // } else {
-      //   //TODO:  add to upload
-      // }
+      if (await _connection.ifConnectedToInternet()) {
+        await addFBSS(count.getAll().first);
+      } else {
+        //TODO:  add to upload
+      }
     }
   }
 
