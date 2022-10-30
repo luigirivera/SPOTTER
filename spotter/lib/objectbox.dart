@@ -189,8 +189,6 @@ class ObjectBox {
     this.theme.removeAll();
     this.theme.put(theme);
 
-    //update in firebase
-
     if (await _connection.ifConnectedToInternet()) {
       await addFBTheme(theme);
     } else {

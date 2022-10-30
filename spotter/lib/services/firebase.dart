@@ -27,7 +27,7 @@ Future<void> initFBSessionCollection() async {
 
 Future<void> addFBTheme(StudyTheme theme) async {
   await _taskCollection.doc(_auth.currentUser!.uid).set({
-    'theme': theme,
+    'theme': theme.name,
   });
 }
 
