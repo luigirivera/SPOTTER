@@ -90,7 +90,6 @@ class _StudySessionState extends State<StudySession> {
       }
       if (seconds == 60) {
         seconds = 0;
-        objectbox.addToSessionCount();
         minutes++;
       }
 
@@ -98,7 +97,7 @@ class _StudySessionState extends State<StudySession> {
         phase = 1;
         newTree = !newTree;
         completed++;
-        //add to completed in database
+        objectbox.addToSessionCount();
       }
       if (minutes == 60) {
         minutes = 0;
