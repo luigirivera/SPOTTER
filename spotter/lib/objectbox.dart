@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -149,7 +150,6 @@ class ObjectBox {
                 SessionDate(year: date.year, month: date.month, day: date.day)))
             .first;
 
-    print(sDate);
     if (sDate == null) {
       SessionDate date = SessionDate(
           year: DateTime.now().year,
@@ -166,13 +166,16 @@ class ObjectBox {
       if (await _connection.ifConnectedToInternet()) {
         await addFBSS(count.getAll().first);
       } else {
-        //TODO:  add to upload
+        DataToUpload data = DataToUpload(
+            addOrDeleteOrNeither: 0, operandType: 3, countID: studyCount.id);
+        dataListToUpload.put(data);
       }
     } else {
       StudyCount studyCount = count
           .getAll()
           .where((element) => element.sessionDate.target!.compareTo(sDate))
           .first;
+      StudyCount toRemove = count.getAll().first;
       count.removeAll();
       studyCount.count++;
       count.put(studyCount);
@@ -180,19 +183,30 @@ class ObjectBox {
       if (await _connection.ifConnectedToInternet()) {
         await addFBSS(count.getAll().first);
       } else {
-        //TODO:  add to upload
+        DataToUpload data1 = DataToUpload(
+            addOrDeleteOrNeither: 1, operandType: 3, countID: toRemove.id);
+        dataListToUpload.put(data1);
+        DataToUpload data2 = DataToUpload(
+            addOrDeleteOrNeither: 0, operandType: 3, countID: studyCount.id);
+        dataListToUpload.put(data2);
       }
     }
   }
 
   Future setTheme(StudyTheme theme) async {
+    StudyTheme toRemove = this.theme.getAll().first;
     this.theme.removeAll();
     this.theme.put(theme);
 
     if (await _connection.ifConnectedToInternet()) {
       await addFBTheme(theme);
     } else {
-      //TODO:  add to upload
+      DataToUpload data1 = DataToUpload(
+          addOrDeleteOrNeither: 1, operandType: 4, themeID: toRemove.id);
+      dataListToUpload.put(data1);
+      DataToUpload data2 = DataToUpload(
+          addOrDeleteOrNeither: 0, operandType: 4, themeID: theme.id);
+      dataListToUpload.put(data2);
     }
   }
 

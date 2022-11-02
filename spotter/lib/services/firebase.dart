@@ -6,7 +6,7 @@ import 'auth.dart';
 final CollectionReference _userCollection =
     FirebaseFirestore.instance.collection('Tasks');
 
-final CollectionReference _taskCollection =
+final CollectionReference _sessionCollection =
     FirebaseFirestore.instance.collection('Study Session');
 final AuthService _auth = AuthService();
 
@@ -22,17 +22,17 @@ Future<void> initFBTaskCollection() async {
 }
 
 Future<void> initFBSessionCollection() async {
-  await _taskCollection.doc(_auth.currentUser!.uid).set({'dates': []});
+  await _sessionCollection.doc(_auth.currentUser!.uid).set({'dates': []});
 }
 
 Future<void> addFBTheme(StudyTheme theme) async {
-  await _taskCollection.doc(_auth.currentUser!.uid).set({
+  await _sessionCollection.doc(_auth.currentUser!.uid).set({
     'theme': theme.name,
   });
 }
 
 Future<void> addFBSS(StudyCount count) async {
-  await _taskCollection
+  await _sessionCollection
       .doc(_auth.currentUser!.uid)
       .collection(
           '${count.sessionDate.target!.year}-${count.sessionDate.target!.month}-${count.sessionDate.target!.day}')
