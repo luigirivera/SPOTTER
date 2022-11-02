@@ -1,4 +1,5 @@
 import 'package:spotter/main.dart';
+import '../models/session_model.dart';
 import '../models/sync_model.dart';
 import '../models/task_model.dart';
 import 'firebase.dart';
@@ -49,6 +50,14 @@ Future<void> upload(List<DataToUpload> dataList, int index) async {
     await addFBTask(task);
     return;
   } else {
-    //operandType 3 and 4
+    if (dataList[index].operandType == 3) {
+      StudyCount count = objectbox.count.get(dataList[index].countID!)!;
+      await addFBSS(count);
+      return;
+    } else if (dataList[index].operandType == 4) {
+      StudyTheme theme = objectbox.theme.get(dataList[index].themeID!)!;
+      await addFBTheme(theme);
+      return;
+    }
   }
 }
