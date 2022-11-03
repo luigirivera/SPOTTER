@@ -61,3 +61,7 @@ Future<void> upload(List<DataToUpload> dataList, int index) async {
     }
   }
 }
+
+//TODO: Add a function to upload all Objectbox data to Firebase
+
+
