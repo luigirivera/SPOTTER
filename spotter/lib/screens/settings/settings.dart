@@ -5,6 +5,7 @@ import 'package:spotter/main.dart';
 
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:spotter/services/connectivity.dart';
 import '../loading/loading.dart';
 
 class SettingsDrawer extends StatefulWidget {
@@ -17,6 +18,8 @@ class SettingsDrawer extends StatefulWidget {
 class _SettingsDrawerState extends State<SettingsDrawer> {
   final AuthService _auth = AuthService();
   bool loading = false;
+
+  final ConnectivityService _connection = ConnectivityService();
 
   @override
   Widget build(BuildContext context) {
@@ -78,17 +81,19 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                     if (_auth.currentUser!.isAnon == true)
                       Column(
                         children: [
-                          SignInButton(Buttons.GoogleDark, onPressed: () {
-                            setState(() {
-                              loading = true;
-                            });
-                            _auth.googleLogin().then((result) {
-                              if (result == null) {
-                                setState(() {
-                                  loading = false;
-                                });
-                              }
-                            });
+                          SignInButton(Buttons.GoogleDark, onPressed: () async {
+                            if (await _connection.ifConnectedToInternet()) {
+                              setState(() {
+                                loading = true;
+                              });
+                              _auth.googleLogin().then((result) {
+                                if (result == null) {
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                }
+                              });
+                            }
                           }),
                           SignInButton(Buttons.Email, onPressed: () {
                             Navigator.push(

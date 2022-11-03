@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spotter/models/user_model.dart';
 import '../../services/auth.dart';
+import '../../services/connectivity.dart';
 import '../loading/loading.dart';
 import 'sign_up.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -21,6 +22,8 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
   String error = '';
+
+  final ConnectivityService _connection = ConnectivityService();
 
   @override
   Widget build(BuildContext context) {
@@ -167,26 +170,40 @@ class _SignInState extends State<SignIn> {
                                               width: 3),
                                         )),
                                     onPressed: () async {
-                                      if (_formKey.currentState!.validate()) {
-                                        setState(() {
-                                          loading = true;
-                                        });
-                                        dynamic result = await _auth.signInEP(
-                                            email, password);
-                                        if (result is! SpotterUser) {
+                                      if (await _connection
+                                          .ifConnectedToInternet()) {
+                                        if (_formKey.currentState!.validate()) {
                                           setState(() {
-                                            // error = result;
-                                            Fluttertoast.showToast(
-                                                msg: result,
-                                                toastLength: Toast.LENGTH_LONG,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 5,
-                                                backgroundColor: Colors.black,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                            loading = false;
+                                            loading = true;
                                           });
+                                          dynamic result = await _auth.signInEP(
+                                              email, password);
+                                          if (result is! SpotterUser) {
+                                            setState(() {
+                                              // error = result;
+                                              Fluttertoast.showToast(
+                                                  msg: result,
+                                                  toastLength:
+                                                      Toast.LENGTH_LONG,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 5,
+                                                  backgroundColor: Colors.black,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
+                                              loading = false;
+                                            });
+                                          }
                                         }
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                "Not connected to the internet",
+                                            toastLength: Toast.LENGTH_LONG,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 5,
+                                            backgroundColor: Colors.black,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
                                       }
                                     },
                                     child: const Center(
@@ -195,17 +212,29 @@ class _SignInState extends State<SignIn> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20)),
                                     ))),
-                            SignInButton(Buttons.GoogleDark, onPressed: () {
-                              setState(() {
-                                loading = true;
-                              });
-                              _auth.googleLogin().then((result) {
-                                if (result == null) {
-                                  setState(() {
-                                    loading = false;
-                                  });
-                                }
-                              });
+                            SignInButton(Buttons.GoogleDark,
+                                onPressed: () async {
+                              if (await _connection.ifConnectedToInternet()) {
+                                setState(() {
+                                  loading = true;
+                                });
+                                _auth.googleLogin().then((result) {
+                                  if (result == null) {
+                                    setState(() {
+                                      loading = false;
+                                    });
+                                  }
+                                });
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Not connected to the internet",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 5,
+                                    backgroundColor: Colors.black,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              }
                             }),
                             const SizedBox(height: 25),
                             Row(

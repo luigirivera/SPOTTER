@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotter/services/connectivity.dart';
 import '../../models/user_model.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
@@ -16,6 +17,8 @@ class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   bool _loading = false;
   bool hidePassword = true;
+
+  final ConnectivityService _connection = ConnectivityService();
 
   ///This is used with the 'Sign up' button
   String email = '';
@@ -145,32 +148,44 @@ class _SignUpState extends State<SignUp> {
                                     /** This will only be valid iff both of
                                     * the validators above return null
                                     */
-                                    if (_formKey.currentState!.validate()) {
-                                      setState(() {
-                                        _loading = true;
-                                      });
-                                      dynamic result = await _auth.registerEP(
-                                          email, password);
-
-                                      /** result (from Future) is either String type or SpotterUser type */
-                                      if (result is! SpotterUser) {
+                                    if (await _connection
+                                        .ifConnectedToInternet()) {
+                                      if (_formKey.currentState!.validate()) {
                                         setState(() {
-                                          Fluttertoast.showToast(
-                                              msg: result,
-                                              toastLength: Toast.LENGTH_LONG,
-                                              gravity: ToastGravity.BOTTOM,
-                                              timeInSecForIosWeb: 5,
-                                              backgroundColor: Colors.black,
-                                              textColor: Colors.white,
-                                              fontSize: 16.0);
-                                          _loading = false;
+                                          _loading = true;
                                         });
-                                      } else {
-                                        if (!mounted) return;
-                                        Navigator.of(context).pop();
+                                        dynamic result = await _auth.registerEP(
+                                            email, password);
 
-                                        //_db.makeCollection(result.uid);
+                                        /** result (from Future) is either String type or SpotterUser type */
+                                        if (result is! SpotterUser) {
+                                          setState(() {
+                                            Fluttertoast.showToast(
+                                                msg: result,
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 5,
+                                                backgroundColor: Colors.black,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                            _loading = false;
+                                          });
+                                        } else {
+                                          if (!mounted) return;
+                                          Navigator.of(context).pop();
+
+                                          //_db.makeCollection(result.uid);
+                                        }
                                       }
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: "Not connected to the internet",
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 5,
+                                          backgroundColor: Colors.black,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
                                     }
                                   },
                                   child: const Center(

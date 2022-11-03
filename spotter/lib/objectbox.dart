@@ -126,6 +126,7 @@ class ObjectBox {
       await FirebaseFirestore.instance
           .runTransaction((Transaction transaction) async {
         transaction.delete(taskCollection.doc(_auth.currentUser!.uid));
+        transaction.delete(sessionCollection.doc(_auth.currentUser!.uid));
       }).whenComplete(() async {
         await _auth.deleteUser();
       });
