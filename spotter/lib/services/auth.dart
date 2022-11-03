@@ -38,10 +38,6 @@ class AuthService {
     return SpotterUser(uid: user?.uid, isAnon: user?.isAnonymous);
   }
 
-  User? currentAuthUser() {
-    return _auth.currentUser;
-  }
-
   SpotterUser? get currentUser => _createSpotterUser(_auth.currentUser);
 
   //auth change user stream

@@ -161,8 +161,7 @@ class _SignInState extends State<SignIn> {
                                             setState(() {
                                               loading = true;
                                             });
-                                            User? anonUser =
-                                                _auth.currentAuthUser();
+
                                             dynamic result = await _auth
                                                 .signInEP(email, password);
                                             if (result is! SpotterUser) {
@@ -182,9 +181,11 @@ class _SignInState extends State<SignIn> {
                                                 loading = false;
                                               });
                                             } else {
-                                              // await _auth
-                                              //     .deleteGivenUser(anonUser!);
-                                              checkIfHasData();
+                                              if (!await checkIfHasData()) {
+                                                //migrate data
+                                              }
+
+                                              // delete user
                                             }
 
                                             Navigator.of(context).pop();

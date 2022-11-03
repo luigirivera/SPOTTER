@@ -12,14 +12,21 @@ final AuthService _auth = AuthService();
 
 Future<bool> checkIfHasData() async {
   try {
-    var session = await _sessionCollection.doc(_auth.currentUser!.uid).get();
+    var session = (await _sessionCollection.doc(_auth.currentUser!.uid).get())
+        .get('dates');
     var tasks = await _userCollection
         .doc(_auth.currentUser!.uid)
         .collection('General')
         .doc('dates')
-        .get();
+        .get()
+        .then((value) => value.data()!['dates']);
+
+    if(session.isEmpty && tasks.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
     // https://stackoverflow.com/questions/67865791/how-to-get-array-field-values-from-firestore
-    print("TEST ${tasks}");
     return true;
   } catch (e) {
     print("ERROR $e");
