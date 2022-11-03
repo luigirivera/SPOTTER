@@ -10,6 +10,23 @@ final CollectionReference _sessionCollection =
     FirebaseFirestore.instance.collection('Study Session');
 final AuthService _auth = AuthService();
 
+Future<bool> checkIfHasData() async {
+  try {
+    var session = await _sessionCollection.doc(_auth.currentUser!.uid).get();
+    var tasks = await _userCollection
+        .doc(_auth.currentUser!.uid)
+        .collection('General')
+        .doc('dates')
+        .get();
+    // https://stackoverflow.com/questions/67865791/how-to-get-array-field-values-from-firestore
+    print("TEST ${tasks}");
+    return true;
+  } catch (e) {
+    print("ERROR $e");
+    return false;
+  }
+}
+
 Future<void> initFBTaskCollection() async {
   await _userCollection.doc(_auth.currentUser!.uid).set({
     'groups': ['General'],

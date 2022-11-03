@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spotter/models/user_model.dart';
+import 'package:spotter/services/connectivity.dart';
+import 'package:spotter/services/firebase.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
-import '../authenticate/sign_up.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class SignIn extends StatefulWidget {
@@ -22,6 +24,8 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
   String error = '';
+
+  final ConnectivityService _connection = ConnectivityService();
 
   @override
   Widget build(BuildContext context) {
@@ -150,28 +154,41 @@ class _SignInState extends State<SignIn> {
                                                 width: 3),
                                           )),
                                       onPressed: () async {
-                                        if (_formKey.currentState!.validate()) {
-                                          setState(() {
-                                            loading = true;
-                                          });
-                                          dynamic result = await _auth.signInEP(
-                                              email, password);
-                                          if (result is! SpotterUser) {
+                                        if (await _connection
+                                            .ifConnectedToInternet()) {
+                                          if (_formKey.currentState!
+                                              .validate()) {
                                             setState(() {
-                                              // error = result;
-                                              Fluttertoast.showToast(
-                                                  msg: result,
-                                                  toastLength:
-                                                      Toast.LENGTH_LONG,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 5,
-                                                  backgroundColor: Colors.black,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0);
-                                              loading = false;
+                                              loading = true;
                                             });
+                                            User? anonUser =
+                                                _auth.currentAuthUser();
+                                            dynamic result = await _auth
+                                                .signInEP(email, password);
+                                            if (result is! SpotterUser) {
+                                              setState(() {
+                                                // error = result;
+                                                Fluttertoast.showToast(
+                                                    msg: result,
+                                                    toastLength:
+                                                        Toast.LENGTH_LONG,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 5,
+                                                    backgroundColor:
+                                                        Colors.black,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
+                                                loading = false;
+                                              });
+                                            } else {
+                                              // await _auth
+                                              //     .deleteGivenUser(anonUser!);
+                                              checkIfHasData();
+                                            }
+
+                                            Navigator.of(context).pop();
                                           }
-                                          Navigator.of(context).pop();
                                         }
                                       },
                                       child: const Center(

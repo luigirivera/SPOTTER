@@ -91,6 +91,12 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                   setState(() {
                                     loading = false;
                                   });
+
+                                  if (true) ;
+                                  //TODO:
+                                  //check if user is in firebase
+                                  //if not, upload data
+                                  //if yes, download data
                                 }
                               });
                             }
@@ -100,7 +106,12 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => const SignIn()))
-                                .then((value) => setState(() {}));
+                                .then((value) {
+                              setState(() {});
+                              //check if user is in firebase
+                              //if not, upload data
+                              //if yes, download data
+                            });
                           }),
                         ],
                       )

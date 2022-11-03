@@ -25,6 +25,10 @@ class AuthService {
     await objectbox.initSessionCollection();
   }
 
+  Future deleteGivenUser(User userToDelete) async {
+    await userToDelete.delete();
+  }
+
   Future deleteUser() async {
     await _auth.currentUser!.delete();
   }
@@ -32,6 +36,10 @@ class AuthService {
   ///create user object based on User
   SpotterUser _createSpotterUser(User? user) {
     return SpotterUser(uid: user?.uid, isAnon: user?.isAnonymous);
+  }
+
+  User? currentAuthUser() {
+    return _auth.currentUser;
   }
 
   SpotterUser? get currentUser => _createSpotterUser(_auth.currentUser);
