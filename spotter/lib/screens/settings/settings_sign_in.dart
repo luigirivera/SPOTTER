@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spotter/models/user_model.dart';
 import 'package:spotter/services/connectivity.dart';
 import 'package:spotter/services/firebase.dart';
+import 'package:spotter/services/sync.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -183,6 +184,7 @@ class _SignInState extends State<SignIn> {
                                             } else {
                                               if (!await checkIfHasData()) {
                                                 //migrate data
+                                                uploadAll();
                                               }
 
                                               // delete user

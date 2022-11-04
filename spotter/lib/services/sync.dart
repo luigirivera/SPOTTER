@@ -1,4 +1,5 @@
 import 'package:spotter/main.dart';
+import 'package:spotter/models/user_model.dart';
 import '../models/session_model.dart';
 import '../models/sync_model.dart';
 import '../models/task_model.dart';
@@ -63,5 +64,32 @@ Future<void> upload(List<DataToUpload> dataList, int index) async {
 }
 
 //TODO: Add a function to upload all Objectbox data to Firebase
+Future<void> uploadAll() async {
+  List<TaskGroup> taskGroups = objectbox.taskGroups.getAll();
+  List<TaskDate> taskDates = objectbox.taskDate.getAll();
+  List<Task> tasks = objectbox.taskList.getAll();
+  List<StudyCount> counts = objectbox.count.getAll();
+  List<StudyTheme> themes = objectbox.theme.getAll();
 
+  for (var taskGroup in taskGroups) {
+    await addFBTaskGroup(taskGroup.taskGroup);
+  }
 
+  for (var taskDate in taskDates) {
+    for (var group in taskDate.taskGroups) {
+      await addFBTaskDate(taskDate, group.taskGroup);
+    }
+  }
+
+  for (var task in tasks) {
+    await addFBTask(task);
+  }
+
+  for (var count in counts) {
+    await addFBSS(count);
+  }
+
+  for (var theme in themes) {
+    await addFBTheme(theme);
+  }
+}
