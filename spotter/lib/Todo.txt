@@ -1,0 +1,6 @@
+Todo:
+
+1. Check data migration
+2. Check data replacement
+3. Delete anon account on login from anon to auth
+4. Art
