@@ -104,7 +104,7 @@
     },
     {
       "id": "8:8907197670501213787",
-      "lastPropertyId": "14:1908189121184236470",
+      "lastPropertyId": "15:4948357939116978409",
       "name": "DataToUpload",
       "properties": [
         {
@@ -151,6 +151,11 @@
         {
           "id": "14:1908189121184236470",
           "name": "themeID",
+          "type": 6
+        },
+        {
+          "id": "15:4948357939116978409",
+          "name": "sessionDateID",
           "type": 6
         }
       ],

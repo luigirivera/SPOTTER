@@ -91,7 +91,7 @@ class _HomeState extends State<Home> {
       ),
 
       ///Bottom screen selection row
-      drawer: const SettingsDrawer(),
+      drawer: SettingsDrawer(),
       body: loading ? const Loading() : _screens[_barIndexSelected],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.grey,

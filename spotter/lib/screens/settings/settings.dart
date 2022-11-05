@@ -91,12 +91,6 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                   setState(() {
                                     loading = false;
                                   });
-
-                                  if (true) ;
-                                  //TODO:
-                                  //check if user is in firebase
-                                  //if not, upload data
-                                  //if yes, download data
                                 }
                               });
                             }

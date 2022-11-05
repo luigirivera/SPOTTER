@@ -1,7 +1,9 @@
 Todo:
 
-1. Check data migration
-2. Check data replacement
-3. Delete anon account on login from anon to auth
-4. Art
-5. Anon signin to google implement
+1. Check data replacement (it works on email, page needs to refresh)
+2. Anon signin to google implement (both empty data and with data)
+
+1. Art
+
+
+x. Delete anon account on login from anon to auth (might not happen)

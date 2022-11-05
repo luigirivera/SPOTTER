@@ -7,6 +7,7 @@ import 'package:spotter/services/firebase.dart';
 import 'package:spotter/services/sync.dart';
 import '../../services/auth.dart';
 import '../loading/loading.dart';
+import 'package:spotter/main.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class SignIn extends StatefulWidget {
@@ -185,9 +186,12 @@ class _SignInState extends State<SignIn> {
                                               if (!await checkIfHasData()) {
                                                 //migrate data
                                                 uploadAll();
+                                              } else {
+                                                objectbox.clearData();
+                                                objectbox.importData();
                                               }
 
-                                              // delete user
+                                              // delete anon user
                                             }
 
                                             Navigator.of(context).pop();
@@ -262,8 +266,13 @@ class _SignInState extends State<SignIn> {
                                               loading = false;
                                             });
                                           } else {
+                                            // delete anon user
                                             if (!mounted) return;
                                             Navigator.of(context).pop();
+                                            Future.delayed(Duration(seconds: 3),
+                                                () {
+                                              uploadAll();
+                                            });
 
                                             //_db.makeCollection(result.uid);
                                           }
