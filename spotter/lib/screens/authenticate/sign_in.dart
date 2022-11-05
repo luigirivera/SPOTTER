@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:spotter/main.dart';
 import 'package:spotter/models/user_model.dart';
 import '../../services/auth.dart';
 import '../../services/connectivity.dart';
@@ -192,6 +193,8 @@ class _SignInState extends State<SignIn> {
                                                   fontSize: 16.0);
                                               loading = false;
                                             });
+                                          } else {
+                                            objectbox.importData();
                                           }
                                         }
                                       } else {

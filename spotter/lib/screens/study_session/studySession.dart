@@ -148,35 +148,31 @@ class _StudySessionState extends State<StudySession> {
   }
 
   void initTheme() async {
-    print(theme.index);
-    var assetsFile =
-        await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
-    final Map<String, dynamic> manifestMap = json.decode(assetsFile);
+    Future.delayed(const Duration(milliseconds: 100), () async {
+      var assetsFile =
+          await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
+      final Map<String, dynamic> manifestMap = json.decode(assetsFile);
 
-    List<String> thumbnails = manifestMap.keys
-        .where((String key) =>
-            key.contains('assets/themes/thumbnails/') && key.contains('.png'))
-        .toList();
+      List<String> thumbnails = manifestMap.keys
+          .where((String key) =>
+              key.contains('assets/themes/thumbnails/') && key.contains('.png'))
+          .toList();
 
-    //grab folder names from file names
-    thumbnails = thumbnails.map((e) {
-      return e
-          .split(RegExp(r'assets/themes/thumbnails/'))[1]
-          .split(RegExp(r'\.'))[0];
-    }).toList();
+      //grab folder names from file names
+      thumbnails = thumbnails.map((e) {
+        return e
+            .split(RegExp(r'assets/themes/thumbnails/'))[1]
+            .split(RegExp(r'\.'))[0];
+      }).toList();
 
-    print(thumbnails);
+      if (theme.index < 0) {
+        selectedTheme = '${thumbnails[0]}/';
+      } else {
+        selectedTheme = '${thumbnails[theme.index]}/';
+      }
 
-    if (theme.index < 0) {
-      selectedTheme = '${thumbnails[0]}/';
-    } else {
-      selectedTheme = '${thumbnails[theme.index]}/';
-    }
-
-    fileName = selectedTheme.split(RegExp(r'_'))[1].split(r'/')[0];
-
-    print(selectedTheme);
-    print(fileName);
+      fileName = selectedTheme.split(RegExp(r'_'))[1].split(r'/')[0];
+    });
   }
 
   @override

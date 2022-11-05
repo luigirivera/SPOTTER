@@ -4,3 +4,5 @@ Todo:
 2. Check data replacement
 3. Delete anon account on login from anon to auth
 4. Art
+5. Anon signin to google implement
+8. Sync session dates

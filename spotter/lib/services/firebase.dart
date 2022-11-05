@@ -21,7 +21,7 @@ Future<bool> checkIfHasData() async {
         .get()
         .then((value) => value.data()!['dates']);
 
-    if(session.isEmpty && tasks.isEmpty) {
+    if (session.isEmpty && tasks.isEmpty) {
       return false;
     } else {
       return true;
@@ -46,13 +46,38 @@ Future<void> initFBTaskCollection() async {
 }
 
 Future<void> initFBSessionCollection() async {
-  await _sessionCollection.doc(_auth.currentUser!.uid).set({'dates': []});
+  await _sessionCollection
+      .doc(_auth.currentUser!.uid)
+      .set({'dates': [], 'name': 'trees', 'index': 0, 'folder': '1_trees'});
 }
 
 Future<void> addFBTheme(StudyTheme theme) async {
-  await _sessionCollection.doc(_auth.currentUser!.uid).set({
-    'theme': theme.name,
+  await _sessionCollection.doc(_auth.currentUser!.uid).update({
+    'name': theme.name,
+    'index': theme.index,
+    'folder': theme.folder,
   });
+}
+
+Future<void> addFBSSDate(SessionDate date) async {
+  DocumentReference docRef = _sessionCollection.doc(_auth.currentUser!.uid);
+
+  List<String> ssDatesList = await getFirebaseCountDates(docRef);
+
+  ssDatesList.add('${date.year}-${date.month}-${date.day}');
+
+  await docRef.update({'dates': ssDatesList});
+}
+
+Future<List<String>> getFirebaseCountDates(DocumentReference docRef) async {
+  List dynamicList = List.empty(growable: true);
+  List<String> ssDatesList = List.empty(growable: true);
+  await docRef.get().then((value) {
+    dynamicList = value['dates'];
+  });
+
+  ssDatesList = dynamicList.cast<String>();
+  return ssDatesList;
 }
 
 Future<void> addFBSS(StudyCount count) async {
@@ -138,6 +163,30 @@ Future<void> deleteFBTaskDate(TaskDate taskDate, String taskGroup) async {
       .indexOf('${taskDate.year}-${taskDate.month}-${taskDate.day}');
   taskDateList.removeAt(index);
   await dateDocRef.set({'dates': taskDateList});
+}
+
+Future<StudyTheme> getFirebaseTheme() async {
+  try {
+    return await _sessionCollection.doc(_auth.currentUser!.uid).get().then(
+        (value) => StudyTheme(
+            name: value['name'],
+            index: value['index'],
+            folder: value['folder']));
+  } catch (e) {
+    return StudyTheme(name: 'trees', index: 0, folder: '1_trees');
+  }
+}
+
+Future<List<String>> getFirebaseSessionDates(
+    DocumentReference dateDocRef) async {
+  List dynamicList = List.empty(growable: true);
+  List<String> sessionDates = List.empty(growable: true);
+  await dateDocRef.get().then((value) {
+    dynamicList = value['dates'];
+  });
+  sessionDates = dynamicList.cast<String>();
+
+  return sessionDates;
 }
 
 Future<List<String>> getFirebaseTaskGroups() async {

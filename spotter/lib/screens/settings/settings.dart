@@ -108,9 +108,6 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                         builder: (context) => const SignIn()))
                                 .then((value) {
                               setState(() {});
-                              //check if user is in firebase
-                              //if not, upload data
-                              //if yes, download data
                             });
                           }),
                         ],
@@ -167,6 +164,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                                   );
                                 });
                           }
+                          objectbox.clearData();
                           await _auth.signOut();
                           if (!mounted) return;
                           Navigator.popUntil(context, ModalRoute.withName("/"));

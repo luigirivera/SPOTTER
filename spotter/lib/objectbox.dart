@@ -120,6 +120,7 @@ class ObjectBox {
     taskList.removeAll();
     theme.removeAll();
     count.removeAll();
+    sessionDate.removeAll();
     dataListToUpload.removeAll();
 
     if (await _connection.ifConnectedToInternet()) {
@@ -134,6 +135,127 @@ class ObjectBox {
       SpotterUser user = _findUser(_auth.currentUser!.uid!);
       user.deleteUser = true;
       users.put(user);
+    }
+  }
+
+  Future<void> clearData() async {
+    taskGroups.removeAll();
+    taskDate.removeAll();
+    taskList.removeAll();
+    theme.removeAll();
+    count.removeAll();
+    sessionDate.removeAll();
+    dataListToUpload.removeAll();
+  }
+
+  void importData() async {
+    List<String> groups = await getFirebaseTaskGroups();
+    for (int i = 0; i < groups.length; i++) {
+      taskGroups.put(TaskGroup(taskGroup: groups.elementAt(i)));
+    }
+
+    for (var group in taskGroups.getAll()) {
+      List<String> dates = await getFirebaseTaskDates(taskCollection
+          .doc(_auth.currentUser!.uid)
+          .collection(group.taskGroup)
+          .doc('dates'));
+      for (int i = 0; i < dates.length; i++) {
+        List<String> parseDate = dates.elementAt(i).split('-');
+        DateTime dt = DateTime.utc(
+            int.parse(parseDate.elementAt(0)),
+            int.parse(parseDate.elementAt(1)),
+            int.parse(parseDate.elementAt(2)));
+
+        TaskDate td = TaskDate(
+            year: dt.year, month: dt.month, day: dt.day, weekday: dt.weekday);
+        bool exists = false;
+        List<int> indices = List.empty(growable: true);
+        for (int i = 0; i < taskDate.getAll().length; i++) {
+          if (taskDate.getAll().elementAt(i).compareTo(td)) {
+            exists = true;
+            indices.add(i);
+            break;
+          }
+        }
+
+        for (var index in indices) {
+          TaskDate td2 = taskDate.getAll().removeAt(index);
+          td2.taskGroups.add(group);
+          taskDate.put(td2);
+        }
+
+        if (!exists) {
+          td.taskGroups.add(group);
+          taskDate.put(td);
+        }
+      }
+    }
+
+    for (var group in taskGroups.getAll()) {
+      List dynamicList = List.empty(growable: true);
+      var dates = await taskCollection
+          .doc(_auth.currentUser!.uid)
+          .collection(group.taskGroup)
+          .doc('dates')
+          .get()
+          .then((value) => dynamicList = value['dates']);
+      List<String> datesList = dynamicList.cast<String>();
+      for (var dates in datesList) {
+        List<String> parseDate = dates.split('-');
+        await taskCollection
+            .doc(_auth.currentUser!.uid)
+            .collection(group.taskGroup)
+            .doc('dates')
+            .collection(dates)
+            .get()
+            .then((value) => value.docs.forEach((element) {
+                  Task task = Task(
+                      completed: element.get('completed'),
+                      taskDescription: element.get('description'));
+                  task.taskGroup.target = group;
+
+                  TaskDate td = findTaskDate(DateTime.utc(
+                    int.parse(parseDate.elementAt(0)),
+                    int.parse(parseDate.elementAt(1)),
+                    int.parse(parseDate.elementAt(2)),
+                  ))!;
+                  task.taskDate.target = td;
+
+                  group.tasks.add(task);
+                  td.tasks.add(task);
+
+                  taskList.put(task);
+
+                  print(task.taskDescription);
+                }));
+      }
+    }
+
+    List<String> sessionDates = await getFirebaseSessionDates(
+        sessionCollection.doc(_auth.currentUser!.uid));
+
+    for (var date in sessionDates) {
+      List<String> parseDate = date.split('-');
+      SessionDate sd = SessionDate(
+          year: int.parse(parseDate.elementAt(0)),
+          month: int.parse(parseDate.elementAt(1)),
+          day: int.parse(parseDate.elementAt(2)));
+      sessionDate.put(sd);
+    }
+
+    theme.put(await getFirebaseTheme());
+
+    for (var date in sessionDate.getAll()) {
+      String dateString = '${date.year}-${date.month}-${date.day}';
+      var snapshot = await sessionCollection
+          .doc(_auth.currentUser!.uid)
+          .collection(dateString)
+          .get()
+          .then((value) => value.docs.forEach((element) {
+                StudyCount c = StudyCount(count: element.get('count'));
+                c.sessionDate.target = date;
+                count.put(c);
+              }));
     }
   }
 
@@ -166,10 +288,15 @@ class ObjectBox {
 
       if (await _connection.ifConnectedToInternet()) {
         await addFBSS(count.getAll().first);
+        await addFBSSDate(date);
       } else {
         DataToUpload data = DataToUpload(
             addOrDeleteOrNeither: 0, operandType: 3, countID: studyCount.id);
         dataListToUpload.put(data);
+
+        DataToUpload data2 = DataToUpload(
+            addOrDeleteOrNeither: 0, operandType: 5, sessionDateID: date.id);
+        dataListToUpload.put(data2);
       }
     } else {
       StudyCount studyCount = count
@@ -195,16 +322,19 @@ class ObjectBox {
   }
 
   Future setTheme(StudyTheme theme) async {
-    StudyTheme toRemove = this.theme.getAll().first;
+    StudyTheme? toRemove =
+        this.theme.getAll().isEmpty ? null : this.theme.getAll().first;
     this.theme.removeAll();
     this.theme.put(theme);
 
     if (await _connection.ifConnectedToInternet()) {
       await addFBTheme(theme);
     } else {
-      DataToUpload data1 = DataToUpload(
-          addOrDeleteOrNeither: 1, operandType: 4, themeID: toRemove.id);
-      dataListToUpload.put(data1);
+      if (toRemove != null) {
+        DataToUpload data1 = DataToUpload(
+            addOrDeleteOrNeither: 1, operandType: 2, themeID: toRemove.id);
+        dataListToUpload.put(data1);
+      }
       DataToUpload data2 = DataToUpload(
           addOrDeleteOrNeither: 0, operandType: 4, themeID: theme.id);
       dataListToUpload.put(data2);
@@ -349,7 +479,6 @@ class ObjectBox {
 
   TaskDate? findTaskDate(DateTime date) {
     List<TaskDate> tempDateList = getTaskDateList();
-
     for (var tempDate in tempDateList) {
       if (tempDate.year == date.year &&
           tempDate.month == date.month &&

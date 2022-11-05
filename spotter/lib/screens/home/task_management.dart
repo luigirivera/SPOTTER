@@ -28,6 +28,7 @@ Future _addTask(
   }
 
   if (!connectionExists) {
+    print("here");
     await addFBTaskDate(taskDate, group);
   } else {
     DataToUpload data = DataToUpload(

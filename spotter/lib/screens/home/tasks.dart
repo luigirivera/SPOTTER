@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:spotter/screens/home/task_management.dart';
 import '../../main.dart';
@@ -33,9 +35,29 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
+  List<Task> taskList = List.empty(growable: true);
+  late Timer t;
+
+  @override
+  void dispose() {
+    t.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    t = Timer(Duration(seconds: 2), () {
+      setState(() {
+        if (objectbox.ifTaskDateExists(widget.date)) {
+          taskList = objectbox.getTaskListByDate(widget.date);
+        }
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Task> taskList = List.empty(growable: true);
     if (objectbox.ifTaskDateExists(widget.date)) {
       taskList = objectbox.getTaskListByDate(widget.date);
     }
@@ -205,10 +227,29 @@ class TaskPopOutPage extends StatefulWidget {
 
 class _TaskPopOutPageState extends State<TaskPopOutPage> {
   bool deletionMade = false;
+  late Timer t;
+  List<TaskGroup> taskGroup = List.empty(growable: true);
+
+  @override
+  void dispose() {
+    t.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    t = Timer(Duration(seconds: 2), () {
+      setState(() {
+        if (objectbox.ifTaskDateExists(widget.date)) {
+          taskGroup = objectbox.getTaskGroupsByDate(widget.date);
+        }
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<TaskGroup> taskGroup = List.empty(growable: true);
     if (objectbox.ifTaskDateExists(widget.date)) {
       taskGroup = objectbox.getTaskGroupsByDate(widget.date);
     }
@@ -301,26 +342,26 @@ class _TaskPopOutPageState extends State<TaskPopOutPage> {
                 const SizedBox(width: 10),
 
                 ///Button for pop out view of the task board
-                TextButton(
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.redAccent)),
-                  child: const Text(
-                    'View By Groups',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              TaskPopOutPage(date: widget.date),
-                        )).then((value) {
-                      setState(() {});
-                    });
-                  },
-                ),
+                // TextButton(
+                //   style: ButtonStyle(
+                //       backgroundColor:
+                //           MaterialStateProperty.all(Colors.redAccent)),
+                //   child: const Text(
+                //     'View By Groups',
+                //     style: TextStyle(
+                //         color: Colors.white, fontWeight: FontWeight.bold),
+                //   ),
+                //   onPressed: () {
+                //     Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) =>
+                //               TaskPopOutPage(date: widget.date),
+                //         )).then((value) {
+                //       setState(() {});
+                //     });
+                //   },
+                // ),
               ],
             ),
           ),
