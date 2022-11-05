@@ -37,10 +37,12 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   List<Task> taskList = List.empty(growable: true);
   late Timer t;
+  late Timer t2;
 
   @override
   void dispose() {
     t.cancel();
+    t2.cancel();
     super.dispose();
   }
 
@@ -53,6 +55,8 @@ class _TaskListState extends State<TaskList> {
         }
       });
     });
+    t2 = Timer.periodic(
+        const Duration(seconds: 2), (Timer tt) => setState(() {}));
     super.initState();
   }
 

@@ -1,6 +1,6 @@
 Todo:
 
-1. Check data replacement (it works on email, page needs to refresh)
+1. Check data replacement (implemented refresh on tasks.dart (check initState and dispose), implement on others)
 2. Anon signin to google implement (both empty data and with data)
 
 1. Art
