@@ -67,11 +67,16 @@ class _CalendarState extends State<Calendar> {
             calendarStyle: const CalendarStyle(
               outsideDaysVisible: false,
               cellMargin: EdgeInsets.all(0),
-              todayDecoration: BoxDecoration(color: Colors.lightBlueAccent, shape: BoxShape.circle),
-              todayTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              markerDecoration: BoxDecoration(color: Colors.orange, shape: BoxShape.rectangle),
-              selectedDecoration: BoxDecoration(color: Colors.orange, shape: BoxShape.rectangle),
-              selectedTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              todayDecoration: BoxDecoration(
+                  color: Colors.lightBlueAccent, shape: BoxShape.circle),
+              todayTextStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              markerDecoration: BoxDecoration(
+                  color: Colors.orange, shape: BoxShape.rectangle),
+              selectedDecoration: BoxDecoration(
+                  color: Colors.orange, shape: BoxShape.rectangle),
+              selectedTextStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             rowHeight: 50,
           ),

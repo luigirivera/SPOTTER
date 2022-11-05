@@ -1,9 +1,10 @@
 Todo:
 
-1. Check data replacement (implemented refresh on tasks.dart (check initState and dispose), implement on others)
+1. Check data replacement (replace works, only screen refresh left)
 2. Anon signin to google implement (both empty data and with data)
 
 1. Art
 
 
-x. Delete anon account on login from anon to auth (might not happen)
+x. Delete anon account on login from anon to auth (might not happen because need to pay)
+x. Clear data while in account

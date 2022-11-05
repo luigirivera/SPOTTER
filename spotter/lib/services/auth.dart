@@ -20,9 +20,14 @@ class AuthService {
       idToken: googleAuth.idToken,
     );
 
-    await _auth.signInWithCredential(credential);
+    UserCredential userCred = await _auth.signInWithCredential(credential);
+    User? user = userCred.user;
+
     await objectbox.initTaskCollection();
     await objectbox.initSessionCollection();
+    SpotterUser spotterUser = _createSpotterUser(user);
+    objectbox.users.put(spotterUser);
+    return spotterUser;
   }
 
   Future deleteGivenUser(User userToDelete) async {

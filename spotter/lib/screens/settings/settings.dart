@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:spotter/models/user_model.dart';
 import 'package:spotter/screens/settings/settings_sign_in.dart';
 import 'package:spotter/services/auth.dart';
 import 'package:spotter/main.dart';
+import 'package:spotter/services/firebase.dart';
+import 'package:spotter/services/sync.dart';
 
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -86,11 +89,19 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                               setState(() {
                                 loading = true;
                               });
-                              _auth.googleLogin().then((result) {
-                                if (result == null) {
+                              _auth.googleLogin().then((result) async {
+                                if (result is! SpotterUser) {
                                   setState(() {
                                     loading = false;
                                   });
+                                } else {
+                                  if (!await checkIfHasData()) {
+                                    //migrate data
+                                    uploadAll();
+                                  } else {
+                                    objectbox.clearData();
+                                    objectbox.importData();
+                                  }
                                 }
                               });
                             }
