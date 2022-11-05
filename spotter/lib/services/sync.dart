@@ -70,9 +70,12 @@ Future<void> uploadAll() async {
   List<Task> tasks = objectbox.taskList.getAll();
   List<StudyCount> counts = objectbox.count.getAll();
   List<StudyTheme> themes = objectbox.theme.getAll();
+  List<SessionDate> sessionDates = objectbox.sessionDate.getAll();
 
   for (var taskGroup in taskGroups) {
-    await addFBTaskGroup(taskGroup.taskGroup);
+    if (taskGroup.taskGroup.compareTo("General") != 0) {
+      await addFBTaskGroup(taskGroup.taskGroup);
+    }
   }
 
   for (var taskDate in taskDates) {
@@ -91,5 +94,9 @@ Future<void> uploadAll() async {
 
   for (var theme in themes) {
     await addFBTheme(theme);
+  }
+
+  for (var dates in sessionDates) {
+    await addFBSSDate(dates);
   }
 }
