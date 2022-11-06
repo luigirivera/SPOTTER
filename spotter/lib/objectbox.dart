@@ -115,17 +115,11 @@ class ObjectBox {
   }
 
   Future<void> deleteEverything() async {
-    taskGroups.removeAll();
-    taskDate.removeAll();
-    taskList.removeAll();
-    theme.removeAll();
-    count.removeAll();
-    sessionDate.removeAll();
-    dataListToUpload.removeAll();
-
     if (await _connection.ifConnectedToInternet()) {
       await FirebaseFirestore.instance
           .runTransaction((Transaction transaction) async {
+        recursivelyDeleteAllDocContent(
+            taskCollection.doc(_auth.currentUser!.uid));
         transaction.delete(taskCollection.doc(_auth.currentUser!.uid));
         transaction.delete(sessionCollection.doc(_auth.currentUser!.uid));
       }).whenComplete(() async {
@@ -136,6 +130,14 @@ class ObjectBox {
       user.deleteUser = true;
       users.put(user);
     }
+
+    taskGroups.removeAll();
+    taskDate.removeAll();
+    taskList.removeAll();
+    theme.removeAll();
+    count.removeAll();
+    sessionDate.removeAll();
+    dataListToUpload.removeAll();
   }
 
   Future<void> clearData() async {
@@ -169,6 +171,7 @@ class ObjectBox {
         TaskDate td = TaskDate(
             year: dt.year, month: dt.month, day: dt.day, weekday: dt.weekday);
         bool exists = false;
+
         List<int> indices = List.empty(growable: true);
         for (int i = 0; i < taskDate.getAll().length; i++) {
           if (taskDate.getAll().elementAt(i).compareTo(td)) {

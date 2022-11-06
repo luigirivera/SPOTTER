@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:spotter/models/user_model.dart';
 import 'package:spotter/screens/settings/settings_sign_in.dart';
 import 'package:spotter/services/auth.dart';
 import 'package:spotter/main.dart';
+import 'package:spotter/services/firebase.dart';
+import 'package:spotter/services/sync.dart';
 
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -86,17 +89,23 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                               setState(() {
                                 loading = true;
                               });
-                              _auth.googleLogin().then((result) {
-                                if (result == null) {
+                              _auth.googleLogin().then((value) async {
+                                if (value == null) {
                                   setState(() {
                                     loading = false;
                                   });
+                                } else {
+                                  if (!await checkIfHasData()) {
+                                    //migrate data
+                                    uploadAll();
+                                  } else {
+                                    objectbox.clearData();
+                                    objectbox.importData();
+                                  }
 
-                                  if (true) ;
-                                  //TODO:
-                                  //check if user is in firebase
-                                  //if not, upload data
-                                  //if yes, download data
+                                  setState(() {
+                                    loading = false;
+                                  });
                                 }
                               });
                             }

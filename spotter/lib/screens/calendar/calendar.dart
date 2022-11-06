@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../home/tasks.dart';
+
+bool calendarChange = false;
 
 class Calendar extends StatefulWidget {
   const Calendar({Key? key}) : super(key: key);
@@ -15,9 +19,31 @@ class _CalendarState extends State<Calendar> {
   /// Try to avoid "late" initialization or the calendar will look trippy
   /// I tried to fill in below variables with some defaults
   static DateTime? _selectedDay;
+  late Timer t;
   bool _daySelected = false;
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month; //setting a default
+
+  void refresh() {
+    t = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted && calendarChange) {
+        setState(() {});
+        calendarChange = false;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    t.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     setState(() {
@@ -67,11 +93,16 @@ class _CalendarState extends State<Calendar> {
             calendarStyle: const CalendarStyle(
               outsideDaysVisible: false,
               cellMargin: EdgeInsets.all(0),
-              todayDecoration: BoxDecoration(color: Colors.lightBlueAccent, shape: BoxShape.circle),
-              todayTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              markerDecoration: BoxDecoration(color: Colors.orange, shape: BoxShape.rectangle),
-              selectedDecoration: BoxDecoration(color: Colors.orange, shape: BoxShape.rectangle),
-              selectedTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              todayDecoration: BoxDecoration(
+                  color: Colors.lightBlueAccent, shape: BoxShape.circle),
+              todayTextStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              markerDecoration: BoxDecoration(
+                  color: Colors.orange, shape: BoxShape.rectangle),
+              selectedDecoration: BoxDecoration(
+                  color: Colors.orange, shape: BoxShape.rectangle),
+              selectedTextStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             rowHeight: 50,
           ),

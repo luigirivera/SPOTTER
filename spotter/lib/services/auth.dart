@@ -13,6 +13,11 @@ class AuthService {
 
     if (googleUser == null) return;
 
+    String email = googleUser.email;
+
+    var existence = await _auth.fetchSignInMethodsForEmail(email);
+    bool emailExists = existence.contains('google.com');
+
     final googleAuth = await googleUser.authentication;
 
     final credential = GoogleAuthProvider.credential(
@@ -20,9 +25,17 @@ class AuthService {
       idToken: googleAuth.idToken,
     );
 
-    await _auth.signInWithCredential(credential);
-    await objectbox.initTaskCollection();
-    await objectbox.initSessionCollection();
+    UserCredential userCred = await _auth.signInWithCredential(credential);
+    User? user = userCred.user;
+
+    if (!emailExists) {
+      await objectbox.initTaskCollection();
+      await objectbox.initSessionCollection();
+    }
+
+    SpotterUser spotterUser = _createSpotterUser(user);
+    objectbox.users.put(spotterUser);
+    return spotterUser;
   }
 
   Future deleteGivenUser(User userToDelete) async {

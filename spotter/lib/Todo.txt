@@ -1,7 +1,10 @@
 Todo:
 
-1. Check data migration
-2. Check data replacement
-3. Delete anon account on login from anon to auth
-4. Art
-5. Anon signin to google implement
+
+1. Check data migration and replacement on iOS
+
+1. Art
+
+
+x. Delete anon account on login from anon to auth (might not happen because need to pay)
+x. Clear data while in account

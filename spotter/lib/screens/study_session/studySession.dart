@@ -6,6 +6,8 @@ import 'dart:io';
 import '../../models/session_model.dart';
 import '../../main.dart';
 
+bool sessionChange = false;
+
 class StudySession extends StatefulWidget {
   const StudySession({Key? key}) : super(key: key);
 
@@ -29,6 +31,7 @@ class _StudySessionState extends State<StudySession> {
   String hoursString = "00";
 
   Timer? timer;
+  late Timer t;
   bool isTimerRunning = false;
   bool newTree = false;
 
@@ -136,14 +139,29 @@ class _StudySessionState extends State<StudySession> {
     });
   }
 
+  @override
   void dispose() {
     timer?.cancel();
+    t.cancel();
     super.dispose();
+  }
+
+  void refresh() {
+    t = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted && sessionChange) {
+        theme = objectbox.getTheme();
+        initTheme();
+
+        sessionChange = false;
+      }
+    });
   }
 
   @override
   void initState() {
+    refresh();
     initTheme();
+
     super.initState();
   }
 
@@ -172,6 +190,8 @@ class _StudySessionState extends State<StudySession> {
       }
 
       fileName = selectedTheme.split(RegExp(r'_'))[1].split(r'/')[0];
+
+      setState(() {});
     });
   }
 
