@@ -1,10 +1,7 @@
 Todo:
 
-
-1. Check data migration and replacement on iOS
-
 1. Art
 
 
-x. Delete anon account on login from anon to auth (might not happen because need to pay)
+x. Delete anon account on login from anon to auth (not happen because need to pay)
 x. Clear data while in account
