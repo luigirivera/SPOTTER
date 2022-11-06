@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spotter/main.dart';
 
 import '../../models/task_model.dart';
+
+bool statChange = false;
+bool taskGraphChange = false;
+bool sessionGraphChange = false;
 
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({Key? key}) : super(key: key);
@@ -76,6 +82,7 @@ class TaskCompletionGraph extends StatefulWidget {
 }
 
 class _TaskCompletionGraphState extends State<TaskCompletionGraph> {
+  late Timer t;
   List<double> sampleTaskCompletionData = [7, 3, 6, 9, 0, 0, 0];
   int touchedIndex = -1;
 
@@ -90,9 +97,27 @@ class _TaskCompletionGraphState extends State<TaskCompletionGraph> {
   }
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    t.cancel();
+    super.dispose();
+  }
 
+  void refresh() {
+    t = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted && statChange) {
+        updateGraph();
+        taskGraphChange = true;
+
+        if (taskGraphChange && sessionGraphChange) {
+          statChange = false;
+          taskGraphChange = false;
+          sessionGraphChange = false;
+        }
+      }
+    });
+  }
+
+  void updateGraph() {
     sampleTaskCompletionData = [
       completedTaskCountForDay(
           DateTime.now().subtract(const Duration(days: 6))),
@@ -108,6 +133,15 @@ class _TaskCompletionGraphState extends State<TaskCompletionGraph> {
           DateTime.now().subtract(const Duration(days: 1))),
       completedTaskCountForDay(DateTime.now()),
     ];
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+    updateGraph();
   }
 
   BarChartGroupData taskCompletedDataGroup(
@@ -323,13 +357,11 @@ class StudySessionTimeGraph extends StatefulWidget {
 }
 
 class _StudySessionTimeGraphState extends State<StudySessionTimeGraph> {
+  late Timer t;
   List<double> sampleTaskCompletionData = [7, 3, 6, 9, 5, 2, 1];
   int touchedIndex = -1;
 
-  @override
-  void initState() {
-    super.initState();
-
+  void updateGraph() {
     sampleTaskCompletionData = [
       objectbox.getStudySessionCount(
           DateTime.now().subtract(const Duration(days: 6))),
@@ -345,6 +377,35 @@ class _StudySessionTimeGraphState extends State<StudySessionTimeGraph> {
           DateTime.now().subtract(const Duration(days: 1))),
       objectbox.getStudySessionCount(DateTime.now()),
     ];
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    t.cancel();
+    super.dispose();
+  }
+
+  void refresh() {
+    t = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted && statChange) {
+        updateGraph();
+        sessionGraphChange = true;
+
+        if (taskGraphChange && sessionGraphChange) {
+          statChange = false;
+          taskGraphChange = false;
+          sessionGraphChange = false;
+        }
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+    updateGraph();
   }
 
   BarChartGroupData taskCompletedDataGroup(

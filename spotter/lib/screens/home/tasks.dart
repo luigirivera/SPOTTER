@@ -6,6 +6,8 @@ import '../../main.dart';
 import '../../models/task_model.dart';
 import '../../services/connectivity.dart';
 
+bool taskChange = false;
+
 class TaskBoard extends StatelessWidget {
   const TaskBoard({Key? key}) : super(key: key);
 
@@ -39,6 +41,15 @@ class _TaskListState extends State<TaskList> {
   late Timer t;
   late Timer t2;
 
+  void refresh() {
+    t2 = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted && taskChange) {
+        setState(() {});
+        taskChange = false;
+      }
+    });
+  }
+
   @override
   void dispose() {
     t.cancel();
@@ -48,15 +59,18 @@ class _TaskListState extends State<TaskList> {
 
   @override
   void initState() {
-    t = Timer(Duration(seconds: 2), () {
-      setState(() {
-        if (objectbox.ifTaskDateExists(widget.date)) {
-          taskList = objectbox.getTaskListByDate(widget.date);
-        }
+    if (mounted) {
+      t = Timer(Duration(seconds: 2), () {
+        setState(() {
+          if (objectbox.ifTaskDateExists(widget.date)) {
+            taskList = objectbox.getTaskListByDate(widget.date);
+          }
+        });
       });
-    });
-    t2 = Timer.periodic(
-        const Duration(seconds: 2), (Timer tt) => setState(() {}));
+    }
+
+    refresh();
+
     super.initState();
   }
 
