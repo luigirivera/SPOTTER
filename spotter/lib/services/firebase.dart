@@ -221,7 +221,7 @@ Future<bool> ifCollectionExistsOnFirebase(String taskGroup) async {
 }
 
 Future<void> recursivelyDeleteAllDocContent(DocumentReference doc) async {
-  DocumentReference userDocRef = _userCollection.doc(_auth.currentUser!.uid);
+  DocumentReference userDocRef = doc;
   DocumentReference dateDocRef;
   List<String> taskGroups = await getFirebaseTaskGroups();
   List<String> taskDates;
