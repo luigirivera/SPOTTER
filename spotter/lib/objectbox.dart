@@ -169,6 +169,7 @@ class ObjectBox {
         TaskDate td = TaskDate(
             year: dt.year, month: dt.month, day: dt.day, weekday: dt.weekday);
         bool exists = false;
+
         List<int> indices = List.empty(growable: true);
         for (int i = 0; i < taskDate.getAll().length; i++) {
           if (taskDate.getAll().elementAt(i).compareTo(td)) {

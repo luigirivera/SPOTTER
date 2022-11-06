@@ -226,6 +226,8 @@ class _SignInState extends State<SignIn> {
                                     setState(() {
                                       loading = false;
                                     });
+                                  } else {
+                                    objectbox.importData();
                                   }
                                 });
                               } else {

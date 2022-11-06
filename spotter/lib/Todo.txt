@@ -1,7 +1,8 @@
 Todo:
 
 1. Check data replacement (replace works, only screen refresh left)
-2. Anon signin to google implement (both empty data and with data)
+
+Check data migration and replacement on iOS
 
 1. Art
 

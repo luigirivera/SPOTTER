@@ -89,19 +89,26 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                               setState(() {
                                 loading = true;
                               });
-                              _auth.googleLogin().then((result) async {
-                                if (result is! SpotterUser) {
+                              _auth.googleLogin().then((value) async {
+                                if (value == null) {
+                                  print("here0");
                                   setState(() {
                                     loading = false;
                                   });
                                 } else {
+                                  print("here1");
                                   if (!await checkIfHasData()) {
                                     //migrate data
                                     uploadAll();
                                   } else {
+                                    print("here3");
                                     objectbox.clearData();
                                     objectbox.importData();
                                   }
+
+                                  setState(() {
+                                    loading = false;
+                                  });
                                 }
                               });
                             }
