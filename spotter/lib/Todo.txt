@@ -1,8 +1,7 @@
 Todo:
 
-1. Check data replacement (replace works, only screen refresh left)
 
-Check data migration and replacement on iOS
+1. Check data migration and replacement on iOS
 
 1. Art
 
