@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../main.dart';
 import '../../models/sync_model.dart';
 import '../../models/task_model.dart';
@@ -6,6 +7,18 @@ import '../../services/firebase.dart';
 
 Future _addTask(
     String description, String group, DateTime date, bool completed) async {
+  if (description.length <= 0) {
+    Fluttertoast.showToast(
+        msg: "Task needs a description",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0);
+
+    return;
+  }
   Task newTask = Task(
     taskDescription: description,
     completed: completed,
@@ -28,7 +41,6 @@ Future _addTask(
   }
 
   if (!connectionExists) {
-    print("here");
     await addFBTaskDate(taskDate, group);
   } else {
     DataToUpload data = DataToUpload(
