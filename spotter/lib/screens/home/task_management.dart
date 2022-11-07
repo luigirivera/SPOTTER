@@ -362,13 +362,15 @@ class _EditTaskGroupState extends State<EditTaskGroup> {
                   IconButton(
                     icon: const Icon(Icons.add_circle, color: Colors.orange),
                     onPressed: () async {
-                      if (objectbox.getTaskGroup(newGroup!) == null) {
-                        await objectbox.addTaskGroup(newGroup!).then((value) {
-                          setState(() {});
-                        });
-                        groupExists = false;
-                      } else {
-                        groupExists = true;
+                      if (newGroup != null) {
+                        if (objectbox.getTaskGroup(newGroup!) == null) {
+                          await objectbox.addTaskGroup(newGroup!).then((value) {
+                            setState(() {});
+                          });
+                          groupExists = false;
+                        } else {
+                          groupExists = true;
+                        }
                       }
                     },
                   ),

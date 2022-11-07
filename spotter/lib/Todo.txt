@@ -1,5 +1,3 @@
 Todo:
 
 1. Art
-
-x. Delete anon account on login from anon to auth (not happen because need to pay)
