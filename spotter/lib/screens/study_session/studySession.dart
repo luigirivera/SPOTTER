@@ -35,7 +35,7 @@ class _StudySessionState extends State<StudySession> {
   bool isTimerRunning = false;
   bool newTree = false;
 
-  int phase = 1;
+  int phase = 0;
   int completed = 0;
 
   void stop() {
@@ -61,7 +61,7 @@ class _StudySessionState extends State<StudySession> {
       minutesString = "00";
       hoursString = "00";
 
-      phase = 1;
+      phase = 0;
       completed = 0;
     });
   }
@@ -73,16 +73,16 @@ class _StudySessionState extends State<StudySession> {
       switch (minutes % 5) {
         //new tree phase every minute
         case 1:
-          phase = 2;
+          phase = 1;
           break;
         case 2:
-          phase = 3;
+          phase = 2;
           break;
         case 3:
-          phase = 4;
+          phase = 3;
           break;
         case 4:
-          phase = 5;
+          phase = 4;
           newTree = true;
           break;
       }
@@ -97,7 +97,7 @@ class _StudySessionState extends State<StudySession> {
       }
 
       if (minutes % 5 == 0 && newTree) {
-        phase = 1;
+        phase = 0;
         newTree = !newTree;
         completed++;
         objectbox.addToSessionCount();
@@ -201,9 +201,8 @@ class _StudySessionState extends State<StudySession> {
         decoration: BoxDecoration(
             image: DecorationImage(
                 // image: AssetImage('assets/beach.png'), fit: BoxFit.fill)
-                image: AssetImage(completed <= 6
-                    ? '$themeFolder$selectedTheme$fileName-$completed.png'
-                    : '$themeFolder$selectedTheme$fileName-6.png'),
+                image: AssetImage(
+                    '$themeFolder$selectedTheme$fileName-$phase.png'),
                 fit: BoxFit.fill)),
         child: Padding(
           padding: EdgeInsets.all(25),
