@@ -48,7 +48,7 @@ Future<void> initFBTaskCollection() async {
 Future<void> initFBSessionCollection() async {
   await _sessionCollection
       .doc(_auth.currentUser!.uid)
-      .set({'dates': [], 'name': 'trees', 'index': 0, 'folder': '1_trees'});
+      .set({'dates': [], 'name': 'ducks', 'index': 0, 'folder': '1_ducks'});
 }
 
 Future<void> addFBTheme(StudyTheme theme) async {
@@ -173,7 +173,7 @@ Future<StudyTheme> getFirebaseTheme() async {
             index: value['index'],
             folder: value['folder']));
   } catch (e) {
-    return StudyTheme(name: 'trees', index: 0, folder: '1_trees');
+    return StudyTheme(name: 'ducks', index: 0, folder: '1_ducks');
   }
 }
 

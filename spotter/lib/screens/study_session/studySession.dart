@@ -216,14 +216,14 @@ class _StudySessionState extends State<StudySession> {
                 SizedBox(
                   height: 100,
                 ),
-                Expanded(
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                          "Tree Phase: $phase\nTrees Completed: $completed",
-                          style: const TextStyle(
-                              fontSize: 20, color: Colors.black))),
-                ),
+                // Expanded(
+                //   child: Align(
+                //       alignment: Alignment.center,
+                //       child: Text(
+                //           "Tree Phase: $phase\nTrees Completed: $completed",
+                //           style: const TextStyle(
+                //               fontSize: 20, color: Colors.black))),
+                // ),
                 Expanded(
                   child: Align(
                       alignment: Alignment.bottomCenter,

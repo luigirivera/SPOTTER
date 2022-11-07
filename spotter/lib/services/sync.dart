@@ -59,6 +59,11 @@ Future<void> upload(List<DataToUpload> dataList, int index) async {
       StudyTheme theme = objectbox.theme.get(dataList[index].themeID!)!;
       await addFBTheme(theme);
       return;
+    } else if (dataList[index].operandType == 5) {
+      SessionDate date =
+          objectbox.sessionDate.get(dataList[index].sessionDateID!)!;
+      await addFBSSDate(date);
+      return;
     }
   }
 }
