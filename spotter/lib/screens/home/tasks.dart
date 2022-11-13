@@ -78,6 +78,8 @@ class _TaskListState extends State<TaskList> {
   Widget build(BuildContext context) {
     if (objectbox.ifTaskDateExists(widget.date)) {
       taskList = objectbox.getTaskListByDate(widget.date);
+    }else{
+      taskList = List.empty(growable: true);
     }
 
     return Column(children: [
