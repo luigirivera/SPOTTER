@@ -71,7 +71,7 @@ class _StudySessionState extends State<StudySession> {
       milliseconds++;
 
       switch (seconds % 60) {
-        //new tree phase every minute
+        //new picture every 10 seconds (restart every minute)
         case 10:
           phase = 1;
           break;
@@ -203,7 +203,6 @@ class _StudySessionState extends State<StudySession> {
     return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                // image: AssetImage('assets/beach.png'), fit: BoxFit.fill)
                 image: AssetImage(
                     '$themeFolder$selectedTheme$fileName-$phase.png'),
                 fit: BoxFit.fill)),
@@ -218,14 +217,6 @@ class _StudySessionState extends State<StudySession> {
                 SizedBox(
                   height: 100,
                 ),
-                // Expanded(
-                //   child: Align(
-                //       alignment: Alignment.center,
-                //       child: Text(
-                //           "Tree Phase: $phase\nTrees Completed: $completed",
-                //           style: const TextStyle(
-                //               fontSize: 20, color: Colors.black))),
-                // ),
                 Expanded(
                   child: Align(
                       alignment: Alignment.bottomCenter,
